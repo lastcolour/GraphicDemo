@@ -11,9 +11,10 @@ To perform build use script **project.py**, here is some examples:
     > project.py -b=debug
     > project.py -b=release -clean
 
-**-b=[build_type]** -- type of build. Valid values is:
+**-b=[build_type]** - type of build. Valid values is:
 - debug
 - release
 - or None, than will be perfomed debug build
-**-clean** -- perform clean build. (All generated files will be removed)
+
+**[-clean]** - perform clean build. (All generated files will be removed)
 
