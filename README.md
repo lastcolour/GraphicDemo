@@ -7,10 +7,10 @@ For build project need:
 - Cmake 2.8
 
 To perform build use script **project.py**, here is some examples:
-'''
+
     project.py -b=debug
     project.py -b=release -clean
-'''
+
 **-b=<build_type>** -- type of build. Valid values is:
 - debug
 - release
