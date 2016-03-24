@@ -7,6 +7,6 @@ class Application {
     virtual ~Application();
     
     int run();
-}
+};
 
 #endif /* __APPLICATION_HPP__*/

@@ -1,7 +1,7 @@
 #ifndef __DEMO_APP_HPP__
 #define __DEMO_APP_HPP__
 
-#include <core/Application.hpp>
+#include <core\Application.hpp>
 
 class DemoApp : public Application {
   public:

@@ -8,6 +8,6 @@ Application::~Application() {
   
 }
 
-Application::run() {
-  
+int Application::run() {
+    return 0;
 }
