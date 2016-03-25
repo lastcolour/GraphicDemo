@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan
+
 #ifndef __DEMO_APP_HPP__
 #define __DEMO_APP_HPP__
 

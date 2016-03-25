@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan
+
 #include <DemoApp.hpp>
 
 int main(int argc, char* argv[]) {
