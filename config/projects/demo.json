@@ -1,5 +1,19 @@
 {
-  "project": {
-     "name": "GraphicsDemo"
+  "name": "DemoApp",
+  "location": "apps/demo",
+
+  "cmake": {
+
+    "cmake_log": "lastCmakeRun.log",
+    "unix": {
+      "ENVs": [
+        {"GD_BUILD_DIR": "_out/linux", "path": true}
+      ],
+      "build_dir": "_build/linux",
+      "defs": [
+        "CMAKE_ECLIPSE_VERSION=4.5"
+      ],
+      "gen": "Eclipse CDT4 - Unix Makefiles"
+    }
   }
 }

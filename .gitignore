@@ -4,9 +4,22 @@
 *.o
 *.obj
 
+# Out folders
+_out/
+_build/
+
+# IDEs folders
+.idea/
+
+# Python
+*.pyc
+
 # Precompiled Headers
 *.gch
 *.pch
+
+# Cached files
+*.*~
 
 # Compiled Dynamic libraries
 *.so

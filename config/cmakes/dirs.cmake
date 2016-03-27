@@ -1,12 +1,12 @@
 # Set output directories
 
- if(DEFINED $ENV{GD_BUILD_OUT_DIR})
-   set(BUILD_OUT $ENV{GD_BUILD_OUT_DIR})
-   message(STATUS "BUILD_OUT dir = ${BUILD_OUT}")
- else()
-   set(BUILD_OUT "${CMAKE_CURRENT_SOURCE_DIR}/../_out/custom/")  
-   message(STATUS "BUILD_OUT is not set upped. Used: ${BUILD_OUT}")
- endif()
+if(DEFINED ENV{GD_BUILD_DIR})
+  set(BUILD_OUT $ENV{GD_BUILD_DIR})
+  message(STATUS "BUILD_OUT dir = ${BUILD_OUT}")
+else()
+  set(BUILD_OUT "${CMAKE_CURRENT_SOURCE_DIR}/../../_out/custom")
+  message(STATUS "GD_BUILD_DIR is not set upped. Used: ${BUILD_OUT}")
+endif()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BUILD_OUT}" CACHE FILEPATH "Runtimes output directory")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${BUILD_OUT}" CACHE FILEPATH "Libraries output directory")

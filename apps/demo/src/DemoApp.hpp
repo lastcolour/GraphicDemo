@@ -3,13 +3,12 @@
 #ifndef __DEMO_APP_HPP__
 #define __DEMO_APP_HPP__
 
-#include <core\Application.hpp>
+#include <core/Appliction.hpp>
 
-class DemoApp : public Application {
+class DemoApp : public Appliction {
   public:
-  
     DemoApp(int argc, char* argv[]);
-    ~DemoApp();
+    virtual ~DemoApp();
     
     int run();
 };
