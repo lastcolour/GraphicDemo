@@ -70,9 +70,12 @@ class Project:
   def _setUpCmake(self):
     enVars = self._model["cmake"]["ENVs"]
     for item in enVars:
-      if "path" in item and item["path"] and self._rootPath != "":
+      if "path" in item and item["path"]:
         for elem in [x for x in item if x != "path"]:
-          item[elem] = self._rootPath + "/" + item[elem]
+          tSuffix = ""
+          if item[elem] != "":
+            tSuffix = "/" + item[elem]
+          item[elem] = self._rootPath + tSuffix
     resDict = dict()
     for item in enVars:
       for elem in item:
@@ -88,10 +91,17 @@ class Project:
       tStr += " -D{0}".format(item)
     return tStr
 
-  def _runCmake(self):
+  def _getBuildDefs(self, buildType):
+    if buildType.lower() == "debug":
+      return " -DCMAKE_BUILD_TYPE=Debug"
+    else:
+      return " -DCMAKE_BUILD_TYPE=Release"
+
+  def _runCmake(self, buildType):
     if not self._setUpCmake():
       pass
-    tCMD = "cmake -H." + self._getGenerator() + self._getBuildDir(forCmake=True) + self._getDefs()
+    tCMD = "cmake -H." + self._getGenerator() + self._getBuildDir(forCmake=True) + self._getDefs() \
+                       + self._getBuildDefs(buildType)
     tWorkDir = self._rootPath + "/" + self._model["location"]
     tProcLog = self._getBuildDir() + "/" + self._model["cmake_log"]
     with open(tProcLog, "w+") as tFile:
@@ -107,7 +117,7 @@ class Project:
     return tStatus
 
   def build(self, buildType):
-    if not self._runCmake():
+    if not self._runCmake(buildType):
       log.error("[Error] Cmake generation failed. See cmake log for more info")
     else:
       log.info("[Info] Cmake generation successful")

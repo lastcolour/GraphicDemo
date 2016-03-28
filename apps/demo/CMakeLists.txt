@@ -25,5 +25,4 @@ add_executable(${TARGET_NAME} ${SRC} ${HEADERS})
 add_dependencies(${TARGET_NAME} core)
 target_link_libraries(${TARGET_NAME} core)
 
-
 set_property(TARGET ${TARGET_NAME} PROPERTY FOLDER "Apps/${PROJECT_NAME}")

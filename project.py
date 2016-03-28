@@ -12,7 +12,7 @@ _ROOT = os.path.dirname(os.path.abspath(__file__)).replace("\\", "/")
 def parseArgs():
   from argparse import ArgumentParser
   argPrs = ArgumentParser(description="Helpful script for project managment")
-  argPrs.add_argument("-p", dest="proj",  nargs=1,   required=False, type=str,  default=_DEF_PROJECT,
+  argPrs.add_argument("-p",       dest="proj",  nargs=1,   required=False, type=str,  default=_DEF_PROJECT,
                                   help="specifie custon project file")
   argPrs.add_argument("-build",   dest="build", nargs="?", required=True,  type=str,  const="debug", choices=["debug", "release", "relwithdebinfo"],
                                   help="build project of specifig type (debug, release, relwithdebinfo, etc.)")
