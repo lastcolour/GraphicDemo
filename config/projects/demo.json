@@ -5,6 +5,14 @@
   "cmake": {
 
     "cmake_log": "lastCmakeRun.log",
+    "win": {
+      "ENVs": [
+        {"GD_BUILD_DIR": "_out/windows", "path": true}
+      ],
+      "gen": "Visual Studio 11",
+      "build_dir": "_build/windows"
+    },
+
     "unix": {
       "ENVs": [
         {"GD_BUILD_DIR": "_out/linux", "path": true}

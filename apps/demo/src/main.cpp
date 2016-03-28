@@ -1,4 +1,6 @@
-#inlude <DemoApp.hpp>
+// author: Oleksii Zhogan
+
+#include <DemoApp.hpp>
 
 int main(int argc, char* argv[]) {
   DemoApp app(argc, argv);

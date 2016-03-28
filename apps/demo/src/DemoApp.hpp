@@ -3,9 +3,9 @@
 #ifndef __DEMO_APP_HPP__
 #define __DEMO_APP_HPP__
 
-#include <core/Appliction.hpp>
+#include <core/Application.hpp>
 
-class DemoApp : public Appliction {
+class DemoApp : public Application {
   public:
     DemoApp(int argc, char* argv[]);
     virtual ~DemoApp();

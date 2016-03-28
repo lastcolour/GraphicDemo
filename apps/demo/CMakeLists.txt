@@ -19,8 +19,11 @@ file(GLOB SRC     "src/*.cpp" )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/
                     ${LIBS_ROOT_DIR}/core/include)
 
+message(STATUS "Target: ${TARGET_NAME}, compiled with flags: ${CMAKE_CXX_FLAGS}")
+                    
 add_executable(${TARGET_NAME} ${SRC} ${HEADERS})
 add_dependencies(${TARGET_NAME} core)
 target_link_libraries(${TARGET_NAME} core)
+
 
 set_property(TARGET ${TARGET_NAME} PROPERTY FOLDER "Apps/${PROJECT_NAME}")

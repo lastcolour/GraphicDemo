@@ -81,9 +81,11 @@ class Project:
     setUpEnv(resDict)
 
   def _getDefs(self):
-    tStr = " "
+    if "defs" not in self._model["cmake"]:
+       return ""
+    tStr = ""
     for item in self._model["cmake"]["defs"]:
-      tStr += "-D{0}".format(item)
+      tStr += " -D{0}".format(item)
     return tStr
 
   def _runCmake(self):
@@ -94,17 +96,19 @@ class Project:
     tProcLog = self._getBuildDir() + "/" + self._model["cmake_log"]
     with open(tProcLog, "w+") as tFile:
       tProcData = runCMD(tCMD, pipe=tFile, isShell=Platform["shell"], workDir=tWorkDir)
+    tStatus = False
     if tProcData["ret_code"] == 0:
-      return True
+      tStatus = True
     if tProcData["ret_code"] is None:
       log.error("[Error] Invalid cmd data sent to cmake")
     elif tProcData["ret_code"] != 0:
       log.error("[Error] Invalid cmake files. See log for more info")
-    return False
+    log.info("[Info] Cmake log saved to: {0}".format(tProcLog))
+    return tStatus
 
   def build(self, buildType):
     if not self._runCmake():
-      log.error("[Error] Cmake generation failed")
+      log.error("[Error] Cmake generation failed. See cmake log for more info")
     else:
       log.info("[Info] Cmake generation successful")
 

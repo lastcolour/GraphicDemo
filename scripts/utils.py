@@ -28,6 +28,7 @@ def runCMD(cmd, workDir=None, pipe=None, isShell=False):
   else:
     pipeFile = pipe
   try:
+    log.debug("[Info] Start process: {0}".format(cmd))
     tProc = Popen(cmd, cwd=workDir, shell=isShell, stdout=pipeFile, stderr=pipeFile)
     tProc.wait()
   except:
