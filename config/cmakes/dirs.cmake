@@ -2,7 +2,7 @@
 
 if(DEFINED ENV{GD_BIN_FILES_LOC})
 
-  set(BUILD_OUT $ENV{GD_BIN_DES_DIR})
+  set(BUILD_OUT $ENV{GD_BIN_FILES_LOC})
   message(STATUS "Used output dir = ${BUILD_OUT}")
 
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BUILD_OUT}" CACHE FILEPATH "Runtimes output directory")

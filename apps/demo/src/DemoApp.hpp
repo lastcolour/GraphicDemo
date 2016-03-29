@@ -10,7 +10,7 @@ class DemoApp : public Application {
     DemoApp(int argc, char* argv[]);
     virtual ~DemoApp();
     
-    int run();
+    int main();
 };
 
 #endif /* __DEMO_APP_HPP__ */

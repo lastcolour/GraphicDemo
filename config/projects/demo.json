@@ -7,7 +7,14 @@
     "cmake_log": "lastCmakeRun.log",
     "win": {
       "ENVs": [
-        {"GD_ROOT_PORJECT_DIR": "", "path": true}
+        {
+          "GD_ROOT_PORJECT_DIR": "", 
+          "path": true
+        },
+        {
+          "GD_BIN_FILES_LOC": "_out/windows/",
+          "path": true
+        }
       ],
       "gen": "Visual Studio 11",
       "build_dir": "_build/windows"

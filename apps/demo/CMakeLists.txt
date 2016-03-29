@@ -9,7 +9,7 @@ project(DemoApp)
 include(${GD_CONFIG_DIR}/dirs.cmake)
 include(${GD_CONFIG_DIR}/projects.cmake)
 
-add_subdirectory(${LIBS_ROOT_DIR}/core "${CMAKE_BINARY_DIR}/libs")
+add_subdirectory(${LIBS_ROOT_DIR}/core "${CMAKE_BINARY_DIR}/_libs")
 
 set(TARGET_NAME "demo")
 
