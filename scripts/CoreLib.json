@@ -1,0 +1,48 @@
+{
+  "name": "CoreLib",
+
+  "builds": ["debug", "release"],
+  "types": ["shared_lib", "static_lib"],
+
+  "deps": [
+    {
+      "project": "FreeGLUT.json",
+      "link": "shared",
+      "type": "Release"
+    }
+  ],
+
+  "cmake": {
+    "run_dir": "libs/core",
+    "out_dir": "_build/{PLATFORM}/{BUILD_TYPE}/libs/core",
+    "debug": {
+      "defs": [
+        {"CMAKE_BUILD_TYPE": "Debug"}
+      ],
+      "env": []
+    },
+
+    "release": {
+      "defs": [
+        {"CMAKE_BUILD_TYPE": "Release"}
+      ],
+      "env": []
+    },
+
+    "common": {
+      "defs": [],
+      "env": []
+    }
+  },
+
+  "build": {
+    "run_dir": "libs/core/{PLATFORM}/{BUILD_TYPE}"
+  },
+
+  "cleanUp": {
+
+  },
+
+  "install": {
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "name": "DemoApp",
+
+  "builds": ["debug", "release"],
+  "types": ["app"],
+
+  "deps": [
+    {
+      "project": "CoreLib.json",
+      "link": "shared",
+      "type": "{BUILD_TYPE}"
+    }
+  ],
+
+  "cmake": {
+    "run_dir": "apps/demo",
+    "out_dir": "_build/{PLATFORM}/{BUILD_TYPE}/apps/DemoApp",
+    "debug": {
+      "defs": [
+        {"CMAKE_BUILD_TYPE": "Debug"}
+      ],
+      "env": []
+    },
+
+    "release": {
+      "defs": [
+        {"CMAKE_BUILD_TYPE": "Release"}
+      ],
+      "env": []
+    },
+
+    "common": {
+      "defs": [],
+      "env": []
+    }
+  },
+
+  "build": {
+    "run_dir": "apps/demo/{PLATFORM}/{BUILD_TYPE}"
+  },
+
+  "cleanUp": {
+
+  },
+
+  "install": {
+    "groups": [
+      {
+        "files": [],
+        "to": ""
+      }
+    ]
+  }
+}
