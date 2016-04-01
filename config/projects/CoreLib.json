@@ -1,8 +1,8 @@
 {
   "name": "CoreLib",
 
-  "builds": ["debug", "release"],
-  "types": ["shared_lib", "static_lib"],
+  "build_types": ["debug", "release"],
+  "bin_types": ["shared_lib", "static_lib"],
 
   "deps": [
     {

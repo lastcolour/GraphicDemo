@@ -1,8 +1,8 @@
 {
   "name": "DemoApp",
 
-  "builds": ["debug", "release"],
-  "types": ["app"],
+  "build_types": ["debug", "release"],
+  "bin_types": ["app"],
 
   "deps": [
     {

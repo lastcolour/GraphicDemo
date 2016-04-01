@@ -1,6 +1,6 @@
 # author: Oleksii Zhogan
 
-__all__ = ["runCMD", "setUpEnv"]
+__all__ = ["runCMD", "setUpEnv", "tryFormat"]
 
 import sys
 import os
@@ -9,6 +9,15 @@ from subprocess import Popen
 from logger import log
 
 _TMP_FILE = "data.temp"
+
+
+def tryFormat(rawStr, dictValues):
+    tOutStr = rawStr
+    try:
+        tOutStr = tOutStr.format(**dictValues)
+    except KeyError:
+        pass
+    return tOutStr
 
 def setUpEnv(envVars):
   for item in envVars:
@@ -28,7 +37,7 @@ def runCMD(cmd, workDir=None, pipe=None, isShell=False):
   else:
     pipeFile = pipe
   try:
-    log.debug("[Info] Start process: {0}".format(cmd))
+    log.debug("[Debug] Start process: {0}".format(cmd))
     tProc = Popen(cmd, cwd=workDir, shell=isShell, stdout=pipeFile, stderr=pipeFile)
     tProc.wait()
   except:

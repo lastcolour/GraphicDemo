@@ -1,12 +1,12 @@
 {
   "name": "FreeGLUT",
 
-  "builds": ["debug", "release"],
-  "types": ["shared_lib", "static_lib"],
+  "build_types": ["debug", "release"],
+  "bin_types": ["shared_lib", "static_lib"],
 
   "cmake": {
-    "run_dir": "extern/libs/freglut-3.0.0",
-    "out_dir": "_build/{PLATFORM}/{BUILD_TYPE}/libs/core",
+    "run_dir": "extern/libs/freeglut-3.0.0",
+    "out_dir": "_build/{PLATFORM}/{BUILD_TYPE}/extrn/freeglut",
     "debug": {
       "defs": [
         {"CMAKE_BUILD_TYPE": "Debug"}
