@@ -10,7 +10,12 @@ from utils import runCMD
 from utils import setUpEnv
 from utils import tryFormat
 
+_DEF_WIN_GENERATOR = "Visual Studio 11"
+_DEF_LIN_GENERATOR = "Ecplise CDT4 - Makefile Unix"
+
 _CMAKE_LOG_FILE = "lastCmakeRun.log"
+_COMPILE_LOG_FILE = "lastCompileRun.log"
+
 
 def _getPlatformInfo():
   import platform
@@ -29,6 +34,13 @@ Platform = _getPlatformInfo()
 del _getPlatformInfo
 
 
+def formatCompileCmd(config):
+    if Platform["name"] == "Windows":
+        tCompCmd = "devenv.com  ALL_BUILD.vcxproj /Build {0}".format(config["build_type"])
+    else:
+        tCompCmd = "make"
+    return tCompCmd
+
 class DependError(RuntimeError):
     def __init__(self, depErr):
         self._depErr = depErr
@@ -43,6 +55,7 @@ class Project:
     
     def __init__(self, configFile, parent=None):
         self._parent = parent
+        self._cmakeOutDir = None
         self._depProjects = dict()
         self._loadModel(configFile)
 
@@ -50,6 +63,7 @@ class Project:
         return self._model["name"]
 
     def cleanUp(self):
+        # TODO: Implement this method
         pass
         
     @staticmethod
@@ -140,7 +154,8 @@ class Project:
         return False
 
     def _runCmake(self, cmakeConfig):
-        tCmakeCmd = "cmake -H." + cmakeConfig["defs"] + " -B{0}".format(cmakeConfig["out_dir"])
+        tCmakeCmd = "cmake -H." + cmakeConfig["defs"] + " -B{0}".format(cmakeConfig["out_dir"])\
+                    + " -G\"{0}\"".format(cmakeConfig["generator"])
         tCmakeLogFile = cmakeConfig["out_dir"] + "/" + _CMAKE_LOG_FILE
         if not os.path.exists(cmakeConfig["out_dir"]):
             try:
@@ -164,7 +179,20 @@ class Project:
                 return True
 
     def _runCompiler(self, compileConfig):
-        return False
+        tCompCmd = formatCompileCmd(compileConfig)
+        tCompileLog = compileConfig["run_dir"] + "/" + _COMPILE_LOG_FILE
+        try:
+            with open(tCompileLog, "w+") as tFile:
+                compileOut = runCMD(tCompCmd, workDir=compileConfig["run_dir"], pipe=tFile, isShell=Platform["shell"])
+        except:
+            log.error("[Error][{0}] Can't compile project: {0}".format(self.getName(), sys.exc_info()[1]))
+            return False
+        else:
+            log.info("[Info][{0}] Compile log saved to: {1}".format(self.getName(), tCompileLog))
+            if compileOut["ret_code"] != 0:
+                return False
+            else:
+                return True
 
     def _doInstall(self, buildType):
         return False
@@ -194,19 +222,29 @@ class Project:
     def _getCmakeEnvs(self, buildType):
         return None
 
+    def _getCmakeGenerator(self):
+        if Platform["name"] == "Windows":
+            # TODO: Move generator to some config
+            tGenStr = _DEF_WIN_GENERATOR
+        else:
+            tGenStr = _DEF_LIN_GENERATOR
+        return tGenStr
+
     def _getCmakeOutDir(self, buildType):
         tBuildValues =  {"PLATFORM"  : Platform["name"],
                          "BUILD_TYPE": buildType}
-        return tryFormat(self._model["cmake"]["out_dir"], tBuildValues)
+        self._cmakeOutDir = tryFormat(self._model["cmake"]["out_dir"], tBuildValues)
+        return  self._cmakeOutDir
 
     def _getCompileRunDir(self):
-        pass
+        return self._cmakeOutDir
 
     def _genCmakeProject(self, buildType):
         cmakeConfig = dict()
         cmakeConfig["build_type"] = buildType
         cmakeConfig["run_dir"] = Project._PROJECTS_ROOT + "/" + self._getCmakeRunDir()
         cmakeConfig["out_dir"] = Project._PROJECTS_ROOT + "/" + self._getCmakeOutDir(buildType)
+        cmakeConfig["generator"] = self._getCmakeGenerator()
         cmakeConfig["defs"] = self._getCmakeDefs(buildType)
         cmakeConfig["envs"] = self._getCmakeEnvs(buildType)
         return self._runCmake(cmakeConfig)

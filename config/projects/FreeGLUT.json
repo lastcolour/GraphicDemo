@@ -1,12 +1,12 @@
 {
   "name": "FreeGLUT",
 
-  "build_types": ["debug", "release"],
+  "build_types": ["Debug", "Release"],
   "bin_types": ["shared_lib", "static_lib"],
 
   "cmake": {
     "run_dir": "extern/libs/freeglut-3.0.0",
-    "out_dir": "_build/{PLATFORM}/{BUILD_TYPE}/extrn/freeglut",
+    "out_dir": "_build/{PLATFORM}/{BUILD_TYPE}/extern/freeglut-3.0.0",
     "debug": {
       "defs": [
         {"CMAKE_BUILD_TYPE": "Debug"}
@@ -28,7 +28,6 @@
   },
 
   "build": {
-    "run_dir": "libs/core/{PLATFORM}/{BUILD_TYPE}"
   },
 
   "cleanUp": {
@@ -36,5 +35,17 @@
   },
 
   "install": {
+    "group": [
+      {
+        "name": "Binaries",
+        "files": "bins/{BUILD_TYPE}/freeglut.*",
+        "to": "{OUT_DIR}"
+      },
+      {
+        "name": "Libs",
+        "files": "libs/{BUILD_TYPE}/freeglut*.*",
+        "to": "{OUT_DIR}"
+      }
+    ]
   }
 }

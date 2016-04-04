@@ -1,7 +1,7 @@
 {
   "name": "DemoApp",
 
-  "build_types": ["debug", "release"],
+  "build_types": ["Debug", "Release"],
   "bin_types": ["app"],
 
   "deps": [
@@ -36,7 +36,6 @@
   },
 
   "build": {
-    "run_dir": "apps/demo/{PLATFORM}/{BUILD_TYPE}"
   },
 
   "cleanUp": {

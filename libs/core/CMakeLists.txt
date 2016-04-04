@@ -1,12 +1,16 @@
 cmake_minimum_required(VERSION 2.8)
 
+if(not ${GD_CONFIG_DIR})
+  set(GD_CONFIG_DIR "../../config/cmakes")
+endif()
+
 project(core)
 
 set(TARGET_NAME "core")
 
 include(${GD_CONFIG_DIR}/opengl.cmake)
 
-# Add freeglut
+# Add freeglut (only shared link)
 find_library(FREEGLUT_LIB_LOC NAMES freeglut glut PATHS ${GD_FREEGLUT_LIBS_DIR} NO_DEFAULT_PATH)
 
 if(NOT FREEGLUT_LIB_LOC)
@@ -22,7 +26,7 @@ file(GLOB HEADERS "include/core/*.hpp" )
 file(GLOB SRC     "src/*.cpp" )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  add_definitions(-DGD_WIN_CORE_LIB_DLL_BUILD)
+  # Add check when debug lib link release freeglut
   add_definitions(-DNDEBUG)
 endif()
 

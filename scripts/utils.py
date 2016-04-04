@@ -20,6 +20,8 @@ def tryFormat(rawStr, dictValues):
     return tOutStr
 
 def setUpEnv(envVars):
+  if envVars is None:
+      return
   for item in envVars:
     if item in os.environ:
       log.warning("[Warning] Override ENV variable: {0}: {1} -> {2}".format(

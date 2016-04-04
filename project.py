@@ -22,9 +22,9 @@ def parseArgs():
     argPrs = ArgumentParser(description="Helpful script for project managment")
     argPrs.add_argument("-p",     dest="proj",  nargs=1,   required=False, type=str,    default=_DEF_PROJECT,
                                   help="specifie custon project file")
-    argPrs.add_argument("-build", dest="build", nargs="?", required=True,    type=str,    const="debug", choices=["debug", "release"],
+    argPrs.add_argument("-build", dest="build", nargs="?", required=True,  type=str,    const="debug", choices=["Debug","debug" ,"Release", "Release"],
                                   help="build project of specifig type (debug, release)")
-    argPrs.add_argument("-clean", dest="clean", nargs="?", required=False, type=bool, const=True, default=False,
+    argPrs.add_argument("-clean", dest="clean", nargs="?", required=False, type=bool,   const=True, default=False,
                                   help="clean all generated files before build")
     return argPrs.parse_args()                                                                                                                                                                                                            
 
@@ -39,7 +39,7 @@ def main():
         return
     if args.clean:
         proj.cleanUp()
-    proj.build(args.build)
+    proj.build(args.build.title())
 
 if __name__ == "__main__":
     main()
