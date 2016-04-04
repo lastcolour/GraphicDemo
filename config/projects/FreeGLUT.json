@@ -35,7 +35,7 @@
   },
 
   "install": {
-    "group": [
+    "groups": [
       {
         "name": "Binaries",
         "files": "bins/{BUILD_TYPE}/freeglut.*",
@@ -44,6 +44,7 @@
       {
         "name": "Libs",
         "files": "libs/{BUILD_TYPE}/freeglut*.*",
+        "from": "",
         "to": "{OUT_DIR}"
       }
     ]

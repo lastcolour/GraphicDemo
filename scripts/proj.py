@@ -9,6 +9,7 @@ from logger import log
 from utils import runCMD
 from utils import setUpEnv
 from utils import tryFormat
+from utils import copyFiles
 
 _DEF_WIN_GENERATOR = "Visual Studio 11"
 _DEF_LIN_GENERATOR = "Ecplise CDT4 - Makefile Unix"
@@ -55,6 +56,7 @@ class Project:
     
     def __init__(self, configFile, parent=None):
         self._parent = parent
+        self._installFlag = False
         self._cmakeOutDir = None
         self._depProjects = dict()
         self._loadModel(configFile)
@@ -119,7 +121,12 @@ class Project:
 
     def _loadDepProject(self, depInfo):
         depInfo["project"] = Project(self._findProjectFile(depInfo.pop("project")))
+        if "install" in depInfo:
+            depInfo["project"]._setNeedInstall(depInfo["install"])
         self._depProjects[depInfo["project"].getName()] = depInfo
+
+    def _setNeedInstall(self, flag):
+        self._installFlag = flag
 
     def _setLinkType(self, linkType):
         self._linkType = linkType
@@ -148,7 +155,7 @@ class Project:
         return True
 
     def _needInstall(self):
-        return False
+        return self._installFlag
 
     def _needCleanAfterBuild(self, buildType):
         return False
@@ -195,7 +202,17 @@ class Project:
                 return True
 
     def _doInstall(self, buildType):
-        return False
+        if not "install" in self._model or "groups" not in self._model["install"]:
+            log.info("[Info][{0}] Can't find install config. Skip installing".format(self.getName()))
+            return True
+        inGroups = self._model["install"]["groups"]
+        for inItem in inGroups:
+            log.info("[Info][{0}] Install files: {1}".format(self.getName(), inItem["name"]))
+            try:
+                copyFiles(inItem["files"], inItem["from"], inItem["to"])
+            except:
+                return False
+        return True
 
     def _doCleanAfterBuild(self, buildType):
         return False

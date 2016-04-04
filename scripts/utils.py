@@ -11,6 +11,9 @@ from logger import log
 _TMP_FILE = "data.temp"
 
 
+def copyFiles(filesMask, fromPath, toPath):
+    pass
+
 def tryFormat(rawStr, dictValues):
     tOutStr = rawStr
     try:

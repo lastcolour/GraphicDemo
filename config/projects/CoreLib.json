@@ -8,7 +8,8 @@
     {
       "project": "FreeGLUT.json",
       "link": "shared",
-      "type": "Release"
+      "type": "Release",
+      "install": true
     }
   ],
 
