@@ -1,7 +1,9 @@
 # author: Oleksii Zhogan
 
-__all__ = ["runCMD", "setUpEnv", "tryFormat"]
+__all__ = ["runCMD", "setUpEnv", "tryFormat", "copyFiles"]
 
+import shutil
+import glob
 import sys
 import os
 
@@ -12,14 +14,31 @@ _TMP_FILE = "data.temp"
 
 
 def copyFiles(filesMask, fromPath, toPath):
-    pass
+    log.debug("[Info] Source location: {0}".format(fromPath))
+    log.debug("[Info] Target location: {0}".format(toPath))
+    if not os.path.exists(toPath):
+        try:
+            os.makedirs(toPath)
+        except:
+            log.debug("[Debug] Can't create target path for COPY: {0}".format(toPath))
+            log.debug("[Debug] Problem: {0}".format(sys.exc_info()[1]))
+            return
+    for item in glob.iglob(fromPath + "/" + filesMask):
+        tBaseName = os.path.basename(item)
+        log.debug("[Info] Copy file: {0}".format(os.path.basename(tBaseName)))
+        try:
+            shutil.copy(item, toPath + "/" + tBaseName)
+        except:
+            log.debug("[Debug] Can't copy file: {0}".format(tBaseName))
+            log.debug("[Debug] Problem: {0}".format(sys.exc_info()[1]))
 
 def tryFormat(rawStr, dictValues):
     tOutStr = rawStr
     try:
         tOutStr = tOutStr.format(**dictValues)
     except KeyError:
-        pass
+        log.debug("[Error] Unknown key when format str: {0}".format(rawStr))
+        log.debug("[Error] Key: {0}".format(sys.exc_info()[1]))
     return tOutStr
 
 def setUpEnv(envVars):

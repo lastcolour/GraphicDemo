@@ -38,14 +38,15 @@
     "groups": [
       {
         "name": "Binaries",
-        "files": "bins/{BUILD_TYPE}/freeglut.*",
-        "to": "{OUT_DIR}"
+        "files": "freeglut.*",
+        "from": "{CMAKE_OUT_DIR}/bin/{BUILD_TYPE}",
+        "to": "{OUT_DIR}/{BUILD_TYPE}"
       },
       {
         "name": "Libs",
-        "files": "libs/{BUILD_TYPE}/freeglut*.*",
-        "from": "",
-        "to": "{OUT_DIR}"
+        "files": "freeglut*.*",
+        "from": "{CMAKE_OUT_DIR}/lib/{BUILD_TYPE}",
+        "to": "{OUT_DIR}/{BUILD_TYPE}"
       }
     ]
   }

@@ -17,7 +17,6 @@ _DEF_LIN_GENERATOR = "Ecplise CDT4 - Makefile Unix"
 _CMAKE_LOG_FILE = "lastCmakeRun.log"
 _COMPILE_LOG_FILE = "lastCompileRun.log"
 
-
 def _getPlatformInfo():
   import platform
   tPlatform = dict()
@@ -33,6 +32,9 @@ def _getPlatformInfo():
   return tPlatform
 Platform = _getPlatformInfo()
 del _getPlatformInfo
+
+
+_OUT_DIR_NAME = "_out/" + Platform["name"]
 
 
 def formatCompileCmd(config):
@@ -206,11 +208,18 @@ class Project:
             log.info("[Info][{0}] Can't find install config. Skip installing".format(self.getName()))
             return True
         inGroups = self._model["install"]["groups"]
+        tBuildValues =  {"PLATFORM"     : Platform["name"],
+                         "BUILD_TYPE"   : buildType,
+                         "OUT_DIR"      : self._getInstallRoot(),
+                         "CMAKE_OUT_DIR": Project._PROJECTS_ROOT + "/" + self._cmakeOutDir}
         for inItem in inGroups:
             log.info("[Info][{0}] Install files: {1}".format(self.getName(), inItem["name"]))
             try:
-                copyFiles(inItem["files"], inItem["from"], inItem["to"])
+                copyFiles(inItem["files"], tryFormat(inItem["from"], tBuildValues),
+                                           tryFormat(inItem["to"], tBuildValues))
             except:
+                log.error("[Error][{0}] Can't install files: {1}".format(self.getName(), inItem["files"]))
+                log.error("[Error][{0}] Problem: {1}".format(self.getName(), sys.exc_info()[1]))
                 return False
         return True
 
@@ -238,6 +247,9 @@ class Project:
 
     def _getCmakeEnvs(self, buildType):
         return None
+
+    def _getInstallRoot(self):
+        return Project._PROJECTS_ROOT + "/" + "_out"
 
     def _getCmakeGenerator(self):
         if Platform["name"] == "Windows":
