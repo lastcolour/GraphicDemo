@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan
+
 #ifndef __CMD_ARGUMENTS_HPP__
 #define __CMD_ARGUMENTS_HPP__
 

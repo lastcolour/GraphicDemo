@@ -54,10 +54,11 @@ class DependError(RuntimeError):
 class Project:
 
     # TODO: Move model to other class
+    # TODO: Add build dict as member of Project instance
 
     _CONFIG_ROOT = ""
     _PROJECTS_ROOT = ""
-    
+
     def __init__(self, configFile, parent=None):
         self._parent = parent
         self._installFlag = False
@@ -71,12 +72,12 @@ class Project:
     def cleanUp(self):
         # TODO: Implement this method
         pass
-        
+
     @staticmethod
     def intializePaths(pathInfo):
         Project._CONFIG_ROOT = pathInfo["config_root"]
         Project._PROJECTS_ROOT = pathInfo["project_root"]
-        
+
     def _absPath(self, path):
        tPath = ""
        if path != "":
@@ -88,8 +89,9 @@ class Project:
         log.info("[Info][{0}] Start build target: {0}".format(self.getName()))
         for depProjName in self._depProjects:
             tProjectNode = self._depProjects[depProjName]
-            tBuildDict = {"OUT_DIR": self._getInstallRoot(),
-                          "BUILD_TYPE": buildType}
+            tBuildDict = {"OUT_DIR"   : self._getInstallRoot(),
+                          "BUILD_TYPE": buildType,
+                          "PLATFORM"  : Platform["name"]}
             if "install" in tProjectNode:
                 tInstallPath = tryFormat(tProjectNode["install"]["path"], tBuildDict)
                 tProjectNode["project"]._setCustomInstallPath(tInstallPath)
@@ -300,7 +302,7 @@ class Project:
         compileConfig["build_type"] = buildType
         compileConfig["run_dir"] = self._getCompileRunDir()
         return self._runCompiler(compileConfig)
-        
+
     def _findProjectFile(self, projectFile):
         tPath = Project._CONFIG_ROOT + "/" + projectFile
         if not os.path.exists(tPath):

@@ -1,5 +1,7 @@
 # Set output directories
 
+set(GD_DIRS_CMAKE_INCLUDED ON)
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   set(GD_BUILD_PLATFORM "Windows")
 else()
@@ -22,7 +24,7 @@ set(GD_EXTERN_ROOT_DIR "${GD_ROOT_DIR}/extern")
 
 # Set up output path
 set(GD_OUT_DIR_NAME "_out")
-set(GD_OUT_ROOT_DIR "${GD_ROOT_DIR}/${GD_OUT_DIR_NAME}")
+set(GD_OUT_ROOT_DIR "${GD_ROOT_DIR}/${GD_OUT_DIR_NAME}/${GD_BUILD_PLATFORM}")
 
 # TODO: Remake for alternative path
 # set(GD_OUT_ROOT_DIR "${GD_ROOT_DIR}/${GD_OUT_DIR_NAME}/${GD_BUILD_PLATFORM}")
@@ -32,9 +34,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${GD_OUT_ROOT_DIR}" CACHE FILEPATH "Librarie
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   ${GD_OUT_ROOT_DIR}/Debug)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${GD_OUT_ROOT_DIR}/Release)
-                                         
+
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   ${GD_OUT_ROOT_DIR}/Debug)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${GD_OUT_ROOT_DIR}/Release)
-                                         
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG   ${GD_OUT_ROOT_DIR}/Debug)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${GD_OUT_ROOT_DIR}/Release)

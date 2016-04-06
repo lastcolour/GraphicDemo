@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan
+
 #include <core\CMDArguments.hpp>
 
 CMDArguments::CMDArguments(int argc, char* argv[]) : 

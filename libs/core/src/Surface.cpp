@@ -1,9 +1,13 @@
+// author: Oleksii Zhogan
+
 #include <core/Surface.hpp>
-#include <core/Application.hpp>
 
-Surface::Surface(Application* app) :
-	appListener(app) {
 
+Application* Surface::appListener = nullptr;
+
+
+Surface::Surface(Application* app) {
+    appListener = app;
 }
 
 Surface::~Surface() {

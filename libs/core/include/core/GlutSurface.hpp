@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan
+
 #ifndef __GLUT_SURFACE_HPP__
 #define __GLUT_SURFACE_HPP__
 

@@ -3,6 +3,7 @@
 #include <core/Application.hpp>
 #include <core/GlutSurface.hpp>
 
+
 Application::Application(int argc, char* argv[]) :
     cmdArgs(argc, argv) {
 }
@@ -28,7 +29,7 @@ int Application::run() {
     return -1;
 }
 
-void Application::onReDrawEvent() {
+void Application::onDrawEvent() {
 }
 
 void Application::onAnimateEvent() {

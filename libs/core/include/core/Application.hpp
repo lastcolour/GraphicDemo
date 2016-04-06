@@ -16,20 +16,18 @@ public:
 
     Application(int argc, char* argv[]);
     virtual ~Application();
-    
+
+    virtual void onDrawEvent();
+    virtual void onAnimateEvent();
+    virtual void onMouseEvent();
+    virtual void onKeyboardEvent();
+
     CMDArguments& getCMDArgs();
     int run();
 
 protected:
 
     virtual int main() = 0;
-  
-protected:
-
-    virtual void onReDrawEvent();
-    virtual void onAnimateEvent();
-    virtual void onMouseEvent();
-    virtual void onKeyboardEvent();
 
 private:
 
