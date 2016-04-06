@@ -9,6 +9,13 @@ public:
 	virtual ~GlutSurface();
 
 	void dispaly();
+
+private:
+
+    static void surfaceDisplayFunc();
+    static void surfaceIdleFunc();
+    static void surfaceMouseFunc(int, int, int, int);
+    static void surfaceKeybordFunc(unsigned char, int, int);
 };
 
 #endif /* __GLUT_SURFACE_HPP__ */

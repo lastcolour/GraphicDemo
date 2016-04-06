@@ -5,35 +5,40 @@
 
 #include <core\DEFS.hpp>
 #include <core\Surface.hpp>
+#include <core\CMDArguments.hpp>
 
 #include <memory>
-
-struct CmdArgs
-{
-    int argc;
-    char** argv;
-};
 
 template class LIB_EXPORT_CONV std::unique_ptr<Surface>;
 
 class LIB_EXPORT_CONV Application {
-  public:
+public:
 
     Application(int argc, char* argv[]);
     virtual ~Application();
     
-    CmdArgs& getCMDArgs();
-
+    CMDArguments& getCMDArgs();
     int run();
 
-    virtual bool createSurface();
+protected:
+
     virtual int main() = 0;
+  
+protected:
+
+    virtual void onReDrawEvent();
+    virtual void onAnimateEvent();
+    virtual void onMouseEvent();
+    virtual void onKeyboardEvent();
+
+private:
+
+    bool createSurface();
 
 private:
 
     std::unique_ptr<Surface> surface;
-
-    CmdArgs args;
+    CMDArguments cmdArgs;
 };
 
 #endif /* __APPLICATION_HPP__*/

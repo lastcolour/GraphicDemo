@@ -53,6 +53,8 @@ class DependError(RuntimeError):
 
 class Project:
 
+    # TODO: Move model to other class
+
     _CONFIG_ROOT = ""
     _PROJECTS_ROOT = ""
     
@@ -86,6 +88,11 @@ class Project:
         log.info("[Info][{0}] Start build target: {0}".format(self.getName()))
         for depProjName in self._depProjects:
             tProjectNode = self._depProjects[depProjName]
+            tBuildDict = {"OUT_DIR": self._getInstallRoot(),
+                          "BUILD_TYPE": buildType}
+            if "install" in tProjectNode:
+                tInstallPath = tryFormat(tProjectNode["install"]["path"], tBuildDict)
+                tProjectNode["project"]._setCustomInstallPath(tInstallPath)
             if not tProjectNode["project"].build(self._getDepBuildType(tProjectNode["type"])):
                 log.error("[Error][{0}] Can't build dep project: {1}".format(self.getName(), depProjName))
                 return False
@@ -96,6 +103,10 @@ class Project:
             return depBuildType.format(BUILD_TYPE=self._targetBuildType)
         except KeyError:
             return depBuildType
+
+    def _setCustomInstallPath(self, path):
+        for item in self._model["install"]["groups"]:
+            item["to"] = path
 
     def _loadModel(self, filename):
         try:
@@ -124,8 +135,11 @@ class Project:
     def _loadDepProject(self, depInfo):
         depInfo["project"] = Project(self._findProjectFile(depInfo.pop("project")))
         if "install" in depInfo:
-            depInfo["project"]._setNeedInstall(depInfo["install"])
+            depInfo["project"]._setNeedInstall(True)
         self._depProjects[depInfo["project"].getName()] = depInfo
+
+    def _updateBuildInfo(self):
+        pass
 
     def _setNeedInstall(self, flag):
         self._installFlag = flag
@@ -241,8 +255,11 @@ class Project:
             return ""
         resultDefsStr = ""
         for defGroup in defsItems:
+            tTypeStr = ""
+            if "type" in defGroup:
+                tTypeStr = ":{0}".format(defGroup.pop("type"))
             for elem in defGroup:
-                resultDefsStr += " -D{0}={1}".format(elem, defGroup[elem])
+                resultDefsStr += " -D{0}{1}={2}".format(elem, tTypeStr, defGroup[elem])
         return resultDefsStr
 
     def _getCmakeEnvs(self, buildType):

@@ -3,9 +3,8 @@
 #include <core/Application.hpp>
 #include <core/GlutSurface.hpp>
 
-Application::Application(int argc, char* argv[]) {
-    args.argc = argc;
-    args.argv = argv;
+Application::Application(int argc, char* argv[]) :
+    cmdArgs(argc, argv) {
 }
 
 bool Application::createSurface() {
@@ -18,8 +17,8 @@ Application::~Application() {
   
 }
 
-CmdArgs& Application::getCMDArgs() {
-    return args;
+CMDArguments& Application::getCMDArgs() {
+    return cmdArgs;
 }
 
 int Application::run() {
@@ -27,4 +26,16 @@ int Application::run() {
        return main();
     }
     return -1;
+}
+
+void Application::onReDrawEvent() {
+}
+
+void Application::onAnimateEvent() {
+}
+
+void Application::onMouseEvent() {
+}
+
+void Application::onKeyboardEvent() {
 }

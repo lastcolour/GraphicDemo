@@ -30,7 +30,8 @@
     },
 
     "common": {
-      "defs": [],
+      "defs": [{"GD_DEMO_APP_INCLUDE_CORE_LIB":"ON",
+                "type":"BOOLEAN"}],
       "env": []
     }
   },

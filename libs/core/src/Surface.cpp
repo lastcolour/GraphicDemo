@@ -7,5 +7,4 @@ Surface::Surface(Application* app) :
 }
 
 Surface::~Surface() {
-
 }
