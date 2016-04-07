@@ -1,0 +1,52 @@
+{
+  "name": "GLEW",
+
+  "build_types": ["Debug", "Release"],
+  "bin_types": ["shared_lib", "static_lib"],
+
+  "cmake": {
+    "run_dir": "extern/libs/glew-1.13.0/build/cmake",
+    "out_dir": "_build/{PLATFORM}/{BUILD_TYPE}/extern/glew-1.13.0",
+    "debug": {
+      "defs": [
+        {"CMAKE_BUILD_TYPE": "Debug"}
+      ],
+      "env": []
+    },
+
+    "release": {
+      "defs": [
+        {"CMAKE_BUILD_TYPE": "Release"}
+      ],
+      "env": []
+    },
+
+    "common": {
+      "defs": [],
+      "env": []
+    }
+  },
+
+  "build": {
+  },
+
+  "cleanUp": {
+  },
+
+  "install": {
+    "groups": [
+      {
+        "name": "Binaries",
+        "files": "glew32.*",
+        "from": "{CMAKE_OUT_DIR}/bin/{BUILD_TYPE}",
+        "to": "{OUT_DIR}/{BUILD_TYPE}"
+      },
+      {
+        "name": "Libs",
+        "files": "glew32.*",
+        "from": "{CMAKE_OUT_DIR}/lib/{BUILD_TYPE}",
+        "to": "{OUT_DIR}/{BUILD_TYPE}"
+      }
+    ]
+  }
+}

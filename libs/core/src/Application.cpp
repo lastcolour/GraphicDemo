@@ -3,9 +3,15 @@
 #include <core/Application.hpp>
 #include <core/GlutSurface.hpp>
 
+#include <GL/glew.h>
 
 Application::Application(int argc, char* argv[]) :
     cmdArgs(argc, argv) {
+}
+
+bool Application::createOpenGLContext() {
+    glewInit();
+    return true;
 }
 
 bool Application::createSurface() {
@@ -22,8 +28,9 @@ CMDArguments& Application::getCMDArgs() {
     return cmdArgs;
 }
 
+
 int Application::run() {
-    if(createSurface()) {
+    if(createSurface() && createOpenGLContext()) {
        return main();
     }
     return -1;

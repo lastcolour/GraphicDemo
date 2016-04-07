@@ -1,0 +1,9 @@
+﻿Build started 4/7/2016 1:03:37 PM.
+     1>Project "D:\Dev_projects\GIT\GraphicsDemo\extern\libs\glew-1.13.0\build\vc10\glew_shared.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         glew_shared.vcxproj -> D:\Dev_projects\GIT\GraphicsDemo\extern\libs\glew-1.13.0\build\vc10\../../bin\Release\Win32\glew32.dll
+     1>Done Building Project "D:\Dev_projects\GIT\GraphicsDemo\extern\libs\glew-1.13.0\build\vc10\glew_shared.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.07

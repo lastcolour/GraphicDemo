@@ -31,6 +31,7 @@ protected:
 
 private:
 
+    bool createOpenGLContext();
     bool createSurface();
 
 private:
