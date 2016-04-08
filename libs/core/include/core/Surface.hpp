@@ -12,6 +12,8 @@ public:
 	Surface(Application* app);
 	virtual ~Surface();
 
+
+    virtual bool initialize() = 0;
 	virtual void dispaly() = 0;
 
 protected:

@@ -2,6 +2,7 @@
 
 #include <core/Application.hpp>
 #include <core/GlutSurface.hpp>
+#include <core/GLEWManager.hpp>
 
 #include <GL/glew.h>
 
@@ -9,15 +10,14 @@ Application::Application(int argc, char* argv[]) :
     cmdArgs(argc, argv) {
 }
 
-bool Application::createOpenGLContext() {
-    glewInit();
-    return true;
+bool Application::createOpenGL() {
+    gl_Manager.reset(new GLEWManager());
+    return gl_Manager->initialize();
 }
 
 bool Application::createSurface() {
     surface.reset(new GlutSurface(this));
-    surface->dispaly();
-    return true;
+    return surface->initialize();
 }
 
 Application::~Application() {
@@ -30,10 +30,17 @@ CMDArguments& Application::getCMDArgs() {
 
 
 int Application::run() {
-    if(createSurface() && createOpenGLContext()) {
-       return main();
+    if(createSurface() && createOpenGL()) {
+       onInitializeEvent();
+       surface->dispaly();
     }
-    return -1;
+    return 0;
+}
+
+void Application::onInitializeEvent() {
+}
+
+void Application::onResizeEvent() {
 }
 
 void Application::onDrawEvent() {

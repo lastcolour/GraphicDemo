@@ -10,10 +10,12 @@ public:
 	GlutSurface(Application* app);
 	virtual ~GlutSurface();
 
+    bool initialize();
 	void dispaly();
 
 private:
 
+    static void surfaceResizeFunc(int, int);
     static void surfaceDisplayFunc();
     static void surfaceIdleFunc();
     static void surfaceMouseFunc(int, int, int, int);

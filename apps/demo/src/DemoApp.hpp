@@ -6,11 +6,13 @@
 #include <core/Application.hpp>
 
 class DemoApp : public Application {
-  public:
+public:
     DemoApp(int argc, char* argv[]);
     virtual ~DemoApp();
     
-    int main();
+    void onInitializeEvent();
+    void onResizeEvent();
+    void onDrawEvent();
 };
 
 #endif /* __DEMO_APP_HPP__ */

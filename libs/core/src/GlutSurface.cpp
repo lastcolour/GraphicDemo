@@ -16,12 +16,19 @@ GlutSurface::GlutSurface(Application* app) :
 GlutSurface::~GlutSurface() {
 }
 
+void GlutSurface::surfaceResizeFunc(int, int) {
+    getApp()->onResizeEvent();
+    glutSwapBuffers();
+}
+
 void GlutSurface::surfaceDisplayFunc() {
     getApp()->onDrawEvent();
+    glutSwapBuffers();
 }
 
 void GlutSurface::surfaceIdleFunc() {
-    getApp()->onAnimateEvent();
+    //getApp()->onAnimateEvent();
+    //glutSwapBuffers();
 }
 
 void GlutSurface::surfaceMouseFunc(int, int, int, int) {
@@ -34,19 +41,24 @@ void GlutSurface::surfaceKeybordFunc(unsigned char, int, int) {
     getApp()->onKeyboardEvent();
 }
 
-
-void GlutSurface::dispaly() {
-
+bool GlutSurface::initialize() {
     CMDArguments& args = getApp()->getCMDArgs();
     glutInit(&args.getArgc(), args.getArgv());
-    glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB);
+    // TODO: Recive all data from internal config struct
+    glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
+    glutInitContextVersion(3, 0);
+    glutInitContextFlags(GLUT_FORWARD_COMPATIBLE|GLUT_DEBUG);
     glutInitWindowSize(DEF_WIDTH, DEF_HEIGHT);
     glutCreateWindow(DEF_WIN_NAME);
 
+    glutReshapeFunc(surfaceResizeFunc);
     glutDisplayFunc(surfaceDisplayFunc);
     glutIdleFunc(surfaceIdleFunc);
     glutMouseFunc(surfaceMouseFunc);
     glutKeyboardFunc(surfaceKeybordFunc);
+    return true;
+}
 
+void GlutSurface::dispaly() {
     glutMainLoop();
 }

@@ -17,7 +17,8 @@ file(GLOB SRC     "src/*.cpp")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/
                     ${GD_LIBS_ROOT_DIR}/core/include
-                    ${GD_GLEW_INCLUDE_DIR})
+                    ${GD_GLEW_INCLUDE_DIR}
+                    ${OPEN_GL_INCLUDE_DIR})
 
 add_executable(${TARGET_NAME} ${SRC} ${HEADERS})
 
@@ -43,6 +44,7 @@ else()
 endif()
 
 target_link_libraries(${TARGET_NAME} PRIVATE ${CORE_LIB_PATH})
+target_link_libraries(${TARGET_NAME} PRIVATE ${OPEN_GL_LIB_PATH})
 
 # Other target setups
 if(MSVC)
