@@ -12,7 +12,7 @@ from utils import tryFormat
 from utils import copyFiles
 
 _DEF_WIN_GENERATOR = "Visual Studio 11 Win64"
-_DEF_LIN_GENERATOR = "Ecplise CDT4 - Makefile Unix"
+_DEF_LIN_GENERATOR = "Eclipse CDT4 - Unix Makefiles"
 
 _CMAKE_LOG_FILE = "lastCmakeRun.log"
 _COMPILE_LOG_FILE = "lastCompileRun.log"
@@ -226,7 +226,7 @@ class Project:
             return True
         inGroups = self._model["install"]["groups"]
         tBuildValues =  {"PLATFORM"     : Platform["name"],
-                         "BUILD_TYPE"   : buildType,
+                         "BUILD_TYPE"   : buildType if Platform["short_name"] is "win" else "",
                          "OUT_DIR"      : self._getInstallRoot(),
                          "CMAKE_OUT_DIR": Project._PROJECTS_ROOT + "/" + self._cmakeOutDir}
         for inItem in inGroups:

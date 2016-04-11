@@ -13,7 +13,7 @@ include(${GD_CONFIG_DIR}/dirs.cmake)
 include(${GD_CONFIG_DIR}/opengl.cmake)
 
 find_library(FREEGLUT_LIB_PATH NAMES freeglut glut PATHS ${GD_FREEGLUT_LINK_DIR} NO_DEFAULT_PATH)
-find_library(GLEW_LIB_PATH NAMES glew32 glew PATHS ${GD_GLEW_LINK_DIR} NO_DEFAULT_PATH)
+find_library(GLEW_LIB_PATH NAMES glew32 glew GLEW PATHS ${GD_GLEW_LINK_DIR} NO_DEFAULT_PATH)
 
 if(NOT GLEW_LIB_PATH)
   message(SEND_ERROR "Can't found GLEW lib at: ${GD_GLEW_LINK_DIR}")
@@ -41,6 +41,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 add_library(${TARGET_NAME} SHARED ${SRC} ${HEADERS})
+
+set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD 11)
+
 target_link_libraries(${TARGET_NAME} PUBLIC ${GLEW_LIB_PATH}) # Show opengl interface
 target_link_libraries(${TARGET_NAME} PRIVATE ${FREEGLUT_LIB_PATH})
 

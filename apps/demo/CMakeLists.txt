@@ -21,7 +21,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/
                     ${OPEN_GL_INCLUDE_DIR})
 
 add_executable(${TARGET_NAME} ${SRC} ${HEADERS})
-
+set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD 11)
 
 # CoreLib link
 if(NOT GD_DEMO_APP_INCLUDE_CORE_LIB)

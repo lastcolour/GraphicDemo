@@ -36,15 +36,15 @@
   "install": {
     "groups": [
       {
-        "name": "Binaries",
-        "files": "glew32.*",
-        "from": "{CMAKE_OUT_DIR}/bin/{BUILD_TYPE}",
+        "name": "Libs",
+        "files": ["glew32.*", "libGLEW*.*"],
+        "from": "{CMAKE_OUT_DIR}/lib/{BUILD_TYPE}",
         "to": "{OUT_DIR}/{BUILD_TYPE}"
       },
       {
-        "name": "Libs",
-        "files": "glew32.*",
-        "from": "{CMAKE_OUT_DIR}/lib/{BUILD_TYPE}",
+        "name": "Bins",
+        "files": ["glew32.*", "libGLEW*.*"],
+        "from": "{CMAKE_OUT_DIR}/bin/{BUILD_TYPE}",
         "to": "{OUT_DIR}/{BUILD_TYPE}"
       }
     ]

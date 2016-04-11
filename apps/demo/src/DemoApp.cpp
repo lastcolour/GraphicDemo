@@ -1,7 +1,6 @@
 // author: Oleksii Zhogan
 
-#include <GL\glew.h>
-#include <GL\GL.h>
+#include <GL/glew.h>
 
 #include <DemoApp.hpp>
 

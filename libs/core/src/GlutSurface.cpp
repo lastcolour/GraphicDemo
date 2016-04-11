@@ -1,9 +1,9 @@
 // author: Oleksii Zhogan
 
-#include <core\Application.hpp>
-#include <core\GlutSurface.hpp>
+#include <core/Application.hpp>
+#include <core/GlutSurface.hpp>
 
-#include <GL\freeglut.h>
+#include <GL/freeglut.h>
 #include <assert.h>
 
 typedef unsigned int uint;

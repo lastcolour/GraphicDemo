@@ -37,15 +37,15 @@
   "install": {
     "groups": [
       {
-        "name": "Binaries",
-        "files": "freeglut.*",
-        "from": "{CMAKE_OUT_DIR}/bin/{BUILD_TYPE}",
+        "name": "Libs",
+        "files": ["freeglut.*", "libglut.*"],
+        "from": "{CMAKE_OUT_DIR}/lib/{BUILD_TYPE}",
         "to": "{OUT_DIR}/{BUILD_TYPE}"
       },
       {
-        "name": "Libs",
-        "files": "freeglut*.*",
-        "from": "{CMAKE_OUT_DIR}/lib/{BUILD_TYPE}",
+        "name": "Bins",
+        "files": ["freeglut.*", "libglut.*"],
+        "from": "{CMAKE_OUT_DIR}/bin/{BUILD_TYPE}",
         "to": "{OUT_DIR}/{BUILD_TYPE}"
       }
     ]

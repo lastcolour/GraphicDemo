@@ -1,4 +1,4 @@
-#include <core\GLManager.hpp>
+#include <core/GLManager.hpp>
 
 GLManager::GLManager() {
 }

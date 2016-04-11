@@ -87,9 +87,15 @@ install ( TARGETS ${targets_to_install}
 
 if (BUILD_UTILS)
   add_executable (glewinfo ${GLEW_DIR}/src/glewinfo.c)
+  if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+     target_link_libraries(glewinfo X11)
+  endif()
   target_link_libraries (glewinfo glew)
 
   add_executable (visualinfo ${GLEW_DIR}/src/visualinfo.c)
+  if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+     target_link_libraries(visualinfo X11)
+  endif()
   target_link_libraries (visualinfo glew)
 
   install ( TARGETS glewinfo visualinfo

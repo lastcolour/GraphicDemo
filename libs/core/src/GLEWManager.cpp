@@ -1,6 +1,6 @@
-#include <core\GLEWManager.hpp>
+#include <core/GLEWManager.hpp>
 
-#include <GL\glew.h>
+#include <GL/glew.h>
 
 GLEWManager::GLEWManager() {
 }

@@ -3,7 +3,7 @@
 #ifndef __CMD_ARGUMENTS_HPP__
 #define __CMD_ARGUMENTS_HPP__
 
-#include <core\DEFS.hpp>
+#include <core/DEFS.hpp>
 
 class LIB_EXPORT_CONV CMDArguments {
 public:

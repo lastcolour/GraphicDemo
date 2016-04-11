@@ -13,7 +13,7 @@ from logger import log
 _TMP_FILE = "data.temp"
 
 
-def copyFiles(filesMask, fromPath, toPath):
+def copyFiles(fileMasks, fromPath, toPath):
     log.debug("[Info] Source location: {0}".format(fromPath))
     log.debug("[Info] Target location: {0}".format(toPath))
     if not os.path.exists(toPath):
@@ -23,7 +23,11 @@ def copyFiles(filesMask, fromPath, toPath):
             log.debug("[Debug] Can't create target path for COPY: {0}".format(toPath))
             log.debug("[Debug] Problem: {0}".format(sys.exc_info()[1]))
             return
-    for item in glob.iglob(fromPath + "/" + filesMask):
+    for maskItem in fileMasks:
+      pathSplicer = "/"
+      if fromPath[-1] == "/" or fromPath[-1] == "\\":
+          pathSplicer = ""
+      for item in glob.iglob(fromPath + pathSplicer + maskItem):
         tBaseName = os.path.basename(item)
         log.debug("[Info] Copy file: {0}".format(os.path.basename(tBaseName)))
         try:

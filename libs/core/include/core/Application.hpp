@@ -3,10 +3,10 @@
 #ifndef __APPLICATION_HPP__
 #define __APPLICATION_HPP__
 
-#include <core\DEFS.hpp>
-#include <core\Surface.hpp>
-#include <core\GLManager.hpp>
-#include <core\CMDArguments.hpp>
+#include <core/DEFS.hpp>
+#include <core/Surface.hpp>
+#include <core/GLManager.hpp>
+#include <core/CMDArguments.hpp>
 
 #include <memory>
 
