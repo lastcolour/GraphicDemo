@@ -33,7 +33,7 @@
     },
 
     "common": {
-      "defs": [],
+      "defs": [{"CMAKE_CXX_STANDARD": "11"}],
       "env": []
     }
   },

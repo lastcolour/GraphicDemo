@@ -38,8 +38,9 @@
     },
 
     "common": {
-      "defs": [{"GD_DEMO_APP_INCLUDE_CORE_LIB":"ON",
-                "type":"BOOLEAN"}],
+      "defs": [{"GD_DEMO_APP_INCLUDE_CORE_LIB": "ON",
+                "type":"BOOLEAN"},
+               {"CMAKE_CXX_STANDARD": "11"}],
       "env": []
     }
   },

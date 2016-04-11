@@ -4,10 +4,12 @@
 
 #include <DemoApp.hpp>
 
+
 DemoApp::DemoApp(int argc, char* argv[]) : Application(argc, argv) {
 }
 
 DemoApp::~DemoApp() {
+
 }
 
 void DemoApp::onAppStartEvent() {
