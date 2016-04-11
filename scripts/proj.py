@@ -11,7 +11,7 @@ from utils import setUpEnv
 from utils import tryFormat
 from utils import copyFiles
 
-_DEF_WIN_GENERATOR = "Visual Studio 11"
+_DEF_WIN_GENERATOR = "Visual Studio 11 Win64"
 _DEF_LIN_GENERATOR = "Ecplise CDT4 - Makefile Unix"
 
 _CMAKE_LOG_FILE = "lastCmakeRun.log"
@@ -54,6 +54,7 @@ class DependError(RuntimeError):
 class Project:
 
     # TODO: Move model to other class
+    # TODO: Create instances of CMakeRunner, CompileRunner and AfterBuildRunner with corresponding functionality
     # TODO: Add build dict as member of Project instance
 
     _CONFIG_ROOT = ""

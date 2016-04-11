@@ -7,11 +7,13 @@
 
 class DemoApp : public Application {
 public:
+
     DemoApp(int argc, char* argv[]);
     virtual ~DemoApp();
     
-    void onInitializeEvent();
-    void onResizeEvent();
+    void onAppStartEvent();
+    void onGraphicsInitEvent();
+    void onResizeEvent(unsigned int width, unsigned int height);
     void onDrawEvent();
 };
 

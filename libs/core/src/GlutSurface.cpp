@@ -4,35 +4,139 @@
 #include <core\GlutSurface.hpp>
 
 #include <GL\freeglut.h>
+#include <assert.h>
 
-const unsigned int DEF_WIDTH = 600;
-const unsigned int DEF_HEIGHT = 400;
-const char* DEF_WIN_NAME = "Application";
+typedef unsigned int uint;
+
+class GlutDataHandler {
+public:
+    // This data handler consitent with glut surface
+    // TODO: Move to other file
+
+    GlutDataHandler() :
+        title("GlutSurfcace"),
+        posX(0), posY(0),
+        width(600), height(400),
+        bufferMode(GLUT_SINGLE),
+        colorMode(GLUT_RGB) {
+    }
+
+
+    void setTitle(const std::string& title) {
+        this->title = title;
+    }
+
+    const char* getTitle() const {
+        return title.c_str();
+    }
+
+    int getPosX() const {
+        return posX;
+    }
+
+    int getPosY() const {
+        return posY;
+    }
+   
+    int getWidth() const {
+        return width;
+    }
+
+    int getHeight() const {
+        return height;
+    }
+
+    int getDisplayFlags() const {
+        return colorMode | bufferMode;
+    }
+
+    void setGeometry(unsigned int posX, unsigned int posY, unsigned int width, unsigned int height) {
+        this->posX   = static_cast<int>(posX);
+        this->posY   = static_cast<int>(posY);
+        this->width  = static_cast<int>(width);
+        this->height = static_cast<int>(height);
+    }
+
+    void setBufferMode(SurfaceBufferMode mode) {
+        switch (mode)
+        {
+        case SurfaceBufferMode::SINGLE:
+            bufferMode = GLUT_SINGLE;
+            break;
+        case SurfaceBufferMode::DOUBLE:
+            bufferMode = GLUT_DOUBLE;
+            break;
+        default:
+            assert(false && "Unssuported buffer mode");
+            break;
+        }
+    }
+
+    void setColorMode(SurfaceColorMode mode) {
+        switch (mode)
+        {
+        case SurfaceColorMode::RGB:
+            colorMode = GLUT_RGB;
+            break;
+        case SurfaceColorMode::RGBA:
+            colorMode = GLUT_RGBA;
+            break;
+        default:
+            assert(false && "Unssuported color mode");
+            break;
+        }
+    }
+
+private:
+
+    std::string title;
+    int posX;
+    int posY;
+    int width;
+    int height;
+    int colorMode;
+    int bufferMode;
+
+};
+
+// Glut surface implementation
 
 GlutSurface::GlutSurface(Application* app) :
-    Surface(app) {
+    Surface(app), dataHandler(new GlutDataHandler()) {
 }
 
 GlutSurface::~GlutSurface() {
 }
 
-void GlutSurface::surfaceResizeFunc(int, int) {
-    getApp()->onResizeEvent();
-    glutSwapBuffers();
+void GlutSurface::setTitle(const std::string& title) {
+    dataHandler->setTitle(title);
+}
+
+void GlutSurface::setBufferMode(SurfaceBufferMode mode) {
+    dataHandler->setBufferMode(mode);
+}
+
+void GlutSurface::setColorMode(SurfaceColorMode mode) {
+    dataHandler->setColorMode(mode);
+}
+
+void GlutSurface::setGeometry(unsigned int posX, unsigned int posY, unsigned int width, unsigned int height) {
+    dataHandler->setGeometry(posX, posY, width, height);
+}
+
+void GlutSurface::surfaceResizeFunc(int width, int height) {
+    getApp()->onResizeEvent(width, height);
 }
 
 void GlutSurface::surfaceDisplayFunc() {
     getApp()->onDrawEvent();
-    glutSwapBuffers();
 }
 
 void GlutSurface::surfaceIdleFunc() {
-    //getApp()->onAnimateEvent();
-    //glutSwapBuffers();
+    getApp()->onAnimateEvent();
 }
 
 void GlutSurface::surfaceMouseFunc(int, int, int, int) {
-    // TODO: Replace glut mouse events to CoreLib mouse events
     getApp()->onMouseEvent();
 }
 
@@ -45,11 +149,12 @@ bool GlutSurface::initialize() {
     CMDArguments& args = getApp()->getCMDArgs();
     glutInit(&args.getArgc(), args.getArgv());
     // TODO: Recive all data from internal config struct
-    glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
-    glutInitContextVersion(3, 0);
-    glutInitContextFlags(GLUT_FORWARD_COMPATIBLE|GLUT_DEBUG);
-    glutInitWindowSize(DEF_WIDTH, DEF_HEIGHT);
-    glutCreateWindow(DEF_WIN_NAME);
+    glutInitDisplayMode(dataHandler->getDisplayFlags());
+    glutInitContextVersion(3, 0); // TODO: Move data to dataHandler
+    glutInitContextFlags(GLUT_FORWARD_COMPATIBLE|GLUT_DEBUG); // TODO: Move data to dataHandler
+    glutInitWindowPosition(dataHandler->getPosX(), dataHandler->getPosY());
+    glutInitWindowSize(dataHandler->getWidth(), dataHandler->getHeight());
+    glutCreateWindow(dataHandler->getTitle());
 
     glutReshapeFunc(surfaceResizeFunc);
     glutDisplayFunc(surfaceDisplayFunc);
@@ -57,6 +162,10 @@ bool GlutSurface::initialize() {
     glutMouseFunc(surfaceMouseFunc);
     glutKeyboardFunc(surfaceKeybordFunc);
     return true;
+}
+
+void GlutSurface::swapBuffers() {
+    glutSwapBuffers();
 }
 
 void GlutSurface::dispaly() {

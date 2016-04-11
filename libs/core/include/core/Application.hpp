@@ -19,15 +19,21 @@ public:
     Application(int argc, char* argv[]);
     virtual ~Application();
 
-    virtual void onInitializeEvent();
-    virtual void onResizeEvent();
+    virtual void onAppStartEvent();
+    virtual void onGraphicsInitEvent();
+    virtual void onResizeEvent(unsigned int width, unsigned int height);
     virtual void onDrawEvent();
     virtual void onAnimateEvent();
     virtual void onMouseEvent();
     virtual void onKeyboardEvent();
+    virtual void onAppFinishEvent();
 
     CMDArguments& getCMDArgs();
     int run();
+
+protected:
+
+    Surface* getSurface();
 
 private:
 
