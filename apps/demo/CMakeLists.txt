@@ -48,6 +48,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE ${OPEN_GL_LIB_PATH})
 
 # Other target setups
 if(MSVC)
+  message(STATUS "Add compile option -Wall")
   add_compile_options("-Wall")
 endif()
 message(STATUS "Target: ${TARGET_NAME}, compiled with flags: ${CMAKE_CXX_FLAGS}")

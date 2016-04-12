@@ -148,14 +148,19 @@ void GlutSurface::surfaceKeybordFunc(unsigned char, int, int) {
 bool GlutSurface::initialize() {
     CMDArguments& args = getApp()->getCMDArgs();
     glutInit(&args.getArgc(), args.getArgv());
-    // TODO: Recive all data from internal config struct
     glutInitDisplayMode(dataHandler->getDisplayFlags());
+    
+    // OpenGL Contex Setup
     glutInitContextVersion(3, 0); // TODO: Move data to dataHandler
-    glutInitContextFlags(GLUT_FORWARD_COMPATIBLE|GLUT_DEBUG); // TODO: Move data to dataHandler
+    glutInitContextProfile(GLUT_CORE_PROFILE);
+    glutInitContextFlags(GLUT_DEBUG); // TODO: Move data to dataHandler
+    
+    // Windows setup
     glutInitWindowPosition(dataHandler->getPosX(), dataHandler->getPosY());
     glutInitWindowSize(dataHandler->getWidth(), dataHandler->getHeight());
     glutCreateWindow(dataHandler->getTitle());
-
+    
+    // Callbacks setup
     glutReshapeFunc(surfaceResizeFunc);
     glutDisplayFunc(surfaceDisplayFunc);
     glutIdleFunc(surfaceIdleFunc);

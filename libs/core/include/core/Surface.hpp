@@ -3,6 +3,8 @@
 #ifndef __SURFACE_HPP__
 #define __SURFACE_HPP__
 
+#include <core\DEFS.hpp>
+
 #include <string>
 
 class Application;
@@ -13,12 +15,14 @@ enum class SurfaceBufferMode {
     DOUBLE
 };
 
+
 enum class SurfaceColorMode {
     RGB,
     RGBA
 };
 
-class Surface {
+
+class LIB_EXPORT_CONV Surface {
 public:
 
 	Surface(Application* app);
@@ -30,7 +34,7 @@ public:
     virtual void setColorMode(SurfaceColorMode mode) = 0;
 
     virtual bool initialize() = 0;
-	virtual void dispaly() = 0;
+    virtual void dispaly() = 0;
     virtual void swapBuffers() = 0;
 
 protected:
@@ -39,7 +43,7 @@ protected:
 
 private:
 
-	static Application *appListener;
+    static Application *appListener;
 };
 
 
