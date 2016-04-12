@@ -37,13 +37,13 @@
     "groups": [
       {
         "name": "Libs",
-        "files": ["glew32.*", "libGLEW*.*"],
+        "files": ["glew32.*", "libGLEW32.*"],
         "from": "{CMAKE_OUT_DIR}/lib/{BUILD_TYPE}",
         "to": "{OUT_DIR}/{BUILD_TYPE}"
       },
       {
         "name": "Bins",
-        "files": ["glew32.*", "libGLEW*.*"],
+        "files": ["glew32.*", "libGLEW32.*"],
         "from": "{CMAKE_OUT_DIR}/bin/{BUILD_TYPE}",
         "to": "{OUT_DIR}/{BUILD_TYPE}"
       }

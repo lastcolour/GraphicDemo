@@ -33,6 +33,8 @@ public:
 
 protected:
 
+    virtual void mainLoop();
+
     Surface* getSurface();
 
 private:

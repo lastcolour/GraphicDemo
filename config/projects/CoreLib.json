@@ -6,7 +6,7 @@
 
   "deps": [
     {
-      "project": "FreeGLUT.json",
+      "project": "GLFW.json",
       "link": "shared",
       "type": "Release",
       "install": {

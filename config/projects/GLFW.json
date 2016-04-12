@@ -1,0 +1,47 @@
+{
+  "name": "FreeGLUT",
+
+  "build_types": ["Debug", "Release"],
+  "bin_types": ["shared_lib", "static_lib"],
+
+  "cmake": {
+    "run_dir": "extern/libs/glfw-3.1.2",
+    "out_dir": "_build/{PLATFORM}/{BUILD_TYPE}/extern/glfw-3.1.2",
+    "debug": {
+      "defs": [
+        {"CMAKE_BUILD_TYPE": "Debug"}
+      ],
+      "env": []
+    },
+
+    "release": {
+      "defs": [
+        {"CMAKE_BUILD_TYPE": "Release"}
+      ],
+      "env": []
+    },
+
+    "common": {
+      "defs": [],
+      "env": []
+    }
+  },
+
+  "build": {
+  },
+
+  "cleanUp": {
+
+  },
+
+  "install": {
+    "groups": [
+      {
+        "name": "Libs",
+        "files": ["glfw3*.*", "libglfw3.*"],
+        "from": "{CMAKE_OUT_DIR}/src/{BUILD_TYPE}",
+        "to": "{OUT_DIR}/{BUILD_TYPE}"
+      }
+    ]
+  }
+}

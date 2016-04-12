@@ -1,14 +1,14 @@
 // author: Oleksii Zhogan
 
 #include <core/Application.hpp>
-#include <core/GlutSurface.hpp>
+#include <core/GLFWSurface.hpp>
 #include <core/GLEWManager.hpp>
 
 #include <GL/glew.h>
 
 Application::Application(int argc, char* argv[]) :
     cmdArgs(argc, argv),
-    surface(new GlutSurface(this)),
+    surface(new GLFWSurface(this)),
     gl_Manager(new GLEWManager()) {
 }
 
@@ -32,7 +32,10 @@ int Application::run() {
         onAppStartEvent();
         if(createSurface() && createOpenGL()) {
             onGraphicsInitEvent();
-            surface->dispaly(); 
+            surface->dispaly();
+
+            // start main loop
+            mainLoop();
         }
     } catch( ... ) {
         return -1;
@@ -44,6 +47,9 @@ int Application::run() {
 
 Surface* Application::getSurface() {
     return surface.get();
+}
+
+void Application::mainLoop() {
 }
 
 /* Default empty implementation */
