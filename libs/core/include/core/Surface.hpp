@@ -4,22 +4,11 @@
 #define __SURFACE_HPP__
 
 #include <core\DEFS.hpp>
+#include <core\SurfaceDefs.hpp>
 
 #include <string>
 
 class Application;
-
-
-enum class SurfaceBufferMode {
-    SINGLE,
-    DOUBLE
-};
-
-
-enum class SurfaceColorMode {
-    RGB,
-    RGBA
-};
 
 
 class LIB_EXPORT_CONV Surface {
@@ -32,9 +21,10 @@ public:
     virtual void setGeometry(unsigned int posX, unsigned int posY, unsigned int width, unsigned int height) = 0;
     virtual void setBufferMode(SurfaceBufferMode mode) = 0;
     virtual void setColorMode(SurfaceColorMode mode) = 0;
+    virtual void setOpenGLVersion(unsigned int major, unsigned int minor) = 0;
 
-    virtual bool initialize() = 0;
-    virtual void dispaly() = 0;
+    virtual void show() = 0;
+    virtual void close() = 0;
     virtual void swapBuffers() = 0;
 
 protected:

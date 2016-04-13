@@ -1,78 +1,65 @@
 // author: Oleksii Zhogan
 
 #include <core/Application.hpp>
-#include <core/GLFWSurface.hpp>
 #include <core/GLEWManager.hpp>
+#include <core/GLFWSurface.hpp>
 
-#include <GL/glew.h>
+#include <exception>
+#include <iostream>
+#include <string>
 
-Application::Application(int argc, char* argv[]) :
-    cmdArgs(argc, argv),
-    surface(new GLFWSurface(this)),
-    gl_Manager(new GLEWManager()) {
-}
+const int APP_FAIL = -1;
+const int APP_OK = 0;
 
-bool Application::createOpenGL() {
-    return gl_Manager->initialize();
-}
-
-bool Application::createSurface() {
-    return surface->initialize();
+Application::Application(int argc, char* argv[]) {
+    if(!initializeApp()) {
+        std::cerr << "Application terminated." << std::endl;
+        std::exit(APP_FAIL);
+    }
 }
 
 Application::~Application() {
+    if(!deinitializeApp()) {
+        std::cerr << "Application terminated." << std::endl;
+        std::exit(APP_FAIL); 
+    }
 }
 
-CMDArguments& Application::getCMDArgs() {
-    return cmdArgs;
+bool Application::initializeApp() {
+    if(!GLEWManager::initialize()) {
+        std::cerr << "Can't initialize GLEW." << std::endl;
+        return false;
+    }
+    if(!GLFWSurface::initialize()) {
+        std::cerr << "Can't initialize surface manager." << std::endl;
+        return false;
+    }
+    return true;
+}
+
+bool Application::deinitializeApp() {
+    if(!GLEWManager::initialize()) {
+        std::cerr << "Can't initialize GLEW." << std::endl;
+        return false;
+    }
+    if(!GLFWSurface::initialize()) {
+        std::cerr << "Can't initialize surface manager." << std::endl;
+        return false;
+    }
+    return true;
 }
 
 int Application::run() {
     try {
-        onAppStartEvent();
-        if(createSurface() && createOpenGL()) {
-            onGraphicsInitEvent();
-            surface->dispaly();
-
-            // start main loop
-            mainLoop();
-        }
+        mainLoop();
+    } catch(std::exception& e) {
+        std::cerr << "Problem: " << e.what() << std::endl;
+        return APP_FAIL;
     } catch( ... ) {
-        return -1;
+        return APP_FAIL;
     }
-    onAppFinishEvent();
-    return 0;
-}
-
-
-Surface* Application::getSurface() {
-    return surface.get();
+    return APP_OK;
 }
 
 void Application::mainLoop() {
-}
-
-/* Default empty implementation */
-void Application::onAppStartEvent() {
-}
-
-void Application::onAppFinishEvent() {
-}
-
-void Application::onGraphicsInitEvent() {
-}
-
-void Application::onResizeEvent(unsigned int width, unsigned int height) {
-}
-
-void Application::onDrawEvent() {
-}
-
-void Application::onAnimateEvent() {
-}
-
-void Application::onMouseEvent() {
-}
-
-void Application::onKeyboardEvent() {
 }

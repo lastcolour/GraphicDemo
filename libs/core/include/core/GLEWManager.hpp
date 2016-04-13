@@ -1,15 +1,17 @@
 #ifndef __GLEW_MANAGER_HPP__
 #define __GLEW_MANAGER_HPP__
 
-#include <core/GLManager.hpp>
-
-class GLEWManager : public GLManager {
+class GLEWManager {
 public:
 
-    GLEWManager();
-    virtual ~GLEWManager();
+    static bool initialize();
+    static bool deinitialize();
 
-    bool initialize();
+private:
+
+    GLEWManager();
+    GLEWManager(GLEWManager&);
+    GLEWManager& operator=(const GLEWManager&);
 };
 
 #endif /* __GLEW_MANAGER_HPP__ */
