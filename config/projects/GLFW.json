@@ -1,5 +1,5 @@
 {
-  "name": "FreeGLUT",
+  "name": "GLFW",
 
   "build_types": ["Debug", "Release"],
   "bin_types": ["shared_lib", "static_lib"],
@@ -38,7 +38,7 @@
     "groups": [
       {
         "name": "Libs",
-        "files": ["glfw3*.*", "libglfw3.*"],
+        "files": ["glfw3*.exp", "libglfw.so*", "glfw3*.lib", "glfw3*.dll"],
         "from": "{CMAKE_OUT_DIR}/src/{BUILD_TYPE}",
         "to": "{OUT_DIR}/{BUILD_TYPE}"
       }

@@ -38,6 +38,8 @@ private:
     static bool initialize();
     static bool deinitialize();
 
+private:
+
     static bool GLFW_LIB_INITED;
 
 };

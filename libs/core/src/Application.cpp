@@ -1,8 +1,8 @@
 // author: Oleksii Zhogan
 
 #include <core/Application.hpp>
-#include <core/GLEWManager.hpp>
 #include <core/GLFWSurface.hpp>
+#include <core/GLEWManager.hpp>
 
 #include <exception>
 #include <iostream>

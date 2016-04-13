@@ -16,7 +16,7 @@
       "type": "Release",
       "install": {
         "path": "{OUT_DIR}/{PLATFORM}/{BUILD_TYPE}"
-       }
+      }
     }
   ],
 

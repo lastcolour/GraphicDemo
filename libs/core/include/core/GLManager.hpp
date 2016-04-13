@@ -1,7 +1,7 @@
 #ifndef __GL_MANAGER_HPP__
 #define __GL_MANAGER_HPP__
 
-#include <core\DEFS.hpp>
+#include <core/DEFS.hpp>
 
 class LIB_EXPORT_CONV GLManager {
 public:

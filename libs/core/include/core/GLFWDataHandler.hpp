@@ -1,7 +1,7 @@
 #ifndef __GLFW_DATA_HANDLER_HPP__
 #define __GLFW_DATA_HANDLER_HPP__
 
-#include <core\SurfaceDefs.hpp>
+#include <core/SurfaceDefs.hpp>
 
 #include <string>
 

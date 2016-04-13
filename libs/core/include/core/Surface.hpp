@@ -3,8 +3,8 @@
 #ifndef __SURFACE_HPP__
 #define __SURFACE_HPP__
 
-#include <core\DEFS.hpp>
-#include <core\SurfaceDefs.hpp>
+#include <core/DEFS.hpp>
+#include <core/SurfaceDefs.hpp>
 
 #include <string>
 

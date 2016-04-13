@@ -5,14 +5,20 @@
   "bin_types": ["shared_lib", "static_lib"],
 
   "deps": [
-    {
-      "project": "GLFW.json",
+     {
+       "project": "GLFW.json",
+       "link": "shared",
+       "type": "Release",
+       "install": {
+         "path": "{OUT_DIR}/{PLATFORM}/{BUILD_TYPE}"
+       }},
+     {
+      "project": "GLEW.json",
       "link": "shared",
       "type": "Release",
       "install": {
         "path": "{OUT_DIR}/{PLATFORM}/{BUILD_TYPE}"
-      }
-    }
+      }}
   ],
 
   "cmake": {
