@@ -6,16 +6,16 @@ import json
 
 from logger import log
 
-from utils import runCMD
-from utils import setUpEnv
 from utils import tryFormat
 from utils import copyFiles
+
+from cmake import CmakeRunner
+from compile import CompileRunner
 
 _DEF_WIN_GENERATOR = "Visual Studio 11 Win64"
 _DEF_LIN_GENERATOR = "Eclipse CDT4 - Unix Makefiles"
 
-_CMAKE_LOG_FILE = "lastCmakeRun.log"
-_COMPILE_LOG_FILE = "lastCompileRun.log"
+
 
 def _getPlatformInfo():
   import platform
@@ -37,13 +37,6 @@ del _getPlatformInfo
 _OUT_DIR_NAME = "_out/" + Platform["name"]
 
 
-def formatCompileCmd(config):
-    if Platform["name"] == "Windows":
-        tCompCmd = "devenv.com  ALL_BUILD.vcxproj /Build {0}".format(config["build_type"])
-    else:
-        tCompCmd = "make"
-    return tCompCmd
-
 class DependError(RuntimeError):
     def __init__(self, depErr):
         self._depErr = depErr
@@ -54,7 +47,7 @@ class DependError(RuntimeError):
 class Project:
 
     # TODO: Move model to other class
-    # TODO: Create instances of CMakeRunner, CompileRunner and AfterBuildRunner with corresponding functionality
+    # TODO: Create instances AfterBuildRunner with corresponding functionality
     # TODO: Add build dict as member of Project instance
 
     _CONFIG_ROOT = ""
@@ -141,9 +134,6 @@ class Project:
             depInfo["project"]._setNeedInstall(True)
         self._depProjects[depInfo["project"].getName()] = depInfo
 
-    def _updateBuildInfo(self):
-        pass
-
     def _setNeedInstall(self, flag):
         self._installFlag = flag
 
@@ -151,11 +141,7 @@ class Project:
         self._linkType = linkType
 
     def _doBuild(self, buildType):
-        if not self._genCmakeProject(buildType):
-            log.error("[Error][{0}] Can't generate project by cmake. See log for more info".format(self.getName()))
-            return False
-        log.info("[Info][{0}] Cmake generation -- OK".format(self.getName()))
-        if not self._createBins(buildType):
+        if not self._compileProject(buildType):
             log.info("[Error][{0}] Can't compile project. See log for more info".format(self.getName()))
             return False
         log.info("[Info][{0}] Compiled -- OK".format(self.getName()))
@@ -179,47 +165,6 @@ class Project:
     def _needCleanAfterBuild(self, buildType):
         return False
 
-    def _runCmake(self, cmakeConfig):
-        tCmakeCmd = "cmake -H." + cmakeConfig["defs"] + " -B{0}".format(cmakeConfig["out_dir"])\
-                    + " -G\"{0}\"".format(cmakeConfig["generator"])
-        tCmakeLogFile = cmakeConfig["out_dir"] + "/" + _CMAKE_LOG_FILE
-        if not os.path.exists(cmakeConfig["out_dir"]):
-            try:
-                os.makedirs(cmakeConfig["out_dir"])
-            except:
-                log.error("[Error] Can't create cmake out dir: {0}".format(cmakeConfig["out_dir"]))
-                log.error("[Error] Problem: {0}".format(sys.exc_info()[1]))
-                return False
-        try:
-            setUpEnv(cmakeConfig["envs"])
-            with open(tCmakeLogFile, "w+") as tFile:
-               cmakeOut = runCMD(tCmakeCmd, workDir=cmakeConfig["run_dir"], pipe=tFile, isShell=Platform["shell"])
-        except:
-            log.error("[Error][{0}] Can't run cmake: {1} ".format(self.getName(), sys.exc_info()[1]))
-            return False
-        else:
-            log.info("[Info][{0}] Cmake log saved to: {1}".format(self.getName(), tCmakeLogFile))
-            if cmakeOut["ret_code"] != 0:
-                return False
-            else:
-                return True
-
-    def _runCompiler(self, compileConfig):
-        tCompCmd = formatCompileCmd(compileConfig)
-        tCompileLog = compileConfig["run_dir"] + "/" + _COMPILE_LOG_FILE
-        try:
-            with open(tCompileLog, "w+") as tFile:
-                compileOut = runCMD(tCompCmd, workDir=compileConfig["run_dir"], pipe=tFile, isShell=Platform["shell"])
-        except:
-            log.error("[Error][{0}] Can't compile project: {0}".format(self.getName(), sys.exc_info()[1]))
-            return False
-        else:
-            log.info("[Info][{0}] Compile log saved to: {1}".format(self.getName(), tCompileLog))
-            if compileOut["ret_code"] != 0:
-                return False
-            else:
-                return True
-
     def _doInstall(self, buildType):
         if not "install" in self._model or "groups" not in self._model["install"]:
             log.info("[Info][{0}] Can't find install config. Skip installing".format(self.getName()))
@@ -228,7 +173,7 @@ class Project:
         tBuildValues =  {"PLATFORM"     : Platform["name"],
                          "BUILD_TYPE"   : buildType if Platform["short_name"] is "win" else "",
                          "OUT_DIR"      : self._getInstallRoot(),
-                         "CMAKE_OUT_DIR": Project._PROJECTS_ROOT + "/" + self._cmakeOutDir}
+                         "CMAKE_OUT_DIR": self._cmakeOutDir}
         for inItem in inGroups:
             log.info("[Info][{0}] Install files: {1}".format(self.getName(), inItem["name"]))
             try:
@@ -243,31 +188,6 @@ class Project:
     def _doCleanAfterBuild(self, buildType):
         return False
 
-    def _getCmakeRunDir(self):
-        return self._model["cmake"]["run_dir"]
-
-    def _getCmakeDefs(self, buildType):
-        tBuildType = buildType.lower()
-        defsItems = []
-        tCmakeNode = self._model["cmake"]
-        if "defs" in tCmakeNode["common"] and len(tCmakeNode["common"]["defs"]) > 0:
-            defsItems.extend(tCmakeNode["common"]["defs"])
-        if "defs" in tCmakeNode[tBuildType] and len(tCmakeNode[tBuildType]["defs"]) > 0:
-            defsItems.extend(tCmakeNode[tBuildType]["defs"])
-        if len(defsItems) == 0:
-            return ""
-        resultDefsStr = ""
-        for defGroup in defsItems:
-            tTypeStr = ""
-            if "type" in defGroup:
-                tTypeStr = ":{0}".format(defGroup.pop("type"))
-            for elem in defGroup:
-                resultDefsStr += " -D{0}{1}={2}".format(elem, tTypeStr, defGroup[elem])
-        return resultDefsStr
-
-    def _getCmakeEnvs(self, buildType):
-        return None
-
     def _getInstallRoot(self):
         return Project._PROJECTS_ROOT + "/" + "_out"
 
@@ -279,30 +199,19 @@ class Project:
             tGenStr = _DEF_LIN_GENERATOR
         return tGenStr
 
-    def _getCmakeOutDir(self, buildType):
-        tBuildValues =  {"PLATFORM"  : Platform["name"],
-                         "BUILD_TYPE": buildType}
-        self._cmakeOutDir = tryFormat(self._model["cmake"]["out_dir"], tBuildValues)
-        return  self._cmakeOutDir
-
-    def _getCompileRunDir(self):
-        return self._cmakeOutDir
-
-    def _genCmakeProject(self, buildType):
-        cmakeConfig = dict()
-        cmakeConfig["build_type"] = buildType
-        cmakeConfig["run_dir"] = Project._PROJECTS_ROOT + "/" + self._getCmakeRunDir()
-        cmakeConfig["out_dir"] = Project._PROJECTS_ROOT + "/" + self._getCmakeOutDir(buildType)
-        cmakeConfig["generator"] = self._getCmakeGenerator()
-        cmakeConfig["defs"] = self._getCmakeDefs(buildType)
-        cmakeConfig["envs"] = self._getCmakeEnvs(buildType)
-        return self._runCmake(cmakeConfig)
-
-    def _createBins(self, buildType):
-        compileConfig = dict()
-        compileConfig["build_type"] = buildType
-        compileConfig["run_dir"] = self._getCompileRunDir()
-        return self._runCompiler(compileConfig)
+    def _compileProject(self, buildType):
+        tCmakeRunner = CmakeRunner(self._model["cmake"])
+        tCmakeRunner.setGenerator(self._getCmakeGenerator())
+        tCmakeRunner.setRootPath(Project._PROJECTS_ROOT)
+        tCmakeInfo = tCmakeRunner.run(buildType)
+        if tCmakeInfo is None:
+            log.error("[Error][{0}] Can't generate project files by cmake".format(self.getName()))
+            return False
+        else:
+            log.info("[Error][{0}] Cmake generation -- OK".format(self.getName()))
+            self._cmakeOutDir = tCmakeInfo["CMAKE_OUT_DIR"] # TODO Remove this
+        tCompileRunner = CompileRunner(tCmakeInfo)
+        return tCompileRunner.run()
 
     def _findProjectFile(self, projectFile):
         tPath = Project._CONFIG_ROOT + "/" + projectFile
