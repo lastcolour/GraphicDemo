@@ -1,21 +1,24 @@
 // author: Oleksii Zhogan
 
-#include <GL/glew.h>
+#include <openGL/openGL.hpp>
+#include <core/Surface.hpp>
 
 #include <DemoApp.hpp>
 
-
 DemoApp::DemoApp(int argc, char* argv[]) : Application(argc, argv) {
+    Surface* surface = getSurface();
+    surface->setTitle("DemoApp");
+    surface->setGeometry(600, 400);
+    surface->setResizeable(false);
+    surface->setOpenGL(3, 3);
+    surface->setCoreProfile(true);
 }
 
 DemoApp::~DemoApp() {
 
 }
 
-void DemoApp::onAppStartEvent() {
-}
-
-void DemoApp::onGraphicsInitEvent() {
+void DemoApp::onInitEvent() {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 }
 

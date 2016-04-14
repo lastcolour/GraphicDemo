@@ -10,7 +10,6 @@
 
 class Application;
 
-
 class LIB_EXPORT_CONV Surface {
 public:
 
@@ -18,14 +17,15 @@ public:
 	virtual ~Surface();
 
     virtual void setTitle(const std::string& title) = 0;
-    virtual void setGeometry(unsigned int posX, unsigned int posY, unsigned int width, unsigned int height) = 0;
-    virtual void setBufferMode(SurfaceBufferMode mode) = 0;
-    virtual void setColorMode(SurfaceColorMode mode) = 0;
-    virtual void setOpenGLVersion(unsigned int major, unsigned int minor) = 0;
+    virtual void setGeometry(unsigned int width, unsigned int height) = 0;
+    virtual void setResizeable(bool flag) = 0;
+    virtual void setOpenGL(unsigned int major, unsigned int minor) = 0;
+    virtual void setCoreProfile(bool flag) = 0;
 
-    virtual void show() = 0;
-    virtual void close() = 0;
-    virtual void swapBuffers() = 0;
+    virtual void sendInputEvents() = 0;
+
+    virtual bool show() = 0;
+    virtual bool isOpen() = 0;
 
 protected:
 

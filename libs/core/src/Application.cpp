@@ -2,7 +2,6 @@
 
 #include <core/Application.hpp>
 #include <core/GLFWSurface.hpp>
-#include <core/GLEWManager.hpp>
 
 #include <exception>
 #include <iostream>
@@ -11,49 +10,45 @@
 const int APP_FAIL = -1;
 const int APP_OK = 0;
 
-Application::Application(int argc, char* argv[]) {
-    if(!initializeApp()) {
-        std::cerr << "Application terminated." << std::endl;
-        std::exit(APP_FAIL);
-    }
+Application::Application(int argc, char* argv[]) :
+    surfacePtr(new GLFWSurface(this)) {
 }
 
 Application::~Application() {
-    if(!deinitializeApp()) {
-        std::cerr << "Application terminated." << std::endl;
-        std::exit(APP_FAIL); 
-    }
 }
 
-bool Application::initializeApp() {
-    if(!GLEWManager::initialize()) {
-        std::cerr << "Can't initialize GLEW." << std::endl;
-        return false;
-    }
-    if(!GLFWSurface::initialize()) {
-        std::cerr << "Can't initialize surface manager." << std::endl;
-        return false;
-    }
-    return true;
+Surface* Application::getSurface() {
+    return surfacePtr.get();
 }
 
-bool Application::deinitializeApp() {
-    if(!GLEWManager::initialize()) {
-        std::cerr << "Can't initialize GLEW." << std::endl;
-        return false;
+bool Application::appInit() {
+    if(surfacePtr->show()) {
+        onInitEvent();
+        return true;
     }
-    if(!GLFWSurface::initialize()) {
-        std::cerr << "Can't initialize surface manager." << std::endl;
-        return false;
-    }
-    return true;
+    return false;
+}
+
+void Application::onInitEvent() {
+}
+
+void Application::onDeinitEvent() {
+}
+
+void Application::onDrawEvent() {
+}
+
+void Application::onResizeEvent(unsigned int width, unsigned int height) {
 }
 
 int Application::run() {
+    if(!appInit()) {
+        return APP_FAIL;
+    }
     try {
         mainLoop();
     } catch(std::exception& e) {
-        std::cerr << "Problem: " << e.what() << std::endl;
+        std::cerr << "[App] Unexpected problem when run app: " << e.what() << std::endl;
         return APP_FAIL;
     } catch( ... ) {
         return APP_FAIL;
@@ -62,4 +57,8 @@ int Application::run() {
 }
 
 void Application::mainLoop() {
+    while(surfacePtr->isOpen()) {
+        surfacePtr->sendInputEvents();
+        onDrawEvent();
+    }
 }

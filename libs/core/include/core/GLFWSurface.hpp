@@ -4,9 +4,8 @@
 #define __GLFW_SURFACE_HPP__
 
 #include <core/Surface.hpp>
-#include <core/GLFWDataHandler.hpp>
 
-#include <memory>
+struct GLFWwindow;
 
 class GLFWSurface : public Surface {
 public:
@@ -16,31 +15,36 @@ public:
 	GLFWSurface(Application* app);
 	virtual ~GLFWSurface();
 
-    
-	void show();
-    void close();
-    void swapBuffers();
-
-    void setBufferMode(SurfaceBufferMode mode);
-    void setColorMode(SurfaceColorMode mode);
-    void setOpenGLVersion(unsigned int major, unsigned int minor);
-
     void setTitle(const std::string& title);
-    void setGeometry(unsigned int posX, unsigned int posY, unsigned int width, unsigned int height);
+    void setGeometry(unsigned int width, unsigned int height);
+    void setResizeable(bool flag);
+    void setOpenGL(unsigned int major, unsigned int minor);
+    void setCoreProfile(bool flag);
+
+    void sendInputEvents();
+
+    bool show();
+    bool isOpen();
 
 private:
 
-    std::unique_ptr<GLFWDataHandler> dataHandler;
-
-private:
-
-
-    static bool initialize();
-    static bool deinitialize();
+    void postGLFWInitalize();
 
 private:
 
     static bool GLFW_LIB_INITED;
+
+private:
+
+    std::string title;
+    unsigned int width;
+    unsigned int height;
+    int openGLMajor;
+    int openGLMinor;
+    bool resizeable;
+    bool corePorfile;
+
+    GLFWwindow* windowHandler;
 
 };
 

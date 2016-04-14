@@ -4,6 +4,11 @@
 #define __APPLICATION_HPP__
 
 #include <core/DEFS.hpp>
+#include <core/Surface.hpp>
+
+#include <memory>
+
+template class LIB_EXPORT_CONV std::unique_ptr<Surface>;
 
 class LIB_EXPORT_CONV Application {
 public:
@@ -13,14 +18,26 @@ public:
 
     int run();
 
+    virtual void onResizeEvent(unsigned int width, unsigned int height);
+    virtual void onDrawEvent();
+
 protected:
 
+    Surface* getSurface();
+
+    virtual void onInitEvent();
+    virtual void onDeinitEvent();
+
+private:
+
+    bool appDeinit();
+    bool appInit();
+    
     void mainLoop();
 
 private:
 
-    bool initializeApp();
-    bool deinitializeApp();
+    std::unique_ptr<Surface> surfacePtr;
 };
 
 #endif /* __APPLICATION_HPP__*/

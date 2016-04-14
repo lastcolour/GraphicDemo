@@ -11,8 +11,7 @@ public:
     DemoApp(int argc, char* argv[]);
     virtual ~DemoApp();
     
-    void onAppStartEvent();
-    void onGraphicsInitEvent();
+    void onInitEvent();
     void onResizeEvent(unsigned int width, unsigned int height);
     void onDrawEvent();
 };
