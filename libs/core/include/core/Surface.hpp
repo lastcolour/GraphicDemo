@@ -4,7 +4,6 @@
 #define __SURFACE_HPP__
 
 #include <core/DEFS.hpp>
-#include <core/SurfaceDefs.hpp>
 
 #include <string>
 
@@ -26,6 +25,7 @@ public:
 
     virtual bool show() = 0;
     virtual bool isOpen() = 0;
+    virtual void swapBuffers() = 0;
 
 protected:
 

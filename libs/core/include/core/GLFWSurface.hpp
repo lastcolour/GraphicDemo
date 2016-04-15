@@ -10,8 +10,6 @@ struct GLFWwindow;
 class GLFWSurface : public Surface {
 public:
 
-    friend class Application;
-
 	GLFWSurface(Application* app);
 	virtual ~GLFWSurface();
 
@@ -25,10 +23,7 @@ public:
 
     bool show();
     bool isOpen();
-
-private:
-
-    void postGLFWInitalize();
+    void swapBuffers();
 
 private:
 
@@ -46,6 +41,9 @@ private:
 
     GLFWwindow* windowHandler;
 
+private:
+
+    friend class Application;
 };
 
 #endif /* __GLFW_SURFACE_HPP__ */

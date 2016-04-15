@@ -18,15 +18,14 @@ public:
 
     int run();
 
-    virtual void onResizeEvent(unsigned int width, unsigned int height);
-    virtual void onDrawEvent();
-
 protected:
-
-    Surface* getSurface();
 
     virtual void onInitEvent();
     virtual void onDeinitEvent();
+    virtual void onResizeEvent(unsigned int width, unsigned int height);
+    virtual void onDrawEvent();
+
+    Surface* getSurface();
 
 private:
 
@@ -38,6 +37,10 @@ private:
 private:
 
     std::unique_ptr<Surface> surfacePtr;
+
+private:
+
+    friend class GLFWSurface;
 };
 
 #endif /* __APPLICATION_HPP__*/

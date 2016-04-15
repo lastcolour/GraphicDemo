@@ -10,9 +10,10 @@ public:
 
     DemoApp(int argc, char* argv[]);
     virtual ~DemoApp();
-    
+
+protected:
+
     void onInitEvent();
-    void onResizeEvent(unsigned int width, unsigned int height);
     void onDrawEvent();
 };
 
