@@ -12,15 +12,20 @@ include(${GD_CONFIG_DIR}/opengl.cmake)
 
 set(TARGET_NAME "demo")
 
+set(SHADER_DIR_NAME "shaders")
+set(SHADER_DIR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${SHADER_DIR_NAME}")
+
 file(GLOB HEADERS "src/*.hpp") # TODO: Replace glob to file enumeration
 file(GLOB SRC     "src/*.cpp")
+
+file(GLOB SHADERS "${SHADER_DIR}/*.glsl")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/
                     ${GD_LIBS_ROOT_DIR}/core/include
                     ${GD_GLEW_INCLUDE_DIR}
                     ${OPEN_GL_INCLUDE_DIR})
 
-add_executable(${TARGET_NAME} ${SRC} ${HEADERS})
+add_executable(${TARGET_NAME} ${SRC} ${HEADERS} ${SHADERS})
 set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD 11)
 
 # CoreLib link
@@ -45,6 +50,14 @@ endif()
 
 target_link_libraries(${TARGET_NAME} PRIVATE ${CORE_LIB_PATH})
 target_link_libraries(${TARGET_NAME} PRIVATE ${OPEN_GL_LIB_PATH})
+
+message(STATUS "Shader dir: ${CMAKE_SOURCE_DIR}/${SHADER_DIR}")
+
+# Copy shaders
+add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${SHADER_DIR_PATH}
+        $<TARGET_FILE_DIR:${TARGET_NAME}>/${TARGE_NAME}/${SHADER_DIR_NAME})
 
 # Other target setups
 if(MSVC)

@@ -40,7 +40,7 @@
     "common": {
       "defs": [{"GD_DEMO_APP_INCLUDE_CORE_LIB": "ON",
                 "type":"BOOLEAN"},
-               {"CMAKE_CXX_STANDARD": "11"}],
+               {"CMAKE_CXX_COMPILER_ARG1": "-std=c++11"}],
       "env": []
     }
   },
