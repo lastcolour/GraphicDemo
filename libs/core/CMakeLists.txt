@@ -30,7 +30,8 @@ include_directories(${GD_GLFW_INCLUDE_DIR}
                     ${GD_GLEW_INCLUDE_DIR}
                     ${CMAKE_CURRENT_SOURCE_DIR}/include/)
 
-file(GLOB HEADERS "include/core/*.hpp" )
+file(GLOB HEADERS "include/core/*.hpp"
+                  "include/openGL/*.hpp")
 file(GLOB SRC     "src/*.cpp" )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")

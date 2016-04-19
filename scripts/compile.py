@@ -28,13 +28,17 @@ class CompileRunner:
         else:
             log.info("[Info] Compile log saved to: {0}".format(tCompileLog))
             if compileOut["ret_code"] != 0:
+                log.error("[Error] {0} Compiler log {1}".format("=" * 20, "=" * 20))
                 self._printNiceFailLog(compileOut["out"])
+                log.error("[Error] {0}".format("-" * 51))
                 return False
             else:
                 return True
 
-    def _printNiceFailLog(self, logData):
-        pass
+    def _printNiceFailLog(self, processOutStr):
+        tLineDecoration = "|"
+        for line in processOutStr.split("\n"):
+           log.warning("{0} {1}".format(tLineDecoration, line))
 
     def _formatCompileCMD(self):
         if self._config["COMPILER"] is "MSVC":

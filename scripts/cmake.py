@@ -45,13 +45,17 @@ class CmakeRunner:
             else:
                 log.info("[Info] Cmake log saved to: {0}".format(self._getLogFile()))
                 if tProcessOut["ret_code"] != 0:
+                    log.error("[Error] {0} Cmake log {1}".format("=" * 18, "=" * 19))
                     self._printNiceFailLog(tProcessOut["out"])
+                    log.error("[Error] {0}".format("-" * 51))
                     return None
                 else:
                     return self._buildDict
 
-    def _printNiceFailLog(self, processOut):
-        pass
+    def _printNiceFailLog(self, processOutStr):
+        tLineDecoration = "|"
+        for line in processOutStr.split("\n"):
+           log.warning("{0} {1}".format(tLineDecoration, line))
 
     def _getRunDir(self):
         return self._rootPath + "/" + self._config["run_dir"]
