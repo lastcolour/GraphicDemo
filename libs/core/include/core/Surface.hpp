@@ -5,8 +5,6 @@
 
 #include <core/DEFS.hpp>
 
-#include <string>
-
 class Application;
 
 class LIB_EXPORT_CONV Surface {
@@ -15,7 +13,7 @@ public:
 	Surface(Application* app);
 	virtual ~Surface();
 
-    virtual void setTitle(const std::string& title) = 0;
+    virtual void setTitle(const char* title) = 0;
     virtual void setGeometry(unsigned int width, unsigned int height) = 0;
     virtual void setResizeable(bool flag) = 0;
     virtual void setOpenGL(unsigned int major, unsigned int minor) = 0;
@@ -25,6 +23,7 @@ public:
 
     virtual bool show() = 0;
     virtual bool isOpen() = 0;
+    virtual void close() = 0;
     virtual void swapBuffers() = 0;
 
 protected:

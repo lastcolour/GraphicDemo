@@ -1,9 +1,10 @@
-#include <core/Application.hpp>
 #include <openGL/ShaderProgram.hpp>
+#include <core/Application.hpp>
 
 #include <assert.h>
 #include <fstream>
 #include <iostream>
+#include <string>
 
 std::string getInfoLog(GLuint instanceID, bool isProgram=false) {
     GLint tLogSize = 0;
@@ -63,27 +64,19 @@ GLuint loadShader(const std::string& shaderPath, GLenum shaderType) {
     return shaderID;
 }
 
-std::unique_ptr<ShaderProgram> ShaderProgram::createProgram(const std::string& vertShader, const std::string& fragShader) {
-    ResourceManager* resourceManager = Application::getInstance()->getResourceManager();
-    std::unique_ptr<ShaderProgram> programPtr(new ShaderProgram(resourceManager->getShaderPath(vertShader), 
-        resourceManager->getShaderPath(fragShader)));
-    if(!programPtr->isComplete()) {
-        return std::unique_ptr<ShaderProgram>();
-    }
-    return programPtr;
-}
-
-ShaderProgram::ShaderProgram(const std::string& vertShaderPath, const std::string& fragShaderPath) :
-        programID(0) {
+ShaderProgram* ShaderProgram::createProgram(const char* vertShader, const char* fragShader) {
+    std::string shadersDir = Application::getInstance()->getResourceManager()->getShadersDir();
+    std::string vertShaderPath = shadersDir + "/" + vertShader;
+    std::string fragShaderPath = shadersDir + "/" + fragShader;
     GLuint vertID = loadShader(vertShaderPath, GL_VERTEX_SHADER);
     GLuint fragID = loadShader(fragShaderPath, GL_FRAGMENT_SHADER);
     if(!vertID || !fragID) {
         std::cerr << "[ShaderProgram] Program creation fail" << std::endl;
         glDeleteShader(fragID);
         glDeleteShader(vertID);
-        return;
+        return nullptr;
     }
-    programID = glCreateProgram();
+    GLuint programID = glCreateProgram();
     glAttachShader(programID, vertID);
     glAttachShader(programID, fragID);
     glLinkProgram(programID);
@@ -99,22 +92,35 @@ ShaderProgram::ShaderProgram(const std::string& vertShaderPath, const std::strin
     }
     glDeleteShader(vertID);
     glDeleteShader(fragID);
+    if(programID != 0) {
+        return new ShaderProgram(programID);
+    }
+    return nullptr;
+}
+
+ShaderProgram::ShaderProgram(GLuint progID) :
+    programID(progID) {
+    assert(progID != 0 && "[ShaderProgram] Creating invalid program");
 }
 
 ShaderProgram::~ShaderProgram() {
-    if(programID) {
-        glDeleteProgram(0);
+    GLint tProgram = 0;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &tProgram);
+    if(tProgram == programID) {
+        glUseProgram(0);
     }
+    glDeleteProgram(programID);
 }
 
 void ShaderProgram::bind() {
+#ifdef GD_CORE_LIB_DEBUG
+    GLint tProgram = 0;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &tProgram);
+    assert(tProgram != programID && "Use already active program");
+#endif
     glUseProgram(programID);
 }
 
 void ShaderProgram::unbind() {
     glUseProgram(0);
-}
-
-bool ShaderProgram::isComplete() {
-    return programID == 0;
 }

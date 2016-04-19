@@ -5,6 +5,8 @@
 
 #include <core/Surface.hpp>
 
+#include <string>
+
 struct GLFWwindow;
 
 class GLFWSurface : public Surface {
@@ -13,7 +15,7 @@ public:
 	GLFWSurface(Application* app);
 	virtual ~GLFWSurface();
 
-    void setTitle(const std::string& title);
+    void setTitle(const char* title);
     void setGeometry(unsigned int width, unsigned int height);
     void setResizeable(bool flag);
     void setOpenGL(unsigned int major, unsigned int minor);
@@ -23,6 +25,7 @@ public:
 
     bool show();
     bool isOpen();
+    void close();
     void swapBuffers();
 
 private:

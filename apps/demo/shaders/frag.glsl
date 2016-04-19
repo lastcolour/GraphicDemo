@@ -1,7 +1,9 @@
-#version 330
+#version 330 core
 
-in vec4 color;
+in vec4 resColor;
+
+out vec4 fragColor;
 
 void main() {
-  gl_FragColor = color;
+  fragColor = resColor;
 }

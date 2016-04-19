@@ -2,24 +2,21 @@
 #define __RESOURCE_MANAGER_HPP__
 
 #include <core/DEFS.hpp>
-#include <string>
 
-template class LIB_EXPORT_CONV std::basic_string<char, std::char_traits<char>, std::allocator<char>>;
+struct PathData;
 
 class LIB_EXPORT_CONV ResourceManager {
 public:
 
-    ResourceManager(const std::string& appLocation);
+    ResourceManager(const char* appLocation);
     ~ResourceManager();
 
-    void setShadersDir(const std::string& dirPath);
-
-    std::string getShaderPath(const std::string& shaderName) const;
+    void setShadersDir(const char* dirPath);
+    const char* getShadersDir() const;
 
 private:
 
-    std::string resourceRoot;
-    std::string shadersRoot;
+    PathData* paths;
 };
 
 #endif /* __RESOURCE_MANAGER_HPP__ */

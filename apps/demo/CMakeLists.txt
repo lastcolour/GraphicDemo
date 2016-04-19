@@ -49,20 +49,26 @@ else()
 endif()
 
 target_link_libraries(${TARGET_NAME} PRIVATE ${CORE_LIB_PATH})
-target_link_libraries(${TARGET_NAME} PRIVATE ${OPEN_GL_LIB_PATH})
+
+# Additional build steps
 
 message(STATUS "Shader dir: ${CMAKE_SOURCE_DIR}/${SHADER_DIR}")
-
-# Copy shaders
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${SHADER_DIR_PATH}
-        $<TARGET_FILE_DIR:${TARGET_NAME}>/${TARGE_NAME}/${SHADER_DIR_NAME})
+        $<TARGET_FILE_DIR:${TARGET_NAME}>/${TARGE_NAME}/${SHADER_DIR_NAME}) # Copy shaders
 
 # Other target setups
 if(MSVC)
-  message(STATUS "Add compile option -Wall")
-  add_compile_options("-Wall")
+  # Force to always compile with W4
+  if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
+    string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+  endif()
+elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic")
 endif()
+
 message(STATUS "Target: ${TARGET_NAME}, compiled with flags: ${CMAKE_CXX_FLAGS}")
 set_property(TARGET ${TARGET_NAME} PROPERTY FOLDER "Apps/${PROJECT_NAME}")

@@ -1,27 +1,33 @@
 #include <core/ResouceManager.hpp>
 
-std::string getDirPath(const std::string& filePath) {
+#include <string>
+
+struct PathData
+{
+    std::string resourceRoot;
+    std::string shaderRoot;
+};
+
+const std::string getDirPath(const std::string& filePath) {
     size_t lastSlashLoc = 0;
     lastSlashLoc = filePath.find_last_of("\\/");
     return filePath.substr(0, lastSlashLoc);
 }
 
-ResourceManager::ResourceManager(const std::string& appLocation) : 
-    resourceRoot(getDirPath(appLocation)),
-    shadersRoot() {
-}
-
-void ResourceManager::setShadersDir(const std::string& dirPath) {
-    shadersRoot = dirPath;
+ResourceManager::ResourceManager(const char* appLocation) : 
+    paths(new PathData()) {
+    paths->resourceRoot = getDirPath(appLocation);
+    paths->shaderRoot = paths->resourceRoot;
 }
 
 ResourceManager::~ResourceManager() {
+    delete paths;
 }
 
-std::string ResourceManager::getShaderPath(const std::string& shaderName) const {
-    std::string tmpPrefixPath = resourceRoot;
-    if(shadersRoot != "") {
-        tmpPrefixPath += "/" + shadersRoot;
-    }
-    return tmpPrefixPath + "/" + shaderName;
+void ResourceManager::setShadersDir(const char* dirPath) {
+    paths->shaderRoot = paths->resourceRoot + "/" + dirPath;
+}
+
+const char* ResourceManager::getShadersDir() const {
+    return paths->shaderRoot.c_str();
 }

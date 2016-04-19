@@ -1,12 +1,12 @@
-#version 330
+#version 330 core
 
-layout(location = 0) in vec4 position;
-layout(location = 0) in vec4 color;
+layout(location = 0) in vec3 vPosition;
+layout(location = 1) in vec3 vColor;
 
-out fragColor;
+out vec4 resColor;
 
 void main() {
-  gl_Position = position;
-  fragColor = color;
+  gl_Position = vec4(vPosition, 1.0f);
+  resColor = vec4(vColor, 1.0f);
 }
 

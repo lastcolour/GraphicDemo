@@ -33,7 +33,7 @@ GLFWSurface::~GLFWSurface() {
     }
 }
 
-void GLFWSurface::setTitle(const std::string& title) {
+void GLFWSurface::setTitle(const char* title) {
     this->title = title;
 }
 
@@ -75,6 +75,12 @@ void GLFWSurface::swapBuffers() {
     }
 }
 
+void GLFWSurface::close() {
+    if(windowHandler) {
+        glfwSetWindowShouldClose(windowHandler, GL_TRUE);
+    }
+}
+
 bool GLFWSurface::show() {
     if(windowHandler) {
         return false;
@@ -85,6 +91,8 @@ bool GLFWSurface::show() {
     if (corePorfile) {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     }
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     windowHandler = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
     if(!windowHandler) {
         return false;
