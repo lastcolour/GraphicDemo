@@ -3,7 +3,7 @@
 
 #include <core/DEFS.hpp>
 
-struct PathData;
+struct PathDataHolder;
 
 class LIB_EXPORT_CONV ResourceManager {
 public:
@@ -16,7 +16,7 @@ public:
 
 private:
 
-    PathData* paths;
+    PathDataHolder* paths;
 };
 
 #endif /* __RESOURCE_MANAGER_HPP__ */

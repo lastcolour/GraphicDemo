@@ -12,7 +12,7 @@ struct GLFWwindow;
 class GLFWSurface : public Surface {
 public:
 
-	GLFWSurface(Application* app);
+	GLFWSurface();
 	virtual ~GLFWSurface();
 
     void setTitle(const char* title);
@@ -31,6 +31,9 @@ public:
 private:
 
     static bool GLFW_LIB_INITED;
+    static bool GLEW_LIB_INITED;
+
+    static bool initGLEW();
 
 private:
 

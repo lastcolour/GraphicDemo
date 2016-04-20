@@ -13,7 +13,7 @@ public:
     Application(int argc, char* argv[]);
     virtual ~Application();
 
-    static const Application* getInstance();
+    static Application* getInstance();
 
     ResourceManager* getResourceManager() const;
     Surface* getSurface();
@@ -32,8 +32,9 @@ protected:
 private:
 
     bool appDeinit();
+    void drawEvent();
     bool appInit();
-    
+
     int getErrorCode() const;
     void setErrorCode(int errorCode);
 
@@ -41,11 +42,11 @@ private:
 
 private:
 
-    static Application* appInstance;
-
     int errCode;
     Surface* surfacePtr;
     ResourceManager* resourcePtr;
+
+    static Application* appInstance;
 
 private:
 

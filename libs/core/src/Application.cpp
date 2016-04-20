@@ -1,5 +1,7 @@
 // author: Oleksii Zhogan
 
+
+#include <openGL/GLutils.hpp>
 #include <core/Application.hpp>
 #include <core/GLFWSurface.hpp>
 
@@ -15,9 +17,9 @@ Application* Application::appInstance = nullptr;
 
 Application::Application(int argc, char* argv[]) :
     errCode(APP_OK),
-    surfacePtr(new GLFWSurface(this)),
+    surfacePtr(new GLFWSurface()),
     resourcePtr() {
-    assert(appInstance == nullptr && "[App] Only one app instance allower");
+    assert(appInstance == nullptr && "[App] Only one app instance allowed");
     assert(argc >= 1 && "[App] Required cmd argc for application");
     assert(argv != nullptr && "[App] Require argv for application");
     appInstance = this;
@@ -25,13 +27,12 @@ Application::Application(int argc, char* argv[]) :
 }
 
 Application::~Application() {
-    delete surfacePtr;
-    surfacePtr = nullptr;
-    delete resourcePtr;
-    resourcePtr = nullptr;
+    SAFE_DELETE(surfacePtr);
+    SAFE_DELETE(resourcePtr);
+    appInstance = nullptr;
 }
 
-const Application* Application::getInstance() {
+Application* Application::getInstance() {
     assert(appInstance != nullptr && "[App] Create app intance before");
     return appInstance;
 }
@@ -73,9 +74,9 @@ void Application::onResizeEvent(unsigned int width, unsigned int height) {
 }
 
 void Application::finishApp(int errCode, const char* lastMessage) {
+    // TODO: Implement this function
     surfacePtr->close();
     setErrorCode(errCode);
-    return;
 }
 
 int Application::run() {
@@ -93,9 +94,13 @@ int Application::run() {
     return getErrorCode();
 }
 
+void Application::drawEvent() {
+    onDrawEvent();
+}
+
 void Application::mainLoop() {
     while(surfacePtr->isOpen()) {
         surfacePtr->sendInputEvents();
-        onDrawEvent();
+        drawEvent();
     }
 }

@@ -38,13 +38,16 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   add_definitions(-DGD_WIN_DLL_BUILD)
 endif()
 
+# Enable debug section at lib
+add_definitions(-DGD_CORE_LIB_DEBUG)
+
 add_library(${TARGET_NAME} SHARED ${SRC} ${HEADERS})
 
 set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD 11)
 
 target_link_libraries(${TARGET_NAME} PRIVATE ${SURFACE_LIB_PATH})
-target_link_libraries(${TARGET_NAME} PUBLIC ${GLEW_LIB_PATH})
-target_link_libraries(${TARGET_NAME} PUBLIC ${OPEN_GL_LIB_PATH}) # Show opengl interface
+target_link_libraries(${TARGET_NAME} PUBLIC  ${GLEW_LIB_PATH})
+target_link_libraries(${TARGET_NAME} PUBLIC  ${OPEN_GL_LIB_PATH}) # Show opengl interface
 
 # Other target setups
 message(STATUS "Target: ${TARGET_NAME}, compiled with flags: ${CMAKE_CXX_FLAGS}")

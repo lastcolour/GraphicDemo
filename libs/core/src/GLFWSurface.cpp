@@ -1,9 +1,11 @@
 // author: Oleksii Zhogan
 
+#include <openGL/openGL.hpp>
+
 #include <core/Application.hpp>
 #include <core/GLFWSurface.hpp>
 
-#include <openGL/openGL.hpp>
+
 #include <GLFW/glfw3.h>
 
 #include <cstdlib>
@@ -12,10 +14,11 @@
 
 
 bool GLFWSurface::GLFW_LIB_INITED = false;
+bool GLFWSurface::GLEW_LIB_INITED = false;
 
 
-GLFWSurface::GLFWSurface(Application* app) :
-    Surface(app),
+GLFWSurface::GLFWSurface() :
+    Surface(),
     windowHandler(nullptr) {
 
     if(!GLFW_LIB_INITED) {
@@ -81,6 +84,25 @@ void GLFWSurface::close() {
     }
 }
 
+bool GLFWSurface::initGLEW() {
+    if(!GLEW_LIB_INITED) {
+        glewExperimental = GL_TRUE;
+        GLenum errCode = GL_NO_ERROR;
+        if((errCode = glewInit()) != GLEW_OK) {
+            const GLubyte* errStr = glewGetErrorString(errCode);
+            std::cerr << "[GLEW] GLEW init error: " << reinterpret_cast<const char*>(errStr) << std::endl; 
+            return false;
+        }
+        errCode = GL_NO_ERROR;
+        if((errCode = glGetError()) != GL_NO_ERROR) {
+            std::cerr << "[GLEW] OpenGL error: " << reinterpret_cast<const char*>(gluErrorString(errCode)) << std::endl; 
+            return false; 
+        }
+        GLEW_LIB_INITED = true;
+    }
+    return true;
+}
+
 bool GLFWSurface::show() {
     if(windowHandler) {
         return false;
@@ -91,17 +113,20 @@ bool GLFWSurface::show() {
     if (corePorfile) {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     }
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+#ifdef GD_CORE_LIB_DEBUG
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+#endif /* GD_CORE_LIB_DEBUG */
+
     windowHandler = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
     if(!windowHandler) {
         return false;
     }
     glfwMakeContextCurrent(windowHandler);
-    glewExperimental = GL_TRUE;
-    if(glewInit() != GLEW_OK) {
+    if(!initGLEW()) {
+        glfwDestroyWindow(windowHandler);
         return false;
     }
-    getApp()->onResizeEvent(width, height);
+    Application::getInstance()->onResizeEvent(width, height);
     return true;
 }

@@ -2,7 +2,7 @@
 
 #include <string>
 
-struct PathData
+struct PathDataHolder
 {
     std::string resourceRoot;
     std::string shaderRoot;
@@ -15,13 +15,13 @@ const std::string getDirPath(const std::string& filePath) {
 }
 
 ResourceManager::ResourceManager(const char* appLocation) : 
-    paths(new PathData()) {
+    paths(new PathDataHolder()) {
     paths->resourceRoot = getDirPath(appLocation);
     paths->shaderRoot = paths->resourceRoot;
 }
 
 ResourceManager::~ResourceManager() {
-    delete paths;
+    SAFE_DELETE(paths);
 }
 
 void ResourceManager::setShadersDir(const char* dirPath) {

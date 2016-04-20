@@ -6,8 +6,11 @@
 #include <core/Application.hpp>
 
 #include <openGL/ShaderProgram.hpp>
+#include <openGL/VAOObject.hpp>
 
 #include <memory>
+
+typedef VAOObject<3, GLfloat, 3, GLfloat> Triangle;
 
 class DemoApp : public Application {
 public:
@@ -17,12 +20,14 @@ public:
 
 protected:
 
+    Triangle* createTriangle();
+
     void onInitEvent();
     void onDrawEvent();
 
 private:
 
-    std::unique_ptr<ShaderProgram> programGL;
+    std::unique_ptr<Triangle> trianglePtr;
     GLuint arrayID;
 };
 

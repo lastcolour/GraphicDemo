@@ -116,7 +116,7 @@ void ShaderProgram::bind() {
 #ifdef GD_CORE_LIB_DEBUG
     GLint tProgram = 0;
     glGetIntegerv(GL_CURRENT_PROGRAM, &tProgram);
-    assert(tProgram != programID && "Use already active program");
+    assert(tProgram != programID && "Binding active program");
 #endif
     glUseProgram(programID);
 }

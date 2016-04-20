@@ -18,7 +18,7 @@ set(SHADER_DIR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${SHADER_DIR_NAME}")
 file(GLOB HEADERS "src/*.hpp") # TODO: Replace glob to file enumeration
 file(GLOB SRC     "src/*.cpp")
 
-file(GLOB SHADERS "${SHADER_DIR}/*.glsl")
+file(GLOB SHADERS "${SHADER_DIR_NAME}/*.glsl")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/
                     ${GD_LIBS_ROOT_DIR}/core/include
@@ -52,7 +52,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE ${CORE_LIB_PATH})
 
 # Additional build steps
 
-message(STATUS "Shader dir: ${CMAKE_SOURCE_DIR}/${SHADER_DIR}")
+message(STATUS "Shader dir: ${SHADER_DIR_PATH}")
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${SHADER_DIR_PATH}
