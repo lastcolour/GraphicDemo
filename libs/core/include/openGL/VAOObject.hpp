@@ -5,7 +5,7 @@
 #include <openGL/ShaderProgram.hpp>
 
 #include <assert.h>
-
+#include <iostream>
 
 template<GLuint F_COUNT, typename F_TYPE, GLuint S_COUNT, typename S_TYPE>
 class VAOObject {
@@ -48,7 +48,7 @@ VAOObject<F_COUNT, F_TYPE, S_COUNT, S_TYPE>::VAOObject(const void* buffer, GLuin
 
     glBufferData(GL_ARRAY_BUFFER, size, buffer, GL_STATIC_DRAW);
 
-    GLuint packSize = F_COUNT * sizeof(F_TYPE) + S_COUNT * sizeof(S_TYPE);
+    GLuint packSize = F_COUNT + S_COUNT;
 
     glVertexAttribPointer(0, F_COUNT, firstType, GL_FALSE, packSize, (GLvoid*)0);
     glVertexAttribPointer(1, S_COUNT, secondType, GL_FALSE, packSize, (GLvoid*)(F_COUNT * sizeof(F_TYPE)));
@@ -60,7 +60,7 @@ VAOObject<F_COUNT, F_TYPE, S_COUNT, S_TYPE>::VAOObject(const void* buffer, GLuin
     std::cout << "\n[VAO:Draw] " << vboID;
     std::cout << "\n[VAO:Draw] " << drawMode;
     std::cout << "\n[VAO:Draw] " << programPtr << std::endl;
-};
+}
 
 template<GLuint F_COUNT, typename F_TYPE, GLuint S_COUNT, typename S_TYPE>
 VAOObject<F_COUNT, F_TYPE, S_COUNT, S_TYPE>::~VAOObject() {
@@ -88,6 +88,11 @@ void VAOObject<F_COUNT, F_TYPE, S_COUNT, S_TYPE>::draw() {
     glDrawArrays(drawMode, 0, 3);
     programPtr->unbind();
     glBindVertexArray(0);
+
+    GLenum errCode = GL_NO_ERROR;
+    if((errCode = glGetError()) != GL_NO_ERROR) {
+    	std::cerr << "[Drawable] GL Error: " << reinterpret_cast<const char*>(gluErrorString(errCode)) << std::endl;
+    }
 }
 
 

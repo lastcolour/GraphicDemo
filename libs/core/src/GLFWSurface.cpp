@@ -96,7 +96,7 @@ bool GLFWSurface::initGLEW() {
         errCode = GL_NO_ERROR;
         if((errCode = glGetError()) != GL_NO_ERROR) {
             std::cerr << "[GLEW] OpenGL error: " << reinterpret_cast<const char*>(gluErrorString(errCode)) << std::endl; 
-            return false; 
+            //return false;
         }
         GLEW_LIB_INITED = true;
     }

@@ -28,7 +28,6 @@ protected:
 private:
 
     std::unique_ptr<Triangle> trianglePtr;
-    GLuint arrayID;
 };
 
 #endif /* __DEMO_APP_HPP__ */

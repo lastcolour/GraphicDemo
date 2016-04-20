@@ -1,7 +1,6 @@
 // author: Oleksii Zhogan
 
 
-#include <openGL/GLutils.hpp>
 #include <core/Application.hpp>
 #include <core/GLFWSurface.hpp>
 

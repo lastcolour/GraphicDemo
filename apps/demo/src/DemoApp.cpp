@@ -44,8 +44,6 @@ void DemoApp::onInitEvent() {
 
 void DemoApp::onDrawEvent() {
     glClear(GL_COLOR_BUFFER_BIT);
-    if(trianglePtr != nullptr) {
-        trianglePtr->draw();
-    }
+    trianglePtr->draw();
     getSurface()->swapBuffers();
 }
