@@ -26,14 +26,15 @@ _build/
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-
 # Compiled Static libraries
 *.lai
 *.la
 *.a
 *.lib
+
+# GLEW *.rc files
+extern/libs/glew-1.13.0/*.pc
+extern/libs/glew-1.13.0/*.pc.in
 
 # Executables
 *.exe

@@ -5,6 +5,8 @@ if(NOT GD_ROOT_DIR)
   set(GD_CONFIG_DIR "${GD_ROOT_DIR}/config/cmakes")
 endif()
 
+option(GD_CORE_LIB_DEBUG ON)
+
 project(core)
 
 set(TARGET_NAME "core")
@@ -34,12 +36,9 @@ file(GLOB HEADERS "include/core/*.hpp"
                   "include/openGL/*.hpp")
 file(GLOB SRC     "src/*.cpp" )
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  add_definitions(-DGD_WIN_DLL_BUILD)
+if(GD_CORE_LIB_DEBUG)
+  add_definitions(-DGD_CORE_LIB_DEBUG)
 endif()
-
-# Enable debug section at lib
-add_definitions(-DGD_CORE_LIB_DEBUG)
 
 add_library(${TARGET_NAME} SHARED ${SRC} ${HEADERS})
 

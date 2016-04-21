@@ -3,11 +3,18 @@
 #ifndef __DEFS_HPP__
 #define __DEFS_HPP__
 
+#if defined(_WIN32) || defined(_WIN64)
+  #define GD_WIN_DLL_BUILD
+#endif
+
 #ifdef GD_WIN_DLL_BUILD
   #define LIB_EXPORT_CONV __declspec(dllexport)
 #else
   #define LIB_EXPORT_CONV
 #endif
+
+#define BUF_STRIDE( X ) \
+    reinterpret_cast<void*>(X)
 
 #define SAFE_DELETE( PTR ) \
     delete PTR; \
