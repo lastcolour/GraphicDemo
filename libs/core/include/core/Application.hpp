@@ -5,7 +5,6 @@
 
 #include <core/DEFS.hpp>
 #include <core/Surface.hpp>
-#include <core/ResouceManager.hpp>
 
 class LIB_EXPORT_CONV Application {
 public:
@@ -15,7 +14,6 @@ public:
 
     static Application* getInstance();
 
-    ResourceManager* getResourceManager() const;
     Surface* getSurface();
 
     int run();
@@ -44,7 +42,6 @@ private:
 
     int errCode;
     Surface* surfacePtr;
-    ResourceManager* resourcePtr;
 
     static Application* appInstance;
 

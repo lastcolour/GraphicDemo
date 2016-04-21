@@ -7,6 +7,8 @@
   #define GD_WIN_DLL_BUILD
 #endif
 
+#define GD_CORE_LIB_DEBUG
+
 #ifdef GD_WIN_DLL_BUILD
   #define LIB_EXPORT_CONV __declspec(dllexport)
 #else
@@ -14,7 +16,7 @@
 #endif
 
 #define BUF_STRIDE( X ) \
-    reinterpret_cast<void*>(X)
+    reinterpret_cast<GLvoid*>(X)
 
 #define SAFE_DELETE( PTR ) \
     delete PTR; \

@@ -1,6 +1,7 @@
 // author: Oleksii Zhogan
 
 #include <openGL/ShaderProgram.hpp>
+#include <core/ResouceManager.hpp>
 #include <DemoApp.hpp>
 
 #include <string>
@@ -15,8 +16,7 @@ DemoApp::DemoApp(int argc, char* argv[]) : Application(argc, argv) {
     surface->setOpenGL(3, 3);
     surface->setCoreProfile(true);
 
-    ResourceManager* resources = getResourceManager();
-    resources->setShadersDir("shaders");
+    ResourceManager::setShadersDir("shaders");
 }
 
 DemoApp::~DemoApp() {
@@ -27,17 +27,30 @@ DemoApp::~DemoApp() {
 GLuint DemoApp::createTriangle() {
     GLfloat vertexData[] = {
         -0.5f, -0.5f, 0.0f, // Left
-         1.0f,  0.0f, 0.0f,
+         1.0f,  1.0f, 1.0f,
          0.5f, -0.5f, 0.0f, // Right
-         0.0f,  1.0f, 0.0f, 
+         1.0f,  1.0f, 1.0f, 
          0.0f,  0.5f, 0.0f, // Top
-         0.0f,  0.0f, 1.0f };
+         0.0f,  0.0f, 1.0f 
+    };
 
     GLuint arrayID;
     GLuint bufferID;
+    GLuint elemID;
+
+    GLuint elemData[] = {0, 1, 2};
+
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
     glGenVertexArrays(1, &arrayID);
-    glGenBuffers(1, &bufferID);
     glBindVertexArray(arrayID);
+
+    glGenBuffers(1, &elemID);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elemID);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elemData), elemData, GL_STATIC_DRAW);
+    
+
+    glGenBuffers(1, &bufferID);
     glBindBuffer(GL_ARRAY_BUFFER, bufferID);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), &vertexData, GL_STATIC_DRAW);
 
@@ -46,8 +59,10 @@ GLuint DemoApp::createTriangle() {
 
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), BUF_STRIDE(3*sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     return arrayID;
 }
@@ -63,7 +78,7 @@ void DemoApp::onDrawEvent() {
 
     glBindVertexArray(trinanglID);
     programPtr->bind();
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
     programPtr->unbind();
     glBindVertexArray(0);
 

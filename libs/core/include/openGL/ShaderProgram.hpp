@@ -13,9 +13,12 @@ public:
     void unbind();
 
     static ShaderProgram* createProgram(const char* vertShader, const char* fragShader);
+    static ShaderProgram* createProgram(GLuint vertShaderID, GLuint fragShaderID);
     
 private:
     
+    static GLuint linkShaders(GLuint vertShaderID, GLuint fragShaderID);
+
     ShaderProgram();
     ShaderProgram& operator=(const ShaderProgram&);
     ShaderProgram(GLuint progID);

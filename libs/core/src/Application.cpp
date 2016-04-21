@@ -3,11 +3,13 @@
 
 #include <core/Application.hpp>
 #include <core/GLFWSurface.hpp>
+#include <core/ResouceManager.hpp>
 
 #include <exception>
 #include <iostream>
 #include <string>
 #include <assert.h>
+#include <cstdlib>
 
 const int APP_FAIL = -1;
 const int APP_OK = 0;
@@ -16,28 +18,25 @@ Application* Application::appInstance = nullptr;
 
 Application::Application(int argc, char* argv[]) :
     errCode(APP_OK),
-    surfacePtr(new GLFWSurface()),
-    resourcePtr() {
+    surfacePtr(new GLFWSurface()) {
     assert(appInstance == nullptr && "[App] Only one app instance allowed");
     assert(argc >= 1 && "[App] Required cmd argc for application");
     assert(argv != nullptr && "[App] Require argv for application");
     appInstance = this;
-    resourcePtr = new ResourceManager(argv[0]);
+    ResourceManager::initialize(argv[0]);
+    std::atexit([](){
+        ResourceManager::deinitialize();
+    });
 }
 
 Application::~Application() {
     SAFE_DELETE(surfacePtr);
-    SAFE_DELETE(resourcePtr);
     appInstance = nullptr;
 }
 
 Application* Application::getInstance() {
     assert(appInstance != nullptr && "[App] Create app intance before");
     return appInstance;
-}
-
-ResourceManager* Application::getResourceManager() const {
-    return resourcePtr;
 }
 
 Surface* Application::getSurface() {

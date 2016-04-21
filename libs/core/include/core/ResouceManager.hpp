@@ -1,22 +1,31 @@
 #ifndef __RESOURCE_MANAGER_HPP__
 #define __RESOURCE_MANAGER_HPP__
 
-#include <core/DEFS.hpp>
+#include <openGL/openGL.hpp>
 
-struct PathDataHolder;
+class PathDataHolder;
 
 class LIB_EXPORT_CONV ResourceManager {
 public:
 
-    ResourceManager(const char* appLocation);
-    ~ResourceManager();
+    static void initialize(const char* appName);
+    static void deinitialize();
 
-    void setShadersDir(const char* dirPath);
-    const char* getShadersDir() const;
+    static void setShadersDir(const char* dirPath);
+    static void setModelsDir(const char* dirPath);
+
+    static GLuint loadShader(const char* vertShaderName, GLenum shaderType);
+
 
 private:
 
-    PathDataHolder* paths;
+    ResourceManager& operator=(ResourceManager&);
+    ResourceManager();
+    ~ResourceManager();
+
+private:
+
+    static PathDataHolder* pathsPtr;
 };
 
 #endif /* __RESOURCE_MANAGER_HPP__ */

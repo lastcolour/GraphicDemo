@@ -12,10 +12,8 @@
 #include <iostream>
 #include <assert.h>
 
-
 bool GLFWSurface::GLFW_LIB_INITED = false;
 bool GLFWSurface::GLEW_LIB_INITED = false;
-
 
 GLFWSurface::GLFWSurface() :
     Surface(),
@@ -93,10 +91,15 @@ bool GLFWSurface::initGLEW() {
             std::cerr << "[GLEW] GLEW init error: " << reinterpret_cast<const char*>(errStr) << std::endl; 
             return false;
         }
+        // Check openGL status
         errCode = GL_NO_ERROR;
         if((errCode = glGetError()) != GL_NO_ERROR) {
+            // Ignore invalid enum
+            if(errCode == GL_INVALID_ENUM) {
+                return true;
+            }
             std::cerr << "[GLEW] OpenGL error: " << reinterpret_cast<const char*>(gluErrorString(errCode)) << std::endl; 
-            //return false;
+            return false;
         }
         GLEW_LIB_INITED = true;
     }
@@ -113,7 +116,6 @@ bool GLFWSurface::show() {
     if (corePorfile) {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     }
-
 #ifdef GD_CORE_LIB_DEBUG
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 #endif /* GD_CORE_LIB_DEBUG */
