@@ -8,15 +8,15 @@
 #include <iostream>
 #include <vector>
 
-DemoApp::DemoApp(int argc, char* argv[]) : Application(argc, argv) {
-    Surface* surface = getSurface();
-    surface->setTitle("DemoApp");
-    surface->setGeometry(600, 400);
-    surface->setResizeable(false);
-    surface->setOpenGL(3, 3);
-    surface->setCoreProfile(true);
+DemoApp::DemoApp(int argc, char* argv[]) : OpenGLApplication(argc, argv) {
+    setSurfaceTitle("DemoApp");
+    setSurfaceGeometry(600, 400);
+    setSurfaceResizable(false);
 
-    ResourceManager::setShadersDir("shaders");
+    setOpenGLVersion(3, 3);
+    setOpenGLCoreProfile(true);
+
+    setResourceShadersDir("shaders");
 }
 
 DemoApp::~DemoApp() {
@@ -70,7 +70,7 @@ GLuint DemoApp::createTriangle() {
 void DemoApp::onInitEvent() {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     trinanglID = createTriangle();
-    programPtr.reset(ShaderProgram::createProgram("vert.glsl", "frag.glsl"));
+    programPtr.reset(new ShaderProgram(loadOpenGLProgram("vert.glsl", "frag.glsl")));
 }
 
 void DemoApp::onDrawEvent() {
@@ -82,5 +82,5 @@ void DemoApp::onDrawEvent() {
     programPtr->unbind();
     glBindVertexArray(0);
 
-    getSurface()->swapBuffers();
+    surfaceSwapBuffers();
 }

@@ -12,7 +12,7 @@ struct GLFWwindow;
 class GLFWSurface : public Surface {
 public:
 
-	GLFWSurface();
+    GLFWSurface(VisualApplication* app);
 	virtual ~GLFWSurface();
 
     void setTitle(const char* title);
@@ -21,7 +21,7 @@ public:
     void setOpenGL(unsigned int major, unsigned int minor);
     void setCoreProfile(bool flag);
 
-    void sendInputEvents();
+    void sendEvents();
 
     bool show();
     bool isOpen();
@@ -35,17 +35,21 @@ private:
 
     static bool initGLEW();
 
+    static void keyboardCallback(GLFWwindow* window, int keyCode, int scanCode, int action, int keyMode);
+    static void mouseCallBack();
+
+    void initCallbacks();
+
 private:
 
     std::string title;
+    GLFWwindow* windowPtr;
     unsigned int width;
     unsigned int height;
     int openGLMajor;
     int openGLMinor;
     bool resizeable;
     bool corePorfile;
-
-    GLFWwindow* windowHandler;
 
 private:
 

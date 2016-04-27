@@ -3,13 +3,14 @@
 #ifndef __SURFACE_HPP__
 #define __SURFACE_HPP__
 
-#include <core/DEFS.hpp>
+#include <core/VisualApplication.hpp>
+#include <cassert>
 
-class LIB_EXPORT_CONV Surface {
+class Surface {
 public:
 
-    Surface() {}
-    virtual ~Surface() {}
+    Surface(VisualApplication* app);
+    virtual ~Surface();
 
     virtual void setTitle(const char* title) = 0;
     virtual void setGeometry(unsigned int width, unsigned int height) = 0;
@@ -17,12 +18,29 @@ public:
     virtual void setOpenGL(unsigned int major, unsigned int minor) = 0;
     virtual void setCoreProfile(bool flag) = 0;
 
-    virtual void sendInputEvents() = 0;
+    virtual void sendEvents() = 0;
 
     virtual bool show() = 0;
     virtual bool isOpen() = 0;
     virtual void close() = 0;
     virtual void swapBuffers() = 0;
+
+protected:
+
+    static void sendDrawEvent();
+    static void sendKeyboardEvent(const KeyboardEvent& keyEvent);
+    static void sendMouseEvent();
+    static void sendResizeEvent(unsigned int width, unsigned int height);
+
+private:
+
+    Surface();
+    Surface& operator=(const Surface&);
+    Surface(const Surface&);
+
+private:
+
+    static VisualApplication* application;
 };
 
 #endif /* __SURFACE_HPP__ */

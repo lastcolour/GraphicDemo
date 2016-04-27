@@ -3,12 +3,12 @@
 #ifndef __DEMO_APP_HPP__
 #define __DEMO_APP_HPP__
 
-#include <core/Application.hpp>
+#include <core/OpenGLApplication.hpp>
 #include <openGL/ShaderProgram.hpp>
 
 #include <memory>
 
-class DemoApp : public Application {
+class DemoApp : public OpenGLApplication {
 public:
 
     DemoApp(int argc, char* argv[]);

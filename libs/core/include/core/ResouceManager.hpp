@@ -3,29 +3,31 @@
 
 #include <openGL/openGL.hpp>
 
-class PathDataHolder;
+#include <string>
 
-class LIB_EXPORT_CONV ResourceManager {
+class ResourceManager {
 public:
 
-    static void initialize(const char* appName);
-    static void deinitialize();
-
-    static void setShadersDir(const char* dirPath);
-    static void setModelsDir(const char* dirPath);
-
-    static GLuint loadShader(const char* vertShaderName, GLenum shaderType);
-
-
-private:
-
-    ResourceManager& operator=(ResourceManager&);
-    ResourceManager();
+    ResourceManager(int argc, char* argv[]);
     ~ResourceManager();
+    
+    void setShadersDir(const char* path);
+
+    GLuint loadShader(const char* vertShaderName, GLenum shaderType) const;
+    GLuint loadProgram(const char* vertShaderName, const char* fragShaderName) const;
+    GLuint loadProgram(GLuint vertShaderID, GLuint fragShaderID) const;
 
 private:
 
-    static PathDataHolder* pathsPtr;
+    ResourceManager(const ResourceManager&);
+    ResourceManager& operator=(const ResourceManager&);
+
+    GLuint linkShaders(GLuint vertID, GLuint fragID) const;
+
+private:
+
+    std::string shadersDir;
+    std::string resourcesDir;
 };
 
 #endif /* __RESOURCE_MANAGER_HPP__ */
