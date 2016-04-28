@@ -1,11 +1,9 @@
-// author: Oleksii Zhogan
-
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
 
 #include <core/OpenGLApplication.hpp>
 #include <core/GLFWSurface.hpp>
 #include <core/ResouceManager.hpp>
 
-#include <exception>
 #include <iostream>
 #include <string>
 #include <assert.h>
@@ -72,12 +70,48 @@ GLuint OpenGLApplication::loadOpenGLProgram(GLuint vertShader, GLuint fragShader
     return programID;
 }
 
+void OpenGLApplication::checkInitErrors() {
+    reportGLerrors("onInit");
+}
+
+void OpenGLApplication::checkResizerrors() {
+    reportGLerrors("onResize");
+}
+
+void OpenGLApplication::checkKeyboardErrors() {
+    reportGLerrors("onKeyboard");
+}
+
+void OpenGLApplication::checkDrawErrors() {
+    reportGLerrors("onDraw");
+}
+
+
+void OpenGLApplication::reportGLerrors(const char* location) {
+    std::string tMesagePrefix = "[App:";
+    tMesagePrefix = tMesagePrefix + location + "]";
+    GLenum errCode = GL_NO_ERROR;
+    if( (errCode = glGetError()) != GL_NO_ERROR) {
+        GLint infoLog = 0;
+        const char* errStr = reinterpret_cast<const char*>(gluErrorString(errCode));
+        if(errStr != nullptr) {
+            std::cerr << tMesagePrefix  << " GL error: " << errStr << std::endl;
+        } else {
+            std::cerr << tMesagePrefix << " Unknown GL error" << std::endl;
+        }
+    } else {
+        // Spam
+        // std::cout << tMesagePrefix <<  " Success" << std::endl;
+    }
+}
+
 int OpenGLApplication::run() {
     surfaceImpl->show();
-    onInitEvent();
+    appInitRequest();
     while(surfaceImpl->isOpen()) {
+        // TODO: Reimplement this method
         surfaceImpl->sendEvents();
-        onDrawEvent();
+        appDrawRequest();
     }
-    return 0;
+    return APP_OK;
 }

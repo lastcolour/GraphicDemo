@@ -1,4 +1,4 @@
-// author: Oleksii Zhogan
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
 
 #ifndef __GLFW_SURFACE_HPP__
 #define __GLFW_SURFACE_HPP__

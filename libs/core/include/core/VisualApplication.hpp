@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __VISUAL_APPLICATION_HPP__
 #define __VISUAL_APPLICATION_HPP__
 
@@ -14,9 +16,32 @@ public:
     virtual void setSurfaceGeometry(unsigned int width, unsigned int height) = 0;
     virtual void setSurfaceResizable(bool flag) = 0;
 
-    virtual int run() = 0;
-
 protected:
+
+    virtual void checkInitErrors() = 0;
+    virtual void checkResizerrors() = 0;
+    virtual void checkKeyboardErrors() = 0;
+    virtual void checkDrawErrors() = 0;
+
+    void appInitRequest() {
+        onInitEvent();
+        checkInitErrors();
+    }
+
+    void appResizeRequest(unsigned int width, unsigned int heigth) {
+        onResizeEvent(width, heigth);
+        checkResizerrors();
+    } 
+
+    void appKeyboardRequest(const KeyboardEvent& keyEvent) {
+        onKeyboardEvent(keyEvent);
+        checkKeyboardErrors();
+    }
+
+    void appDrawRequest() {
+        onDrawEvent();
+        checkDrawErrors();
+    }
 
     virtual void onResizeEvent(unsigned int width, unsigned int heigth) {}
     virtual void onKeyboardEvent(const KeyboardEvent& keyEvent) {}

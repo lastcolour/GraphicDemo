@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __RESOURCE_MANAGER_HPP__
 #define __RESOURCE_MANAGER_HPP__
 

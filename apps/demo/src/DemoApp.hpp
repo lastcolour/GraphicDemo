@@ -1,4 +1,4 @@
-// author: Oleksii Zhogan
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
 
 #ifndef __DEMO_APP_HPP__
 #define __DEMO_APP_HPP__
@@ -18,13 +18,17 @@ protected:
 
     void onInitEvent();
     void onDrawEvent();
+    void onKeyboardEvent(const KeyboardEvent& keyEvent);
 
-    GLuint createTriangle();
+    GLuint createFirstTriangle();
+    GLuint createSecondTriangle();
 
 private:
 
-    GLuint trinanglID;
-    std::unique_ptr<ShaderProgram> programPtr;
+    GLuint firstTriangle;
+    GLuint secondTriangle;
+    std::unique_ptr<ShaderProgram> firstProgram;
+    std::unique_ptr<ShaderProgram> secondProgram;
 };
 
 #endif /* __DEMO_APP_HPP__ */

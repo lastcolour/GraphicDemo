@@ -1,4 +1,4 @@
-// author: Oleksii Zhogan
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
 
 #include <openGL/openGL.hpp>
 
@@ -120,6 +120,7 @@ void GLFWSurface::keyboardCallback(GLFWwindow* windowPtr, int keyCode, int scanC
 
     switch (keyCode)
     {
+    
     case GLFW_KEY_R:
         code = KeyCode::R;
         break;

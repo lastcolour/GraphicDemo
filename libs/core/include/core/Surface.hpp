@@ -1,4 +1,4 @@
-// author: Oleksii Zhogan
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
 
 #ifndef __SURFACE_HPP__
 #define __SURFACE_HPP__

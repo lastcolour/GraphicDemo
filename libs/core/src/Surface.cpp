@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #include <core/Surface.hpp>
 
 VisualApplication* Surface::application = nullptr;
@@ -12,17 +14,16 @@ VisualApplication* Surface::application = nullptr;
  }
 
 void Surface::sendDrawEvent() {
-    application->onDrawEvent();
+    application->appDrawRequest();
 }
 
-
 void Surface::sendKeyboardEvent(const KeyboardEvent& keyEvent) {
-    application->onKeyboardEvent(keyEvent);
+    application->appKeyboardRequest(keyEvent);
 }
 
 void Surface::sendMouseEvent() {
 }
 
 void Surface::sendResizeEvent(unsigned int width, unsigned int height) {
-    application->onResizeEvent(width, height);
+    application->appResizeRequest(width, height);
 }

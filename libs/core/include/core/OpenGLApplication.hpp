@@ -1,4 +1,4 @@
-// author: Oleksii Zhogan
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
 
 #ifndef __OPENGL_APPLICATION_HPP__
 #define __OPENGL_APPLICATION_HPP__
@@ -33,6 +33,17 @@ public:
     GLuint loadOpenGLProgram(GLuint vertShader, GLuint fragShader);
 
     int run();
+
+protected:
+
+    void checkInitErrors();
+    void checkResizerrors();
+    void checkKeyboardErrors();
+    void checkDrawErrors();
+
+private:
+
+    void reportGLerrors(const char* location);
 
 private:
 

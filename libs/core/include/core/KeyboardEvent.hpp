@@ -1,9 +1,45 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __KEYBOARD_EVENT_HPP__
 #define __KEYBOARD_EVENT_HPP__
 
 enum class KeyCode {
     UNKNOWN = 0,
-    R
+    Q,
+    W,
+    E,
+    R,
+    T,
+    Y,
+    U,
+    I,
+    O,
+    P,
+    FIGURE_BRACKET_OPEN,
+    FIGURE_BRACKET_CLOSE,
+    BACK_SLASH,
+    A,
+    S,
+    D,
+    F,
+    G,
+    H,
+    J,
+    K,
+    L,
+    DOT_COMMA,
+    APOSTROPHE,
+    Z,
+    X,
+    C,
+    V,
+    B,
+    N,
+    M,
+    COMMA,
+    DOT,
+    SLASH,
+    SPACE
 };
 
 enum class KeyType {
