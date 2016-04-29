@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __TEXTURE_HPP__
 #define __TEXTURE_HPP__
 
@@ -5,7 +7,7 @@
 
 class LIB_EXPORT_CONV Texture /*: public OpenGLObject */ {
 public:
-    
+
     Texture() {}
     ~Texture() {}
 

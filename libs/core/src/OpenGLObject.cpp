@@ -1,14 +1,14 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #include <openGL/OpenGLObject.hpp>
 
 #include <cassert>
-
 
 OpenGLObject::OpenGLObject() : resID(0) {
 }
 
 OpenGLObject::~OpenGLObject() {
 }
-
 
 void OpenGLObject::replaceID(OpenGLObject&& object) {
     if(resID != 0) {
@@ -54,7 +54,7 @@ void OpenGLObject::bind() {
 
 void OpenGLObject::unbind() {
     assert(resID != 0 && "Try use invalid resource");
-    if(isBounded()) {
+    if(makeIsBoundCheck(resID)) {
         makeUnbind(resID);
     }
 }

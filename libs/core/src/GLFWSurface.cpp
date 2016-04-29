@@ -95,7 +95,7 @@ bool GLFWSurface::initGLEW() {
         GLenum errCode = GL_NO_ERROR;
         if((errCode = glewInit()) != GLEW_OK) {
             const GLubyte* errStr = glewGetErrorString(errCode);
-            std::cerr << "[GLEW] GLEW init error: " << reinterpret_cast<const char*>(errStr) << std::endl; 
+            std::cerr << "[GLEW] GLEW init error: " << reinterpret_cast<const char*>(errStr) << std::endl;
             return false;
         }
         // Check openGL status
@@ -105,7 +105,7 @@ bool GLFWSurface::initGLEW() {
             if(errCode == GL_INVALID_ENUM) {
                 return true;
             }
-            std::cerr << "[GLEW] OpenGL error: " << reinterpret_cast<const char*>(gluErrorString(errCode)) << std::endl; 
+            std::cerr << "[GLEW] OpenGL error: " << reinterpret_cast<const char*>(gluErrorString(errCode)) << std::endl;
             return false;
         }
         GLEW_LIB_INITED = true;
@@ -120,7 +120,7 @@ void GLFWSurface::keyboardCallback(GLFWwindow* windowPtr, int keyCode, int scanC
 
     switch (keyCode)
     {
-    
+
     case GLFW_KEY_R:
         code = KeyCode::R;
         break;

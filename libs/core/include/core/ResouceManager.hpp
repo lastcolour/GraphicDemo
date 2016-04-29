@@ -12,7 +12,7 @@ public:
 
     ResourceManager(int argc, char* argv[]);
     ~ResourceManager();
-    
+
     void setShadersDir(const char* path);
     void setTexturesDir(const char* path);
 

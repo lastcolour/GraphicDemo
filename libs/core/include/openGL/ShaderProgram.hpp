@@ -15,9 +15,9 @@ public:
 
     void setUniform1f(const char* name, float x) const;
     void setUniform4f(const char* name, float x, float y, float z, float w) const;
-    
+
 protected:
-    
+
     bool makeIsBoundCheck(GLuint resourceID);
     bool makeCheck(GLuint resourceID);
     bool makeBind(GLuint resourceID);

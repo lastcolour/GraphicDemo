@@ -6,10 +6,8 @@
 #include <openGL/openGL.hpp>
 #include <core/VisualApplication.hpp>
 
-class Image;
 class Surface;
 class ResourceManager;
-
 
 class LIB_EXPORT_CONV OpenGLApplication : public VisualApplication {
 public:

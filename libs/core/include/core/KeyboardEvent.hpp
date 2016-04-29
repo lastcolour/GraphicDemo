@@ -52,17 +52,17 @@ enum class KeyType {
 class KeyboardEvent {
 public:
 
-    explicit KeyboardEvent(KeyCode keyCode, KeyType keyType) : 
+    explicit KeyboardEvent(KeyCode keyCode, KeyType keyType) :
         code(keyCode),
         type(keyType),
         altPressed(false),
         shiftPressed(false),
         ctrlPressed(false) {}
 
-    KeyboardEvent(const KeyboardEvent& keyEvent) : 
+    KeyboardEvent(const KeyboardEvent& keyEvent) :
         code(keyEvent.code),
         type(keyEvent.type),
-        altPressed(keyEvent.altPressed), 
+        altPressed(keyEvent.altPressed),
         shiftPressed(keyEvent.shiftPressed),
         ctrlPressed(keyEvent.ctrlPressed) {}
 

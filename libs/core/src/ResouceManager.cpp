@@ -2,7 +2,7 @@
 
 #include <core/ResouceManager.hpp>
 
-#include <assert.h>
+#include <cassert>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -27,7 +27,7 @@ std::string getShaderLog(GLuint instanceID) {
     return tLogStr;
 }
 
-ResourceManager::ResourceManager(int argc, char* argv[]) : 
+ResourceManager::ResourceManager(int argc, char* argv[]) :
     resourcesDir(getDirPath(argv[0])) {
     shadersDir = resourcesDir;
 }

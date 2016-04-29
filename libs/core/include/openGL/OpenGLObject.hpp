@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __OPENGL_OBJECT_HPP__
 #define __OPENGL_OBJECT_HPP__
 
@@ -6,10 +8,6 @@
 
 class LIB_EXPORT_CONV OpenGLObject {
 public:
-
-    // TODO: Implement this;
-    //OpenGLObject(OpenGLObject&& resource);
-    //OpenGLObject& operator=(OpenGLObject&& resource);
 
     virtual ~OpenGLObject();
 

@@ -31,7 +31,7 @@ protected:
     void appResizeRequest(unsigned int width, unsigned int heigth) {
         onResizeEvent(width, heigth);
         checkResizerrors();
-    } 
+    }
 
     void appKeyboardRequest(const KeyboardEvent& keyEvent) {
         onKeyboardEvent(keyEvent);

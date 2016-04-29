@@ -134,7 +134,7 @@ GLint ShaderProgram::getUniformLocation(const char* name) const {
     if(unifLoc == -1) {
         reportUniformNameError(name);
     }
-#endif 
+#endif
     return unifLoc;
 }
 
@@ -143,10 +143,10 @@ void ShaderProgram::reportUniformNameError(const char* name) const {
     std::string tMessagePrefix;
     tMessagePrefix = tMessagePrefix + "[ShaderProgram:" + std::to_string(getID()) + "] ";
     if(allUniforms.size() == 0) {
-        std::cerr << tMessagePrefix.c_str() << "Can't find uniform: \"" << name 
+        std::cerr << tMessagePrefix.c_str() << "Can't find uniform: \"" << name
             << "\"; Program does't have any uniform\n";
     } else {
-        std::cerr << tMessagePrefix.c_str() << "Can't find uniform: \"" << name 
+        std::cerr << tMessagePrefix.c_str() << "Can't find uniform: \"" << name
             << "\"; Program, containe next uniforms\n";
         for(const auto& tName : allUniforms) {
             std::cerr << tMessagePrefix.c_str() << " - \"" << tName << "\"" << std::endl;

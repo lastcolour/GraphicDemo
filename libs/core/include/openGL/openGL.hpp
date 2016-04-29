@@ -10,6 +10,6 @@
 
 #ifndef GD_WIN_DLL_BUILD
   #include <GL/glut.h>
-#endif 
+#endif
 
 #endif /* __OPEN_GL_HPP__ */
