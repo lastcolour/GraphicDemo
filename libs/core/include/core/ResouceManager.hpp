@@ -14,10 +14,9 @@ public:
     ~ResourceManager();
     
     void setShadersDir(const char* path);
+    void setTexturesDir(const char* path);
 
     GLuint loadShader(const char* vertShaderName, GLenum shaderType) const;
-    GLuint loadProgram(const char* vertShaderName, const char* fragShaderName) const;
-    GLuint loadProgram(GLuint vertShaderID, GLuint fragShaderID) const;
 
 private:
 
@@ -29,6 +28,7 @@ private:
 private:
 
     std::string shadersDir;
+    std::string texturesDir;
     std::string resourcesDir;
 };
 

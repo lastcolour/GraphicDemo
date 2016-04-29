@@ -4,8 +4,35 @@
 
 #include <iostream>
 #include <string>
-#include <assert.h>
+#include <cassert>
 #include <vector>
+
+std::string getProgramLog(GLuint instanceID) {
+    GLint tLogSize = 0;
+    std::vector<GLchar> tLogBuffer;
+    glGetProgramiv(instanceID, GL_INFO_LOG_LENGTH, &tLogSize);
+    if(tLogSize <= 1) {
+        return "?";
+    }
+    tLogBuffer.resize(tLogSize);
+    glGetProgramInfoLog(instanceID, tLogSize, nullptr, &tLogBuffer[0]);
+    return std::string(&tLogBuffer[0]);
+}
+
+GLuint linkProgram(GLuint vertID, GLuint fragID) {
+    GLuint tProgID = glCreateProgram();
+    glAttachShader(tProgID, vertID);
+    glAttachShader(tProgID, fragID);
+    glLinkProgram(tProgID);
+    GLint linked = GL_FALSE;
+    glGetProgramiv(tProgID, GL_LINK_STATUS, &linked);
+    if(linked != GL_TRUE) {
+        std::cerr << "[ShaderProgram] Can't link program: " << getProgramLog(tProgID) << std::endl;
+        glDeleteProgram(tProgID);
+        return 0;
+    }
+    return tProgID;
+}
 
 std::vector<std::string> getAllUniformsNames(GLuint programID) {
     std::vector<std::string> allUniforms;
@@ -24,41 +51,84 @@ std::vector<std::string> getAllUniformsNames(GLuint programID) {
     return allUniforms;
 }
 
-ShaderProgram::ShaderProgram(GLuint progID) :
-    programID(progID) {
-    assert(progID != 0 && "[ShaderProgram] Creating invalid program");
+ShaderProgram::ShaderProgram(GLuint vertID, GLuint fragID) : OpenGLObject() {
+    assert(vertID != 0 && "Invalud vertex program id");
+    assert(fragID != 0 && "Invalud fragment program id");
+    GLuint tProgID = linkProgram(vertID, fragID);
+    if(tProgID != 0) {
+        holdID(tProgID);
+    }
 }
 
-GLuint ShaderProgram::getID() const {
-    return programID;
+ShaderProgram::ShaderProgram(ShaderProgram&& program) {
+    replaceID(std::move(program));
+}
+
+ShaderProgram& ShaderProgram::operator=(ShaderProgram&& program) {
+    if(this == &program) {
+        return *this;
+    }
+    replaceID(std::move(program));
+    return *this;
 }
 
 ShaderProgram::~ShaderProgram() {
-    GLint tProgram = 0;
-    glGetIntegerv(GL_CURRENT_PROGRAM, &tProgram);
-    if(tProgram == programID) {
-        glUseProgram(0);
+    if(makeIsBoundCheck(getID())) {
+        makeUnbind(getID());
     }
-    glDeleteProgram(programID);
+    makeFree(getID());
 }
 
-void ShaderProgram::bind() const {
-#ifdef GD_CORE_LIB_DEBUG
+void ShaderProgram::setUniform1f(const char* name, float x) const {
+    assert(getID() != 0 && "Invalid shader program used");
+    GLint unifLoc = -1;
+    if((unifLoc = getUniformLocation(name)) != -1) {
+        glUniform1f(unifLoc, x);
+    }
+}
+
+void ShaderProgram::setUniform4f(const char* name, float x, float y, float z, float w) const {
+    assert(getID() != 0 && "Invalid shader program used");
+    GLint unifLoc = -1;
+    if((unifLoc = getUniformLocation(name)) != -1) {
+        glUniform4f(unifLoc, x, y, z, w);
+    }
+}
+
+bool ShaderProgram::makeIsBoundCheck(GLuint resourceID) {
     GLint tProgram = 0;
     glGetIntegerv(GL_CURRENT_PROGRAM, &tProgram);
-    assert(tProgram != programID && "Binding active program");
-#endif
-    glUseProgram(programID);
+    return resourceID == tProgram;
+}
+
+bool ShaderProgram::makeCheck(GLuint resourceID) {
+    return resourceID != 0;
+}
+
+bool ShaderProgram::makeBind(GLuint resourceID) {
+    glUseProgram(resourceID);
+    return true;
+}
+
+bool ShaderProgram::makeUnbind(GLuint resourceID) {
+    glUseProgram(0);
+    return true;
+}
+
+bool ShaderProgram::makeFree(GLuint resourceID) {
+    glDeleteProgram(resourceID);
+    return true;
 }
 
 GLint ShaderProgram::getUniformLocation(const char* name) const {
+    assert(getID() != 0 && "Invalid shader program used");
 #ifdef GD_CORE_LIB_DEBUG
     GLint tProgram = 0;
     glGetIntegerv(GL_CURRENT_PROGRAM, &tProgram);
-    assert(tProgram == programID && "Set uniform for not bounded program");
+    assert(tProgram == getID() && "Set uniform for not bounded program");
 #endif
 
-    GLint unifLoc = glGetUniformLocation(programID, name);
+    GLint unifLoc = glGetUniformLocation(getID(), name);
 
 #ifdef GD_CORE_LIB_DEBUG
     if(unifLoc == -1) {
@@ -69,9 +139,9 @@ GLint ShaderProgram::getUniformLocation(const char* name) const {
 }
 
 void ShaderProgram::reportUniformNameError(const char* name) const {
-    std::vector<std::string> allUniforms = getAllUniformsNames(programID);
+    std::vector<std::string> allUniforms = getAllUniformsNames(getID());
     std::string tMessagePrefix;
-    tMessagePrefix = tMessagePrefix + "[ShaderProgram:" + std::to_string(programID) + "] ";
+    tMessagePrefix = tMessagePrefix + "[ShaderProgram:" + std::to_string(getID()) + "] ";
     if(allUniforms.size() == 0) {
         std::cerr << tMessagePrefix.c_str() << "Can't find uniform: \"" << name 
             << "\"; Program does't have any uniform\n";
@@ -82,27 +152,4 @@ void ShaderProgram::reportUniformNameError(const char* name) const {
             std::cerr << tMessagePrefix.c_str() << " - \"" << tName << "\"" << std::endl;
         }
     }
-}
-
-void ShaderProgram::setUniform1f(const char* name, float x) const {
-    GLint unifLoc = -1;
-    if((unifLoc = getUniformLocation(name)) != -1) {
-        glUniform1f(unifLoc, x);
-    }
-}
-
-void ShaderProgram::setUniform4f(const char* name, float x, float y, float z, float w) const {
-    GLint unifLoc = -1;
-    if((unifLoc = getUniformLocation(name)) != -1) {
-        glUniform4f(unifLoc, x, y, z, w);
-    }
-}
-
-void ShaderProgram::unbind() const {
-#ifdef GD_CORE_LIB_DEBUG
-    GLint tProgram = 0;
-    glGetIntegerv(GL_CURRENT_PROGRAM, &tProgram);
-    assert(tProgram == programID && "Unbinding not active program");
-#endif
-    glUseProgram(0);
 }

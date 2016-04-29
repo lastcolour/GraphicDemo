@@ -6,7 +6,7 @@
 #include <openGL/openGL.hpp>
 #include <core/VisualApplication.hpp>
 
-
+class Image;
 class Surface;
 class ResourceManager;
 
@@ -29,8 +29,7 @@ public:
     void setResourceShadersDir(const char* dirPath);
 
     GLuint loadOpenGLShader(const char* shaderName, GLenum shaderType);
-    GLuint loadOpenGLProgram(const char* vertShader, const char* fragShader);
-    GLuint loadOpenGLProgram(GLuint vertShader, GLuint fragShader);
+    GLuint loadOpenGLTexture(const char* textureName);
 
     int run();
 

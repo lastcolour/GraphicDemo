@@ -121,15 +121,11 @@ void DemoApp::onInitEvent() {
     GLuint vertID = loadOpenGLShader("vert.glsl", GL_VERTEX_SHADER);
     GLuint firstFragID = loadOpenGLShader("frag_1.glsl", GL_FRAGMENT_SHADER);
     GLuint secondFragID = loadOpenGLShader("frag_2.glsl", GL_FRAGMENT_SHADER);
-    GLuint progID = loadOpenGLProgram(vertID, firstFragID);
-    if(progID != 0) {
-        firstProgram.reset(new ShaderProgram(progID));
+    firstProgram.reset(new ShaderProgram(vertID, firstFragID));
+    secondProgram.reset(new ShaderProgram(vertID, secondFragID));
+    if(!firstProgram->isValid() || !secondProgram->isValid()) {
+        std::exit(1);
     }
-    progID = loadOpenGLProgram(vertID, secondFragID);
-    if(progID != 0) {
-        secondProgram.reset(new ShaderProgram(progID));
-    }
-    
     glDeleteShader(vertID);
     glDeleteShader(firstFragID);
     glDeleteShader(secondFragID);
@@ -142,7 +138,7 @@ void DemoApp::onDrawEvent() {
 
     firstProgram->bind();
     firstProgram->setUniform4f("vColor", 1.0, 1.0, 1.0, 1.0);
-    firstProgram->setUniform1f("xOffset", -0.2f);
+    firstProgram->setUniform1f("hOffset", -0.2f);
 
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, BUF_STRIDE(3 * sizeof(GLfloat)));

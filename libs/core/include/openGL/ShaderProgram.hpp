@@ -3,35 +3,34 @@
 #ifndef __SHADER_PROGRAM_HPP__
 #define __SHADER_PROGRAM_HPP__
 
-#include <core/DEFS.hpp>
-#include <openGL/openGL.hpp>
+#include <openGL/OpenGLObject.hpp>
 
-class LIB_EXPORT_CONV ShaderProgram {
+class LIB_EXPORT_CONV ShaderProgram : public OpenGLObject {
 public:
 
-    ShaderProgram(GLuint progID);
+    ShaderProgram(GLuint vertID, GLuint fragID);
+    ShaderProgram(ShaderProgram&& program);
+    ShaderProgram& operator=(ShaderProgram&& program);
     ~ShaderProgram();
-
-    void bind() const;
-    void unbind() const;
-
-    GLuint getID() const;
 
     void setUniform1f(const char* name, float x) const;
     void setUniform4f(const char* name, float x, float y, float z, float w) const;
     
-private:
+protected:
     
-    GLint getUniformLocation(const char* name) const;
+    bool makeIsBoundCheck(GLuint resourceID);
+    bool makeCheck(GLuint resourceID);
+    bool makeBind(GLuint resourceID);
+    bool makeUnbind(GLuint resourceID);
+    bool makeFree(GLuint resourceID);
 
+private:
+
+    GLint getUniformLocation(const char* name) const;
     void reportUniformNameError(const char* name) const;
 
     ShaderProgram();
     ShaderProgram& operator=(const ShaderProgram&);
-    
-private:
-
-    GLuint programID;
 };
 
 #endif /* __SHADER_PROGRAM_HPP__ */

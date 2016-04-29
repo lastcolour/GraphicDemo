@@ -58,18 +58,6 @@ GLuint OpenGLApplication::loadOpenGLShader(const char* shaderName, GLenum shader
     return shaderID;
 }
 
-GLuint OpenGLApplication::loadOpenGLProgram(const char* vertShader, const char* fragShader) {
-    GLuint programID = 0;
-    programID = resourceImpl->loadProgram(vertShader, fragShader);
-    return programID;
-}
-
-GLuint OpenGLApplication::loadOpenGLProgram(GLuint vertShader, GLuint fragShader) {
-    GLuint programID = 0;
-    programID = resourceImpl->loadProgram(vertShader, fragShader);
-    return programID;
-}
-
 void OpenGLApplication::checkInitErrors() {
     reportGLerrors("onInit");
 }

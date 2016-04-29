@@ -30,6 +30,7 @@ endif()
 
 include_directories(${GD_GLFW_INCLUDE_DIR}
                     ${GD_GLEW_INCLUDE_DIR}
+                    ${GD_STB_IMAGE_INCLUDE_DIR}
                     ${CMAKE_CURRENT_SOURCE_DIR}/include/)
 
 file(GLOB HEADERS "include/core/*.hpp"
