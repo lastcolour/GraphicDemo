@@ -32,10 +32,6 @@ _build/
 *.a
 *.lib
 
-# GLEW *.rc files
-extern/libs/glew-1.13.0/*.pc
-extern/libs/glew-1.13.0/*.pc.in
-
 # Executables
 *.exe
 *.out
