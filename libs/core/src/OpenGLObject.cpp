@@ -11,6 +11,9 @@ OpenGLObject::~OpenGLObject() {
 }
 
 void OpenGLObject::replaceID(OpenGLObject&& object) {
+    if(object.resID == resID) {
+        return;
+    }
     if(resID != 0) {
         if(makeIsBoundCheck(resID)) {
             makeUnbind(resID);

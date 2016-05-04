@@ -50,10 +50,6 @@ private:
     int openGLMinor;
     bool resizeable;
     bool corePorfile;
-
-private:
-
-    friend class Application;
 };
 
 #endif /* __GLFW_SURFACE_HPP__ */

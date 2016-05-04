@@ -24,6 +24,8 @@ GLuint linkProgram(GLuint vertID, GLuint fragID) {
     glAttachShader(tProgID, vertID);
     glAttachShader(tProgID, fragID);
     glLinkProgram(tProgID);
+    glDetachShader(tProgID, vertID);
+    glDetachShader(tProgID, fragID);
     GLint linked = GL_FALSE;
     glGetProgramiv(tProgID, GL_LINK_STATUS, &linked);
     if(linked != GL_TRUE) {
@@ -52,8 +54,40 @@ std::vector<std::string> getAllUniformsNames(GLuint programID) {
 }
 
 ShaderProgram::ShaderProgram(GLuint vertID, GLuint fragID) : OpenGLObject() {
-    assert(vertID != 0 && "Invalud vertex program id");
-    assert(fragID != 0 && "Invalud fragment program id");
+    assert(vertID != 0 && "Invalid vertex program id");
+    assert(fragID != 0 && "Invalid fragment program id");
+    GLuint tProgID = linkProgram(vertID, fragID);
+    if(tProgID != 0) {
+        holdID(tProgID);
+    }
+}
+
+ShaderProgram::ShaderProgram(const char* vertShader, const char* fragShader) {
+    Shader tVert(vertShader, GL_VERTEX_SHADER);
+    Shader tFrag(fragShader, GL_FRAGMENT_SHADER);
+    assert(tVert.getID() != 0 && "Invalid vertex program id");
+    assert(tFrag.getID() != 0 && "Invalid fragment program id");
+    if(tVert.getID() == 0 || tFrag.getID() == 0) {
+        return;
+    }
+    GLuint tProgID = linkProgram(tVert.getID(), tFrag.getID());
+    if(tProgID != 0) {
+        holdID(tProgID);
+    }
+}
+
+ShaderProgram::ShaderProgram(const Shader& firstShader, const Shader& secondShader) :
+    OpenGLObject() {
+    assert(firstShader.getID() != 0 && "Invalid vertex program id");
+    assert(secondShader.getID() != 0 && "Invalid fragment program id");
+    GLuint vertID = 0;
+    GLuint fragID = 0;
+    if(firstShader.getType() != secondShader.getType()) {
+        vertID = firstShader.getType() == GL_VERTEX_SHADER ? firstShader.getID() : secondShader.getID();
+        fragID = firstShader.getType() == GL_FRAGMENT_SHADER ? firstShader.getID() : secondShader.getID();
+    }
+    assert(vertID != 0 && "No vertex shader specified");
+    assert(fragID != 0 && "No fragment shader specified");
     GLuint tProgID = linkProgram(vertID, fragID);
     if(tProgID != 0) {
         holdID(tProgID);
@@ -82,17 +116,21 @@ ShaderProgram::~ShaderProgram() {
 void ShaderProgram::setUniform1f(const char* name, float x) const {
     assert(getID() != 0 && "Invalid shader program used");
     GLint unifLoc = -1;
+    glUseProgram(getID());
     if((unifLoc = getUniformLocation(name)) != -1) {
         glUniform1f(unifLoc, x);
     }
+    glUseProgram(0);
 }
 
 void ShaderProgram::setUniform4f(const char* name, float x, float y, float z, float w) const {
     assert(getID() != 0 && "Invalid shader program used");
     GLint unifLoc = -1;
+    glUseProgram(getID());
     if((unifLoc = getUniformLocation(name)) != -1) {
         glUniform4f(unifLoc, x, y, z, w);
     }
+    glUseProgram(0);
 }
 
 bool ShaderProgram::makeIsBoundCheck(GLuint resourceID) {

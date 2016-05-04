@@ -54,4 +54,4 @@ protected:
     friend class Surface;
 };
 
-#endif /* VisualApplication */
+#endif /* __VISUAL_APPLICATION_HPP__ */

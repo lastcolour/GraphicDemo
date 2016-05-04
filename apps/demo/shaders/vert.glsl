@@ -1,9 +1,11 @@
 #version 330 core
 
 layout(location = 0) in vec3 vPosition;
+layout(location = 1) in vec2 vTexCoord;
 
-uniform float hOffset;
+out vec2 texCoord;
 
 void main() {
-  gl_Position = vec4(vPosition.x + hOffset, vPosition.y, vPosition.z, 1.0f);
+  gl_Position = vec4(vPosition, 1.0f);
+  texCoord = vTexCoord;
 }

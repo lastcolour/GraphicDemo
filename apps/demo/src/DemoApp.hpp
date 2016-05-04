@@ -4,8 +4,7 @@
 #define __DEMO_APP_HPP__
 
 #include <core/OpenGLApplication.hpp>
-#include <openGL/ShaderProgram.hpp>
-
+#include <openGL/VAOPipeline.hpp>
 #include <memory>
 
 class DemoApp : public OpenGLApplication {
@@ -20,15 +19,9 @@ protected:
     void onDrawEvent();
     void onKeyboardEvent(const KeyboardEvent& keyEvent);
 
-    GLuint createFirstTriangle();
-    GLuint createSecondTriangle();
-
 private:
 
-    GLuint firstTriangle;
-    GLuint secondTriangle;
-    std::unique_ptr<ShaderProgram> firstProgram;
-    std::unique_ptr<ShaderProgram> secondProgram;
+     std::unique_ptr<VAOPipeline> triangle;
 };
 
 #endif /* __DEMO_APP_HPP__ */

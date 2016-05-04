@@ -2,7 +2,7 @@
 
 #include <core/OpenGLApplication.hpp>
 #include <core/GLFWSurface.hpp>
-#include <core/ResouceManager.hpp>
+#include <core/Resouce.hpp>
 
 #include <iostream>
 #include <string>
@@ -13,14 +13,13 @@ const int APP_FAIL = -1;
 const int APP_OK = 0;
 
 OpenGLApplication::OpenGLApplication(int argc, char* argv[]) :
-    surfaceImpl(new GLFWSurface(this)),
-    resourceImpl(new ResourceManager(argc, argv)) {
+    surfaceImpl(new GLFWSurface(this)) {
     assert(argc >= 1 && "[App] Required cmd argc for application");
     assert(argv != nullptr && "[App] Require argv for application");
+    Resource::setResourceDir(argv[0]);
 }
 
 OpenGLApplication::~OpenGLApplication() {
-    SAFE_DELETE(resourceImpl);
     SAFE_DELETE(surfaceImpl);
 }
 
@@ -48,16 +47,6 @@ void OpenGLApplication::setOpenGLCoreProfile(bool flag) {
     surfaceImpl->setCoreProfile(flag);
 }
 
-void OpenGLApplication::setResourceShadersDir(const char* dirPath) {
-    resourceImpl->setShadersDir(dirPath);
-}
-
-GLuint OpenGLApplication::loadOpenGLShader(const char* shaderName, GLenum shaderType) {
-    GLuint shaderID = 0;
-    shaderID = resourceImpl->loadShader(shaderName, shaderType);
-    return shaderID;
-}
-
 void OpenGLApplication::checkInitErrors() {
     reportGLerrors("onInit");
 }
@@ -73,7 +62,6 @@ void OpenGLApplication::checkKeyboardErrors() {
 void OpenGLApplication::checkDrawErrors() {
     reportGLerrors("onDraw");
 }
-
 
 void OpenGLApplication::reportGLerrors(const char* location) {
     std::string tMesagePrefix = "[App:";

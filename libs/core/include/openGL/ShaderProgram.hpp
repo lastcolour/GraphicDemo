@@ -4,11 +4,16 @@
 #define __SHADER_PROGRAM_HPP__
 
 #include <openGL/OpenGLObject.hpp>
+#include <openGL/Shader.hpp>
 
 class LIB_EXPORT_CONV ShaderProgram : public OpenGLObject {
 public:
 
+    typedef ShaderProgram* PtrType;
+
+    ShaderProgram(const char* vertShader, const char* fragShader);
     ShaderProgram(GLuint vertID, GLuint fragID);
+    ShaderProgram(const Shader& vertShader, const Shader& fragShader);
     ShaderProgram(ShaderProgram&& program);
     ShaderProgram& operator=(ShaderProgram&& program);
     ~ShaderProgram();

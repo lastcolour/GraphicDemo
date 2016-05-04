@@ -13,6 +13,8 @@ include(${GD_CONFIG_DIR}/opengl.cmake)
 set(TARGET_NAME "demo")
 
 set(SHADER_DIR_NAME "shaders")
+set(IMAGE_DIR_NAME "images")
+set(IMAGE_DIR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_DIR_NAME}")
 set(SHADER_DIR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${SHADER_DIR_NAME}")
 
 file(GLOB HEADERS "src/*.hpp") # TODO: Replace glob to file enumeration
@@ -57,6 +59,12 @@ add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${SHADER_DIR_PATH}
         $<TARGET_FILE_DIR:${TARGET_NAME}>/${TARGE_NAME}/${SHADER_DIR_NAME}) # Copy shaders
+
+message(STATUS "Image dir: ${IMAGE_DIR_PATH}")
+add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${IMAGE_DIR_PATH}
+        $<TARGET_FILE_DIR:${TARGET_NAME}>/${TARGE_NAME}/${IMAGE_DIR_NAME}) # Copy shaders
 
 # Other target setups
 if(MSVC)
