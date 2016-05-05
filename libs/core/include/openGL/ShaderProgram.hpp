@@ -22,6 +22,7 @@ public:
 
     void setUniform1f(const char* name, float x) const;
     void setUniform4f(const char* name, float x, float y, float z, float w) const;
+    void setUniformMat4fv(const char* name, const GLfloat* mat4x4Data) const;
     void setUniformTex(const char* name, Texture* texture);
     void setUniformTex(const char* name, Texture&& texture);
 

@@ -24,6 +24,8 @@ public:
     void setOpenGLVersion(unsigned int major, unsigned int minor);
     void setOpenGLCoreProfile(bool flag);
 
+    void setDataFolder(const char* path);
+
     int run();
 
 protected:

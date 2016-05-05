@@ -6,6 +6,10 @@
 #include <iostream>
 #include <vector>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 DemoApp::DemoApp(int argc, char* argv[]) : OpenGLApplication(argc, argv) {
     setSurfaceTitle("DemoApp");
     setSurfaceGeometry(600, 400);
@@ -13,6 +17,8 @@ DemoApp::DemoApp(int argc, char* argv[]) : OpenGLApplication(argc, argv) {
 
     setOpenGLVersion(3, 3);
     setOpenGLCoreProfile(true);
+
+    setDataFolder("data");
 }
 
 DemoApp::~DemoApp() {
@@ -76,6 +82,11 @@ void DemoApp::onInitEvent() {
 
 void DemoApp::onDrawEvent() {
     glClear(GL_COLOR_BUFFER_BIT);
+
+    glm::mat4 transform;
+    transform = glm::rotate(transform, glm::pi<float>()/4.f, glm::vec3(0.f, 0.f, 1.f));
+    triangle->getProgram()->setUniformMat4fv("transform", glm::value_ptr(transform));
+
     triangle->drawAllElements();
     surfaceSwapBuffers();
 }

@@ -12,4 +12,6 @@
   #include <GL/glut.h>
 #endif
 
+#define CHECK_GL_CALL( X )
+
 #endif /* __OPEN_GL_HPP__ */

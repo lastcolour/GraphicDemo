@@ -17,6 +17,7 @@ private:
 
     static DirPath* dirPath;
     static void setResourceDir(const char* dirPath);
+    static void setClientResourceDir(const char* dirPath);
 
     friend class OpenGLApplication;
 

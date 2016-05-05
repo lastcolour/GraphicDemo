@@ -18,15 +18,25 @@ public:
         assert(appLocation != "" && "Invalid application location");
     }
 
+    void setClientPath(const char* path) {
+        assert(path != nullptr && "Invalid data path");
+        clientPath = path;
+    }
+
     const char* fullPath(const char* filename) {
         lastPathReturned.clear();
-        lastPathReturned = appLocation + "/" + filename;
+        lastPathReturned = appLocation;
+        if(clientPath != "") {
+            lastPathReturned = lastPathReturned + "/" + clientPath;
+        }
+        lastPathReturned = lastPathReturned + "/" + filename;
         return lastPathReturned.c_str();
     }
 
 private:
 
     std::string appLocation;
+    std::string clientPath;
     std::string lastPathReturned;
 
 };
@@ -41,7 +51,13 @@ void Resource::setResourceDir(const char* appPath) {
     });
 }
 
+void Resource::setClientResourceDir(const char* path) {
+    assert(dirPath != nullptr && "Resources not initialized");
+    dirPath->setClientPath(path);
+}
+
 const char* Resource::getFullPath(const char* filename) {
+    assert(dirPath != nullptr && "Resources not initialized");
     return dirPath->fullPath(filename);
 }
 

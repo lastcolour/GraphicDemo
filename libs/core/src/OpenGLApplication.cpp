@@ -63,6 +63,10 @@ void OpenGLApplication::checkDrawErrors() {
     reportGLerrors("onDraw");
 }
 
+void OpenGLApplication::setDataFolder(const char* path) {
+    Resource::setClientResourceDir(path);
+}
+
 void OpenGLApplication::reportGLerrors(const char* location) {
     std::string tMesagePrefix = "[App:";
     tMesagePrefix = tMesagePrefix + location + "]";

@@ -12,19 +12,19 @@ include(${GD_CONFIG_DIR}/opengl.cmake)
 
 set(TARGET_NAME "demo")
 
-set(SHADER_DIR_NAME "shaders")
-set(IMAGE_DIR_NAME "images")
-set(IMAGE_DIR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_DIR_NAME}")
-set(SHADER_DIR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${SHADER_DIR_NAME}")
+set(DATA_DIR_NAME "data")
+set(DATA_DIR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${DATA_DIR_NAME}")
+set(SHADER_DIR_PATH "${DATA_DIR_PATH}/shaders")
 
 file(GLOB HEADERS "src/*.hpp") # TODO: Replace glob to file enumeration
 file(GLOB SRC     "src/*.cpp")
 
-file(GLOB SHADERS "${SHADER_DIR_NAME}/*.glsl")
+file(GLOB SHADERS "${SHADER_DIR_PATH}/*.glsl")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/
                     ${GD_LIBS_ROOT_DIR}/core/include
                     ${GD_GLEW_INCLUDE_DIR}
+                    ${GD_GLM_INCLUDE_DIR}
                     ${OPEN_GL_INCLUDE_DIR})
 
 add_executable(${TARGET_NAME} ${SRC} ${HEADERS} ${SHADERS})
@@ -54,17 +54,12 @@ target_link_libraries(${TARGET_NAME} PRIVATE ${CORE_LIB_PATH})
 
 # Additional build steps
 
-message(STATUS "Shader dir: ${SHADER_DIR_PATH}")
+# Copy application data
+message(STATUS "Shader dir: ${DATA_DIR_PATH}")
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${SHADER_DIR_PATH}
-        $<TARGET_FILE_DIR:${TARGET_NAME}>/${TARGE_NAME}/${SHADER_DIR_NAME}) # Copy shaders
-
-message(STATUS "Image dir: ${IMAGE_DIR_PATH}")
-add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${IMAGE_DIR_PATH}
-        $<TARGET_FILE_DIR:${TARGET_NAME}>/${TARGE_NAME}/${IMAGE_DIR_NAME}) # Copy shaders
+        ${DATA_DIR_PATH}
+        $<TARGET_FILE_DIR:${TARGET_NAME}>/${TARGE_NAME}/${DATA_DIR_NAME})
 
 # Other target setups
 if(MSVC)

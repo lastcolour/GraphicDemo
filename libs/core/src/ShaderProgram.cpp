@@ -202,6 +202,17 @@ void ShaderProgram::setUniform4f(const char* name, float x, float y, float z, fl
     glUseProgram(0);
 }
 
+void ShaderProgram::setUniformMat4fv(const char* name, const GLfloat* mat4x4Data) const {
+    assert(getID() != 0 && "Invalid shader program used");
+    assert(mat4x4Data != nullptr && "Setup invalid matrix data uniform");
+    GLint unifLoc = -1;
+    glUseProgram(getID());
+    if((unifLoc = uniformFindLocation(name)) != -1) {
+        glUniformMatrix4fv(unifLoc, 1, GL_FALSE, mat4x4Data);
+    }
+    glUseProgram(0);
+}
+
 void ShaderProgram::setUniformTex(const char* name, Texture* texture) {
     assert(getID() != 0 && "Invalid shader program used");
     assert(texture != nullptr && "Setup invalid texture");
