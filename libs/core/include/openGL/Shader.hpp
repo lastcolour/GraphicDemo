@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __SHADER_HPP__
 #define __SHADER_HPP__
 

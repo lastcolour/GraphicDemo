@@ -35,8 +35,6 @@ protected:
     void checkKeyboardErrors();
     void checkDrawErrors();
 
-    void reportGLerrors(const char* location);
-
 private:
 
     Surface* surfaceImpl;

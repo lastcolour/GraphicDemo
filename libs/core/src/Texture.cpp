@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #include <openGL/Texture.hpp>
 
 #include <iostream>
@@ -86,6 +88,7 @@ Texture::Texture(const char* filename, GLenum texType, GLenum texFormat) :
 
     glBindTexture(texType, 0);
     holdID(texUnitID);
+    CHECK_OPENGL_STATUS("Texture:Texture");
 }
 
 Texture::Texture(Texture&& texture) :
@@ -123,6 +126,7 @@ Texture::~Texture() {
         makeUnbind(getID());
     }
     makeFree(getID());
+    CHECK_OPENGL_STATUS("Texture:~Texture");
 }
 
 int Texture::heigth() const {
@@ -174,18 +178,21 @@ void Texture::setWrapS(GLenum wrapType) {
     makeBind(getID());
     glTexParameteri(texUnitType, GL_TEXTURE_WRAP_S, wrapType);
     makeUnbind(getID());
+    CHECK_OPENGL_STATUS("Texture:setWrapS");
 }
 
 void Texture::setWrapT(GLenum wrapType) {
     makeBind(getID());
     glTexParameteri(texUnitType, GL_TEXTURE_WRAP_T, wrapType);
     makeUnbind(getID());
+    CHECK_OPENGL_STATUS("Texture:setWrapT");
 }
 
 void Texture::setWrapR(GLenum wrapType) {
     makeBind(getID());
     glTexParameteri(texUnitType, GL_TEXTURE_WRAP_R, wrapType);
     makeUnbind(getID());
+    CHECK_OPENGL_STATUS("Texture:setWrapR");
 }
 
 void Texture::setBorderColor() {
@@ -195,10 +202,12 @@ void Texture::setMinFilter(GLenum filterType) {
     makeBind(getID());
     glTexParameteri(texUnitType, GL_TEXTURE_MIN_FILTER, filterType);
     makeUnbind(getID());
+    CHECK_OPENGL_STATUS("Texture:setMinFilter");
 }
 
 void Texture::setMagFilter(GLenum filterType) {
     makeBind(getID());
     glTexParameteri(texUnitType, GL_TEXTURE_MAG_FILTER, filterType);
     makeUnbind(getID());
+    CHECK_OPENGL_STATUS("Texture:setMagFilter");
 }

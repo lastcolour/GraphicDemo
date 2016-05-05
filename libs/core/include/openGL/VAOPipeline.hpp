@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __VAO_PIPELINE__
 #define __VAO_PIPELINE__
 

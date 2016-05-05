@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #include <openGL/Shader.hpp>
 
 #include <cassert>

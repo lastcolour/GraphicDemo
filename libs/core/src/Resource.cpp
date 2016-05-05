@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #include <core/Resouce.hpp>
 
 #include <cassert>

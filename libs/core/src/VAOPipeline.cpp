@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #include <openGL/VAOPipeline.hpp>
 
 #include <utility>
@@ -75,6 +77,7 @@ VAOPipeline::~VAOPipeline() {
         glDeleteBuffers(1, &vertexElemBuffer);
     }
     SAFE_DELETE(shaderPrg);
+    CHECK_OPENGL_STATUS("VAOPipeline:~VAOPipeline");
 }
 
 void VAOPipeline::setProgram(ShaderProgram* program) {
@@ -114,6 +117,7 @@ void VAOPipeline::setVertexBuffer(GLsizeiptr size, const GLvoid* buffer, const V
     }
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    CHECK_OPENGL_STATUS("VAOPipeline:setVertexBuffer");
 }
 
 void VAOPipeline::setElementBuffer(GLsizeiptr size, const GLvoid* buffer, GLenum bufferType, GLenum bufferMode) {
@@ -137,6 +141,7 @@ void VAOPipeline::setElementBuffer(GLsizeiptr size, const GLvoid* buffer, GLenum
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, buffer, bufferMode);
     glBindVertexArray(0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    CHECK_OPENGL_STATUS("VAOPipeline:setElementBuffer");
 }
 
 ShaderProgram* VAOPipeline::getProgram() {
@@ -154,32 +159,44 @@ void VAOPipeline::drawElements(GLsizei count) {
     }
     glBindVertexArray(vaoID);
     shaderPrg->bind(); 
+
     glDrawElements(drawMode, count, elemBufferType, 0);
+
     shaderPrg->unbind();
     glBindVertexArray(0);
+    CHECK_OPENGL_STATUS("VAOPipeline:drawElements");
 }
 
 void VAOPipeline::drawAllElements() {
     assert(vertexElemBuffer != 0 && "Can't draw elements without element buffer");
     glBindVertexArray(vaoID);
     shaderPrg->bind(); 
+
     glDrawElements(drawMode, elemsSize, elemBufferType, 0);
+
     shaderPrg->unbind();
     glBindVertexArray(0);
+    CHECK_OPENGL_STATUS("VAOPipeline:drawAllElements");
 }
 
 void VAOPipeline::draw(GLsizei count) {
     glBindVertexArray(vaoID);
     shaderPrg->bind(); 
+
     glDrawArrays(drawMode, 0, count);
+
     shaderPrg->unbind();
     glBindVertexArray(0);
+    CHECK_OPENGL_STATUS("VAOPipeline:draw");
 }
 
 void VAOPipeline::drawAll() {
     glBindVertexArray(vaoID);
     shaderPrg->bind(); 
+
     glDrawArrays(drawMode, 0, vertexSize);
+
     shaderPrg->unbind();
     glBindVertexArray(0);
+    CHECK_OPENGL_STATUS("VAOPipeline:drawAll");
 }
