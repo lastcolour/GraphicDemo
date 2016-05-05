@@ -27,7 +27,8 @@ protected:
     virtual bool makeFree(GLuint resourceID)         = 0;
 
     void holdID(GLuint resourceID);
-    void replaceID(OpenGLObject&& resourceID);
+    void replaceTo(OpenGLObject&& resourceID);
+    void resetID();
     GLuint getID() const;
 
 private:

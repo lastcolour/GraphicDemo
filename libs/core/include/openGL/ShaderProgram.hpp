@@ -3,8 +3,10 @@
 #ifndef __SHADER_PROGRAM_HPP__
 #define __SHADER_PROGRAM_HPP__
 
-#include <openGL/OpenGLObject.hpp>
+#include <openGL/Texture.hpp>
 #include <openGL/Shader.hpp>
+
+class TextureManager;
 
 class LIB_EXPORT_CONV ShaderProgram : public OpenGLObject {
 public:
@@ -20,6 +22,8 @@ public:
 
     void setUniform1f(const char* name, float x) const;
     void setUniform4f(const char* name, float x, float y, float z, float w) const;
+    void setUniformTex(const char* name, Texture* texture);
+    void setUniformTex(const char* name, Texture&& texture);
 
 protected:
 
@@ -31,11 +35,15 @@ protected:
 
 private:
 
-    GLint getUniformLocation(const char* name) const;
-    void reportUniformNameError(const char* name) const;
+    GLint uniformFindLocation(const char* name) const;
+    void uniformReportNameError(const char* name) const;
 
     ShaderProgram();
     ShaderProgram& operator=(const ShaderProgram&);
+
+private:
+
+    TextureManager* texManager;
 };
 
 #endif /* __SHADER_PROGRAM_HPP__ */

@@ -37,27 +37,45 @@ void DemoApp::onKeyboardEvent(const KeyboardEvent& keyEvent) {
 
 void DemoApp::onInitEvent() {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-    GLfloat vertexData[] = {
+    GLfloat vertexData[] = { // array of { <VertCoord, VertColor, TexCoord> }
         -0.5f, -0.5f, 0.0f,
+         1.0f,  1.0f, 0.0f,
          0.0f,  0.0f,
+
          0.5f, -0.5f, 0.0f,
+         0.0f,  1.0f, 0.0f,
+         1.0f,  0.0f,
+
+         0.5f,  0.5f, 0.0f,
+         0.0f,  0.0f, 1.0f,
+         1.0f,  1.0f,
+
+        -0.5f,  0.5f, 0.0f,
+         1.0f,  0.0f, 0.0f,
          0.0f,  1.0f,
-         0.0f,  0.5f, 0.0f,
-         0.5f,  0.5f,
+    };
+    GLuint elemData[] = {
+        0, 1, 2, 2, 3, 0
     };
     VertexPacking packing[] = {
-        VertexPacking::VEC3, VertexPacking::VEC2, VertexPacking::NONE
+        VertexPacking::VEC3, VertexPacking::VEC3, VertexPacking::VEC2, VertexPacking::NONE
     };
-    Shader vert("shaders/vert.glsl", GL_VERTEX_SHADER);
-    Shader frag("shaders/frag.glsl", GL_FRAGMENT_SHADER); 
+
+    Texture *texContainer = new Texture("images/container.jpg", GL_TEXTURE_2D, GL_RGB);
+    texContainer->setMinFilter(GL_LINEAR);
+    texContainer->setMagFilter(GL_NEAREST);
+
+    ShaderProgram tProgram("shaders/vert.glsl", "shaders/frag.glsl");
+    tProgram.setUniformTex("Container", texContainer);
+
     triangle.reset(new VAOPipeline());
-    triangle->setProgram(new ShaderProgram(vert, frag));
-    triangle->setTexture(new Texture2d("images/wall.jpg"));
+    triangle->setProgram(std::move(tProgram));
     triangle->setVertexBuffer(sizeof(vertexData), vertexData, packing);
+    triangle->setElementBuffer(sizeof(elemData), elemData);
 }
 
 void DemoApp::onDrawEvent() {
     glClear(GL_COLOR_BUFFER_BIT);
-    triangle->draw();
+    triangle->drawAllElements();
     surfaceSwapBuffers();
 }

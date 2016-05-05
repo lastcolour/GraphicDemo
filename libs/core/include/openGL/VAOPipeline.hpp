@@ -4,7 +4,7 @@
 #include <openGL/openGL.hpp>
 
 #include <openGL/ShaderProgram.hpp>
-#include <openGL/Texture2d.hpp>
+#include <openGL/Texture.hpp>
 
 enum class VertexPacking {
     NONE = 0,
@@ -22,16 +22,17 @@ public:
 
     void setDrawMode(GLenum mode);
     void setProgram(ShaderProgram* program);
-    void setTexture(Texture2d* texture);
+    void setProgram(ShaderProgram&& program);
     void setVertexBuffer(GLsizeiptr size, const GLvoid* buffer, const VertexPacking* packing, GLenum bufferMode = GL_STATIC_DRAW);
-    void setElementBuffer(GLsizeiptr size, const GLvoid* buffer, GLenum bufferMode = GL_STATIC_DRAW);
+    void setElementBuffer(GLsizeiptr size, const GLvoid* buffer, GLenum bufferType = GL_UNSIGNED_INT, GLenum bufferMode = GL_STATIC_DRAW);
 
     ShaderProgram* getProgram();
-    Texture2d* getTexture();
     GLsizei getVertexSize() const;
 
-    void draw();
-    void drawElements();
+    void draw(GLsizei count);
+    void drawAll();
+    void drawElements(GLsizei count);
+    void drawAllElements();
 
 private:
 
@@ -44,9 +45,10 @@ private:
     GLuint vaoID;
     GLuint vertexDataBuffer;
     GLuint vertexElemBuffer;
+    GLenum elemBufferType;
     GLenum drawMode;
     GLsizei vertexSize;
-    Texture2d* texUnit;
+    GLsizei elemsSize;
     ShaderProgram* shaderPrg;
 };
 

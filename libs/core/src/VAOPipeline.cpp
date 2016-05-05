@@ -1,30 +1,7 @@
 #include <openGL/VAOPipeline.hpp>
 
+#include <utility>
 #include <cassert>
-
-template<class T>
-class bind_guard {
-public:
-
-    typedef typename T::PtrType PtrT;
-
-    bind_guard(PtrT obj) : objPtr(obj) {
-        if(objPtr != nullptr) {
-            objPtr->bind();
-        }
-    }
-    ~bind_guard() {
-        if(objPtr != nullptr) {
-            objPtr->unbind();
-        }
-    }
-private:
-    bind_guard();
-    bind_guard(const bind_guard&);
-    bind_guard& operator=(const bind_guard&);
-
-    PtrT objPtr;
-};
 
 struct AttribData {
     GLint compNum;
@@ -78,9 +55,10 @@ VAOPipeline::VAOPipeline() :
     vaoID(0),
     vertexDataBuffer(0),
     vertexElemBuffer(0),
+    elemBufferType(GL_NONE),
     drawMode(GL_TRIANGLES),
     vertexSize(0),
-    texUnit(nullptr),
+    elemsSize(0),
     shaderPrg(nullptr) {
     glGenVertexArrays(1, &vaoID);
     assert(vaoID != 0 && "Can't generate VAO"); 
@@ -96,7 +74,6 @@ VAOPipeline::~VAOPipeline() {
     if(vertexElemBuffer != 0) {
         glDeleteBuffers(1, &vertexElemBuffer);
     }
-    SAFE_DELETE(texUnit);
     SAFE_DELETE(shaderPrg);
 }
 
@@ -106,11 +83,18 @@ void VAOPipeline::setProgram(ShaderProgram* program) {
     shaderPrg = program;
 }
 
-void VAOPipeline::setTexture(Texture2d* texture) {
-    texUnit = texture;
+void VAOPipeline::setProgram(ShaderProgram&& program) {
+    assert(program.isValid() == true && "Setup not compiled program");
+    if(shaderPrg != nullptr) {
+        SAFE_DELETE(shaderPrg);
+    }
+    shaderPrg = new ShaderProgram(std::move(program));
 }
 
 void VAOPipeline::setVertexBuffer(GLsizeiptr size, const GLvoid* buffer, const VertexPacking* packing, GLenum bufferMode) {
+    if(vertexDataBuffer != 0) {
+        glDeleteBuffers(1, &vertexDataBuffer);
+    }
     glBindVertexArray(vaoID);
     glGenBuffers(1, &vertexDataBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexDataBuffer);
@@ -132,7 +116,21 @@ void VAOPipeline::setVertexBuffer(GLsizeiptr size, const GLvoid* buffer, const V
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void VAOPipeline::setElementBuffer(GLsizeiptr size, const GLvoid* buffer, GLenum bufferMode) {
+void VAOPipeline::setElementBuffer(GLsizeiptr size, const GLvoid* buffer, GLenum bufferType, GLenum bufferMode) {
+    if(vertexElemBuffer != 0) {
+        glDeleteBuffers(1, &vertexElemBuffer);
+    }
+    elemBufferType = bufferType;
+    switch (bufferType)
+    {
+    case GL_UNSIGNED_INT:
+        elemsSize =  static_cast<GLsizei>(size) / sizeof(GLuint);
+        assert(static_cast<GLsizei>(size) % sizeof(GLuint) == 0 && "Element buffer has wrong structure");
+        break;
+    default:
+        assert(0 && "Unknown buffer type");
+        break;
+    }
     glBindVertexArray(vaoID);
     glGenBuffers(1, &vertexElemBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexElemBuffer);
@@ -145,18 +143,43 @@ ShaderProgram* VAOPipeline::getProgram() {
     return shaderPrg;
 }
 
-Texture2d* VAOPipeline::getTexture() {
-    return texUnit;
-}
-
 void VAOPipeline::setDrawMode(GLenum mode) {
     drawMode = mode;
 }
 
-void VAOPipeline::draw() {
+void VAOPipeline::drawElements(GLsizei count) {
+    assert(vertexElemBuffer != 0 && "Can't draw elements without element buffer");
+    if(elemsSize == 0) {
+        return;
+    }
     glBindVertexArray(vaoID);
-    bind_guard<Texture2d> tex(texUnit);
-    bind_guard<ShaderProgram> prg(shaderPrg); 
+    shaderPrg->bind(); 
+    glDrawElements(drawMode, count, elemBufferType, 0);
+    shaderPrg->unbind();
+    glBindVertexArray(0);
+}
+
+void VAOPipeline::drawAllElements() {
+    assert(vertexElemBuffer != 0 && "Can't draw elements without element buffer");
+    glBindVertexArray(vaoID);
+    shaderPrg->bind(); 
+    glDrawElements(drawMode, elemsSize, elemBufferType, 0);
+    shaderPrg->unbind();
+    glBindVertexArray(0);
+}
+
+void VAOPipeline::draw(GLsizei count) {
+    glBindVertexArray(vaoID);
+    shaderPrg->bind(); 
+    glDrawArrays(drawMode, 0, count);
+    shaderPrg->unbind();
+    glBindVertexArray(0);
+}
+
+void VAOPipeline::drawAll() {
+    glBindVertexArray(vaoID);
+    shaderPrg->bind(); 
     glDrawArrays(drawMode, 0, vertexSize);
+    shaderPrg->unbind();
     glBindVertexArray(0);
 }

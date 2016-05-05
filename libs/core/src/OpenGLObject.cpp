@@ -10,7 +10,7 @@ OpenGLObject::OpenGLObject() : resID(0) {
 OpenGLObject::~OpenGLObject() {
 }
 
-void OpenGLObject::replaceID(OpenGLObject&& object) {
+void OpenGLObject::replaceTo(OpenGLObject&& object) {
     if(object.resID == resID) {
         return;
     }
@@ -60,4 +60,14 @@ void OpenGLObject::unbind() {
     if(makeIsBoundCheck(resID)) {
         makeUnbind(resID);
     }
+}
+
+void OpenGLObject::resetID() {
+   if(resID != 0) {
+        if(makeIsBoundCheck(resID)) {
+            makeUnbind(resID);
+        }
+        makeFree(resID);
+    }
+   resID = 0;
 }

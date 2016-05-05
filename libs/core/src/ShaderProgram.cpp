@@ -6,6 +6,57 @@
 #include <string>
 #include <cassert>
 #include <vector>
+#include <utility>
+
+const GLint MAX_BIND_TEX_UNITS = 16;
+
+class TextureManager {
+public:
+
+    typedef Texture* TexturePtr;
+    typedef std::pair<GLint, TexturePtr> TexBindInfo;
+
+    TextureManager() : texUnits() {}
+    ~TextureManager() {
+        for(auto texInfo : texUnits) {
+            SAFE_DELETE(texInfo.second);
+        }
+        texUnits.clear();
+    }
+    
+    void reset() {
+        texUnits.clear();
+    }
+
+    void addTexture(GLint location, TexturePtr texture) {
+        assert(texUnits.size() < MAX_BIND_TEX_UNITS && "Too many textures used for program binding");
+        texUnits.push_back(std::make_pair(location, texture));
+    }
+
+    void bind() {
+        GLint tCurrActiveTexture = GL_TEXTURE0;
+        for(auto texInfo : texUnits) {
+            glActiveTexture(tCurrActiveTexture);
+            texInfo.second->bind();
+            glUniform1i(texInfo.first, tCurrActiveTexture - GL_TEXTURE0);
+            tCurrActiveTexture++;
+        }
+    }
+
+    void unbind() {
+        for(auto texInfo : texUnits) {
+            texInfo.second->unbind();
+        }
+    }
+
+private:
+
+    TextureManager(const TextureManager&);
+    TextureManager& operator=(const TextureManager&);
+
+    std::vector<TexBindInfo> texUnits;
+};
+
 
 std::string getProgramLog(GLuint instanceID) {
     GLint tLogSize = 0;
@@ -53,7 +104,10 @@ std::vector<std::string> getAllUniformsNames(GLuint programID) {
     return allUniforms;
 }
 
-ShaderProgram::ShaderProgram(GLuint vertID, GLuint fragID) : OpenGLObject() {
+ShaderProgram::ShaderProgram(GLuint vertID, GLuint fragID) : 
+    OpenGLObject(),
+    texManager(new TextureManager()) {
+
     assert(vertID != 0 && "Invalid vertex program id");
     assert(fragID != 0 && "Invalid fragment program id");
     GLuint tProgID = linkProgram(vertID, fragID);
@@ -62,7 +116,10 @@ ShaderProgram::ShaderProgram(GLuint vertID, GLuint fragID) : OpenGLObject() {
     }
 }
 
-ShaderProgram::ShaderProgram(const char* vertShader, const char* fragShader) {
+ShaderProgram::ShaderProgram(const char* vertShader, const char* fragShader) :
+    OpenGLObject(),
+    texManager(new TextureManager()) {
+
     Shader tVert(vertShader, GL_VERTEX_SHADER);
     Shader tFrag(fragShader, GL_FRAGMENT_SHADER);
     assert(tVert.getID() != 0 && "Invalid vertex program id");
@@ -77,7 +134,9 @@ ShaderProgram::ShaderProgram(const char* vertShader, const char* fragShader) {
 }
 
 ShaderProgram::ShaderProgram(const Shader& firstShader, const Shader& secondShader) :
-    OpenGLObject() {
+    OpenGLObject(),
+    texManager(new TextureManager()) {
+
     assert(firstShader.getID() != 0 && "Invalid vertex program id");
     assert(secondShader.getID() != 0 && "Invalid fragment program id");
     GLuint vertID = 0;
@@ -94,19 +153,29 @@ ShaderProgram::ShaderProgram(const Shader& firstShader, const Shader& secondShad
     }
 }
 
-ShaderProgram::ShaderProgram(ShaderProgram&& program) {
-    replaceID(std::move(program));
+ShaderProgram::ShaderProgram(ShaderProgram&& program) :
+    OpenGLObject(),
+    texManager(nullptr) {
+
+    replaceTo(std::move(program));
+    std::swap(texManager, program.texManager);
 }
 
 ShaderProgram& ShaderProgram::operator=(ShaderProgram&& program) {
     if(this == &program) {
         return *this;
     }
-    replaceID(std::move(program));
+    replaceTo(std::move(program));
+    SAFE_DELETE(texManager);
+    std::swap(texManager, program.texManager);
     return *this;
 }
 
 ShaderProgram::~ShaderProgram() {
+    SAFE_DELETE(texManager);
+    if(getID() == 0) {
+        return;
+    }
     if(makeIsBoundCheck(getID())) {
         makeUnbind(getID());
     }
@@ -117,7 +186,7 @@ void ShaderProgram::setUniform1f(const char* name, float x) const {
     assert(getID() != 0 && "Invalid shader program used");
     GLint unifLoc = -1;
     glUseProgram(getID());
-    if((unifLoc = getUniformLocation(name)) != -1) {
+    if((unifLoc = uniformFindLocation(name)) != -1) {
         glUniform1f(unifLoc, x);
     }
     glUseProgram(0);
@@ -127,8 +196,32 @@ void ShaderProgram::setUniform4f(const char* name, float x, float y, float z, fl
     assert(getID() != 0 && "Invalid shader program used");
     GLint unifLoc = -1;
     glUseProgram(getID());
-    if((unifLoc = getUniformLocation(name)) != -1) {
+    if((unifLoc = uniformFindLocation(name)) != -1) {
         glUniform4f(unifLoc, x, y, z, w);
+    }
+    glUseProgram(0);
+}
+
+void ShaderProgram::setUniformTex(const char* name, Texture* texture) {
+    assert(getID() != 0 && "Invalid shader program used");
+    assert(texture != nullptr && "Setup invalid texture");
+    assert(texture->isValid() && "Setup invalid texture");
+    GLint unifLoc = -1;
+    glUseProgram(getID());
+    if((unifLoc = uniformFindLocation(name)) != -1) {
+        texManager->addTexture(unifLoc, texture);
+    }
+    glUseProgram(0);
+}
+
+void ShaderProgram::setUniformTex(const char* name, Texture&& texture) {
+    assert(getID() != 0 && "Invalid shader program used");
+    assert(texture.isValid() && "Setup invalid texture");
+    GLint unifLoc = -1;
+    Texture* tTexPtr = new Texture(std::move(texture));
+    glUseProgram(getID());
+    if((unifLoc = uniformFindLocation(name)) != -1) {
+        texManager->addTexture(unifLoc, tTexPtr);
     }
     glUseProgram(0);
 }
@@ -145,20 +238,23 @@ bool ShaderProgram::makeCheck(GLuint resourceID) {
 
 bool ShaderProgram::makeBind(GLuint resourceID) {
     glUseProgram(resourceID);
+    texManager->bind();
     return true;
 }
 
 bool ShaderProgram::makeUnbind(GLuint resourceID) {
+    texManager->unbind();
     glUseProgram(0);
     return true;
 }
 
 bool ShaderProgram::makeFree(GLuint resourceID) {
     glDeleteProgram(resourceID);
+    texManager->reset();
     return true;
 }
 
-GLint ShaderProgram::getUniformLocation(const char* name) const {
+GLint ShaderProgram::uniformFindLocation(const char* name) const {
     assert(getID() != 0 && "Invalid shader program used");
 #ifdef GD_CORE_LIB_DEBUG
     GLint tProgram = 0;
@@ -170,13 +266,13 @@ GLint ShaderProgram::getUniformLocation(const char* name) const {
 
 #ifdef GD_CORE_LIB_DEBUG
     if(unifLoc == -1) {
-        reportUniformNameError(name);
+        uniformReportNameError(name);
     }
 #endif
     return unifLoc;
 }
 
-void ShaderProgram::reportUniformNameError(const char* name) const {
+void ShaderProgram::uniformReportNameError(const char* name) const {
     std::vector<std::string> allUniforms = getAllUniformsNames(getID());
     std::string tMessagePrefix;
     tMessagePrefix = tMessagePrefix + "[ShaderProgram:" + std::to_string(getID()) + "] ";
