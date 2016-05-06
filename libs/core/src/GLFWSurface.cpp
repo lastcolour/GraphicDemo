@@ -113,6 +113,18 @@ bool GLFWSurface::initGLEW() {
     return true;
 }
 
+unsigned int GLFWSurface::getWidth() const {
+    return width;
+}
+
+unsigned int GLFWSurface::getHeight() const {
+    return height;
+}
+
+float GLFWSurface::getShowDuration() const {
+    return static_cast<float>(glfwGetTime());
+}
+
 void GLFWSurface::keyboardCallback(GLFWwindow* windowPtr, int keyCode, int scanCode, int action, int keyMode) {
 
     KeyCode code = KeyCode::UNKNOWN;
@@ -157,9 +169,35 @@ void GLFWSurface::keyboardCallback(GLFWwindow* windowPtr, int keyCode, int scanC
     Surface::sendKeyboardEvent(keyEvent);
 }
 
+void GLFWSurface::mouseFocusCallback(GLFWwindow* window, int entered) {
+    MouseEvent tEvent;
+    sendMouseEvent(tEvent);
+}
+
+void GLFWSurface::mousePosCallback(GLFWwindow* window, double x, double y) {
+    MouseEvent tEvent;
+    sendMouseEvent(tEvent);
+}
+
+void GLFWSurface::mouseButtonCallback(GLFWwindow* window, int mouseButton, int action, int keyMode) {
+    MouseEvent tEvent;
+    sendMouseEvent(tEvent);
+}
+
+void GLFWSurface::mouseWheelCallback(GLFWwindow* window, double xoffset, double yoffset) {
+    MouseEvent tEvent;
+    sendMouseEvent(tEvent);
+}
+
 void GLFWSurface::initCallbacks() {
     assert(windowPtr != nullptr && "Can't create callback without windwows");
+    // Keyboard
     glfwSetKeyCallback(windowPtr, keyboardCallback);
+    // Mouse
+    glfwSetCursorEnterCallback(windowPtr, mouseFocusCallback);
+    glfwSetMouseButtonCallback(windowPtr, mouseButtonCallback);
+    glfwSetCursorPosCallback(windowPtr, mousePosCallback);
+    glfwSetScrollCallback(windowPtr, mousePosCallback);
 }
 
 bool GLFWSurface::show() {
@@ -186,6 +224,8 @@ bool GLFWSurface::show() {
         return false;
     }
     initCallbacks();
+    glfwSetTime(0.F);
+
     sendResizeEvent(width, height);
     return true;
 }

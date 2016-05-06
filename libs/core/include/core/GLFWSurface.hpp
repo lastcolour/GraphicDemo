@@ -28,6 +28,10 @@ public:
     void close();
     void swapBuffers();
 
+    unsigned int getWidth() const;
+    unsigned int getHeight() const;
+    float getShowDuration() const;
+
 private:
 
     static bool GLFW_LIB_INITED;
@@ -36,7 +40,11 @@ private:
     static bool initGLEW();
 
     static void keyboardCallback(GLFWwindow* window, int keyCode, int scanCode, int action, int keyMode);
-    static void mouseCallBack();
+
+    static void mousePosCallback(GLFWwindow* window, double x, double y);
+    static void mouseFocusCallback(GLFWwindow* window, int entered);
+    static void mouseButtonCallback(GLFWwindow* window, int mouseButton, int action, int keyMode);
+    static void mouseWheelCallback(GLFWwindow* window, double xoffset, double yoffset);
 
     void initCallbacks();
 

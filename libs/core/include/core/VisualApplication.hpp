@@ -5,6 +5,7 @@
 
 #include <core/DEFS.hpp>
 #include <core/KeyboardEvent.hpp>
+#include <core/MouseEvent.hpp>
 
 class LIB_EXPORT_CONV VisualApplication {
 public:
@@ -16,37 +17,36 @@ public:
     virtual void setSurfaceGeometry(unsigned int width, unsigned int height) = 0;
     virtual void setSurfaceResizable(bool flag) = 0;
 
-protected:
+    virtual unsigned int getWidth() const = 0;
+    virtual unsigned int getHeight() const = 0;
 
-    virtual void checkInitErrors() = 0;
-    virtual void checkResizerrors() = 0;
-    virtual void checkKeyboardErrors() = 0;
-    virtual void checkDrawErrors() = 0;
+protected:
 
     void appInitRequest() {
         onInitEvent();
-        checkInitErrors();
     }
 
     void appResizeRequest(unsigned int width, unsigned int heigth) {
         onResizeEvent(width, heigth);
-        checkResizerrors();
     }
 
     void appKeyboardRequest(const KeyboardEvent& keyEvent) {
         onKeyboardEvent(keyEvent);
-        checkKeyboardErrors();
     }
 
     void appDrawRequest() {
         onDrawEvent();
-        checkDrawErrors();
+    }
+
+    void appMouseRequest(const MouseEvent& mouseEvent) {
+        onMouseEvent(mouseEvent);
+
     }
 
     virtual void onResizeEvent(unsigned int width, unsigned int heigth) {}
     virtual void onKeyboardEvent(const KeyboardEvent& keyEvent) {}
+    virtual void onMouseEvent(const MouseEvent& mouseEvent) {}
     virtual void onDrawEvent() {}
-    virtual void onMouseEvent() {}
     virtual void onInitEvent() {}
 
 protected:

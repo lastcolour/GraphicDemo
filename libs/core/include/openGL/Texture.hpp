@@ -11,7 +11,7 @@ public:
 
     typedef Texture* PtrType;
 
-    Texture(const char* filename, GLenum texType, GLenum texFormat);
+    Texture(const char* filename, GLenum texType);
     Texture(Texture&& texture);
     Texture& operator=(Texture&& texture);
     ~Texture();

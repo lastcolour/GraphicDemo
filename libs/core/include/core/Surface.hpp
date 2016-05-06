@@ -25,12 +25,16 @@ public:
     virtual void close() = 0;
     virtual void swapBuffers() = 0;
 
+    virtual unsigned int getWidth() const = 0;
+    virtual unsigned int getHeight() const = 0;
+    virtual float getShowDuration() const = 0;
+
 protected:
 
     static void sendDrawEvent();
     static void sendKeyboardEvent(const KeyboardEvent& keyEvent);
-    static void sendMouseEvent();
-    static void sendResizeEvent(unsigned int width, unsigned int height);
+    static void sendMouseEvent(const MouseEvent& mouseEvent);
+    static void sendResizeEvent(unsigned int w, unsigned int h);
 
 private:
 

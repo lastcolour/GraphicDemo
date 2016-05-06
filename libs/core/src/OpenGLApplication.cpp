@@ -47,24 +47,20 @@ void OpenGLApplication::setOpenGLCoreProfile(bool flag) {
     surfaceImpl->setCoreProfile(flag);
 }
 
-void OpenGLApplication::checkInitErrors() {
-    CHECK_OPENGL_STATUS("App::onInit");
-}
-
-void OpenGLApplication::checkResizerrors() {
-    CHECK_OPENGL_STATUS("App::onResize");
-}
-
-void OpenGLApplication::checkKeyboardErrors() {
-    CHECK_OPENGL_STATUS("App::onKeyboard");
-}
-
-void OpenGLApplication::checkDrawErrors() {
-    CHECK_OPENGL_STATUS("App::onDraw");
-}
-
 void OpenGLApplication::setDataFolder(const char* path) {
     Resource::setClientResourceDir(path);
+}
+
+unsigned int OpenGLApplication::getWidth() const {
+    return surfaceImpl->getWidth();
+}
+
+unsigned int OpenGLApplication::getHeight() const {
+    return surfaceImpl->getHeight();
+}
+
+float OpenGLApplication::getAppRunDuration() const {
+    return surfaceImpl->getShowDuration();
 }
 
 int OpenGLApplication::run() {

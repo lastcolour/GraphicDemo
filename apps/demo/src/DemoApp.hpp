@@ -5,7 +5,10 @@
 
 #include <core/OpenGLApplication.hpp>
 #include <openGL/VAOPipeline.hpp>
+
 #include <memory>
+
+#include <glm/glm.hpp>
 
 class DemoApp : public OpenGLApplication {
 public:
@@ -17,11 +20,16 @@ protected:
 
     void onInitEvent();
     void onDrawEvent();
+    void onResizeEvent(unsigned int width, unsigned int height);
     void onKeyboardEvent(const KeyboardEvent& keyEvent);
 
 private:
 
-     std::unique_ptr<VAOPipeline> triangle;
+    VAOPipeline* createCube();
+    void drawAllCubes();
+
+    glm::mat4 projectionMatrix;
+    std::unique_ptr<VAOPipeline> cube;
 };
 
 #endif /* __DEMO_APP_HPP__ */

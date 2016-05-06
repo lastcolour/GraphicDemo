@@ -43,33 +43,31 @@ int getCompRequires(GLenum texFormat) {
 
 // TODO: Implemt class with ref and unref methods for shared object holding 
 
-Texture::Texture(const char* filename, GLenum texType, GLenum texFormat) : 
+Texture::Texture(const char* filename, GLenum texType) :
     OpenGLObject(),
     Resource(),
     w(0),
     h(0),
     texUnitType(texType),
-    texUnitFrmt(texFormat) {
+    texUnitFrmt(GL_NONE) {
 
     int tComps = 0;
-    int tCompsReq = getCompRequires(texFormat);
-    unsigned char* buffer = loadImage(getFullPath(filename), w, h, tComps, tCompsReq);
+    unsigned char* buffer = loadImage(getFullPath(filename), w, h, tComps, 0);
     if(buffer == nullptr) {
         reset();
         return;
     }
-    assert(tComps == tCompsReq && "Loaded invalid image format");
-
-    GLenum imageFrmt = GL_NONE;
     switch (tComps)
     {
     case 3:
-        imageFrmt = GL_RGB;
+        texUnitFrmt = GL_RGB;
         break;
     case 4:
-        imageFrmt = GL_RGBA;
+        texUnitFrmt = GL_RGBA;
         break;
     default:
+        freeImage(buffer);
+        assert(0 && "Loaded texture with invalid image format");
         reset();
         return;
     }
@@ -80,7 +78,7 @@ Texture::Texture(const char* filename, GLenum texType, GLenum texFormat) :
     switch (texType)
     {
     case GL_TEXTURE_2D:
-        glTexImage2D(texType, 0, texFormat, w, h, 0, imageFrmt, GL_UNSIGNED_BYTE, buffer);
+        glTexImage2D(texType, 0, texUnitFrmt, w, h, 0, texUnitFrmt, GL_UNSIGNED_BYTE, buffer);
     default:
         break;
     }

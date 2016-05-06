@@ -21,9 +21,10 @@ void Surface::sendKeyboardEvent(const KeyboardEvent& keyEvent) {
     application->appKeyboardRequest(keyEvent);
 }
 
-void Surface::sendMouseEvent() {
+void Surface::sendMouseEvent(const MouseEvent& mouseEvent) {
+    application->appMouseRequest(mouseEvent);
 }
 
-void Surface::sendResizeEvent(unsigned int width, unsigned int height) {
-    application->appResizeRequest(width, height);
+void Surface::sendResizeEvent(unsigned int w, unsigned int h) {
+    application->appResizeRequest(w, h);
 }

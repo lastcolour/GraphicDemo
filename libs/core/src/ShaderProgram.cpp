@@ -172,7 +172,6 @@ ShaderProgram& ShaderProgram::operator=(ShaderProgram&& program) {
 }
 
 ShaderProgram::~ShaderProgram() {
-    SAFE_DELETE(texManager);
     if(getID() == 0) {
         return;
     }
@@ -180,6 +179,7 @@ ShaderProgram::~ShaderProgram() {
         makeUnbind(getID());
     }
     makeFree(getID());
+    SAFE_DELETE(texManager);
 }
 
 void ShaderProgram::setUniform1f(const char* name, float x) const {

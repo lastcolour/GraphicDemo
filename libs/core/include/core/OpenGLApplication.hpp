@@ -4,6 +4,7 @@
 #define __OPENGL_APPLICATION_HPP__
 
 #include <openGL/openGL.hpp>
+#include <core/Camera.hpp>
 #include <core/VisualApplication.hpp>
 
 class Surface;
@@ -26,18 +27,16 @@ public:
 
     void setDataFolder(const char* path);
 
+    unsigned int getWidth() const;
+    unsigned int getHeight() const;
+    float getAppRunDuration() const;
+
     int run();
-
-protected:
-
-    void checkInitErrors();
-    void checkResizerrors();
-    void checkKeyboardErrors();
-    void checkDrawErrors();
 
 private:
 
     Surface* surfaceImpl;
+    Camera* cameraIpml;
 };
 
 #endif /* __OPENGL_APPLICATION_HPP__*/
