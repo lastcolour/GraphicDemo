@@ -16,7 +16,7 @@ DemoApp::DemoApp(int argc, char* argv[]) : OpenGLApplication(argc, argv),
     setSurfaceGeometry(600, 400);
     setSurfaceResizable(false);
 
-    setOpenGLVersion(3, 3);
+    setOpenGLVersion(3, 4);
     setOpenGLCoreProfile(true);
 
     setDataFolder("data");

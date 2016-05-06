@@ -64,7 +64,9 @@ float OpenGLApplication::getAppRunDuration() const {
 }
 
 int OpenGLApplication::run() {
-    surfaceImpl->show();
+    if(!surfaceImpl->show()) {
+        return APP_FAIL;
+    }
     appInitRequest();
     while(surfaceImpl->isOpen()) {
         // TODO: Reimplement this method

@@ -35,13 +35,16 @@ GLFWSurface::GLFWSurface(VisualApplication* app) :
 GLFWSurface::~GLFWSurface() {
     if(!windowPtr) {
         glfwDestroyWindow(windowPtr);
+        windowPtr = nullptr;
     }
     if(GLFW_LIB_INITED) {
         glfwTerminate();
+        GLFW_LIB_INITED = false;
     }
 }
 
 void GLFWSurface::setTitle(const char* title) {
+    assert(title != nullptr && "Invalid title");
     this->title = title;
 }
 
@@ -171,22 +174,22 @@ void GLFWSurface::keyboardCallback(GLFWwindow* windowPtr, int keyCode, int scanC
 
 void GLFWSurface::mouseFocusCallback(GLFWwindow* window, int entered) {
     MouseEvent tEvent;
-    sendMouseEvent(tEvent);
+    Surface::sendMouseEvent(tEvent);
 }
 
 void GLFWSurface::mousePosCallback(GLFWwindow* window, double x, double y) {
     MouseEvent tEvent;
-    sendMouseEvent(tEvent);
+    Surface::sendMouseEvent(tEvent);
 }
 
 void GLFWSurface::mouseButtonCallback(GLFWwindow* window, int mouseButton, int action, int keyMode) {
     MouseEvent tEvent;
-    sendMouseEvent(tEvent);
+    Surface::sendMouseEvent(tEvent);
 }
 
 void GLFWSurface::mouseWheelCallback(GLFWwindow* window, double xoffset, double yoffset) {
     MouseEvent tEvent;
-    sendMouseEvent(tEvent);
+    Surface::sendMouseEvent(tEvent);
 }
 
 void GLFWSurface::initCallbacks() {
@@ -216,10 +219,19 @@ bool GLFWSurface::show() {
 
     windowPtr = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
     if(!windowPtr) {
+#ifdef GD_CORE_LIB_DEBUG
+        std::cerr << "[Surface] Can't create Surface";
+        std::cerr << "\n[Surface] Require openGL version: " << openGLMajor << "." << openGLMinor << std::endl;
+#endif GD_CORE_LIB_DEBUG
         return false;
     }
+
     glfwMakeContextCurrent(windowPtr);
     if(!initGLEW()) {
+#ifdef GD_CORE_LIB_DEBUG
+        std::cerr << "[Surface] Can't initialize GLEW";
+        std::cerr << "\n[Surface] Require openGL version: " << openGLMajor << "." << openGLMinor << std::endl;
+#endif GD_CORE_LIB_DEBUG
         glfwDestroyWindow(windowPtr);
         return false;
     }
