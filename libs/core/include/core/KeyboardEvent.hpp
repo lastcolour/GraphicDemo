@@ -87,6 +87,8 @@ public:
     void setShiftPressed(bool flag) { shiftPressed = flag; }
     void setCtrlPressed(bool flag) { ctrlPressed = flag; }
 
+    bool isPressed() const { return type == KeyType::PRESSED || type == KeyType::REPEAT; }
+    bool isReleased() const { return type == KeyType::RELEASE; }
     bool isAltPressed() const {return altPressed; }
     bool isShiftPressed() const {return shiftPressed; }
     bool isCtrlPressed() const {return ctrlPressed; }

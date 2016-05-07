@@ -11,40 +11,61 @@
 #include <glm/gtc/type_ptr.hpp>
 
 DemoApp::DemoApp(int argc, char* argv[]) : OpenGLApplication(argc, argv),
-    cube(nullptr) {
+    cube(nullptr),
+    camera(new FlyCamera()) {
+
     setSurfaceTitle("DemoApp");
     setSurfaceGeometry(600, 400);
     setSurfaceResizable(false);
 
-    setOpenGLVersion(3, 4);
+    setOpenGLVersion(3, 3);
     setOpenGLCoreProfile(true);
 
     setDataFolder("data");
+
+    camera->setPerspective(45.f, 0.f, 0.1f, 100.f);
 }
 
 DemoApp::~DemoApp() {
 }
 
 void DemoApp::onKeyboardEvent(const KeyboardEvent& keyEvent) {
-    if(keyEvent.getType() == KeyType::PRESSED && keyEvent.getCode() == KeyCode::R) {
-        GLint currMode[] = {GL_NONE, GL_NONE};
-        glGetIntegerv(GL_POLYGON_MODE, currMode);
-        GLenum nextMode = GL_NONE; 
-        if (currMode[0] == GL_FILL) {
-            nextMode = GL_LINE;
-        } else if (currMode[0] == GL_LINE) {
-            nextMode = GL_FILL;
-        } else {
-            std::cout << "[DemoApp] Unknown POLYGON_MODEs: " << currMode[0] << ", " << currMode[1] << std::endl; 
-            return;
+    switch(keyEvent.getCode()) {
+    case KeyCode::R:
+        if(keyEvent.getType() == KeyType::PRESSED) {
+            chagePolygonMode();
         }
-        glPolygonMode(GL_FRONT_AND_BACK, nextMode);
+       break;
+    case KeyCode::W:
+       if(keyEvent.isPressed()) {
+           camera->makeMove(0.0f, 1.0, 1.0);
+       }
+       break;
+    case KeyCode::S:
+        if(keyEvent.isPressed()) {
+        } else {
+            camera->makeMove(0.0f, -1.0, 1.0);
+        }
+       break;
+    case KeyCode::A:
+        if(keyEvent.isPressed()) {
+            camera->makeMove(-1.0f, 0.0, 1.0);
+        }
+        break;
+    case KeyCode::D:
+        if(keyEvent.isPressed()) {
+            camera->makeMove(1.0f, 0.0, 1.0);
+        }
+        break;
+    default:
+        // ignore
+        break;
     }
 }
 
 void DemoApp::onResizeEvent(unsigned int width, unsigned int height) {
     float aspect = width / static_cast<float>(height);
-    projectionMatrix = glm::perspective(45.f, aspect, 0.1f, 100.f);
+    camera->setAspectRatio(aspect);
 }
 
 VAOPipeline* DemoApp::createCube() {
@@ -142,16 +163,32 @@ void DemoApp::drawAllCubes() {
         GLfloat angle = 0;
 
         if( i == 1 ||  i % 3 != 0) {
-            GLfloat angle = 20.0f * i;
+            angle = 20.0f * i;
         } else {
             angle = 10.f * (i + 1) * getAppRunDuration();
         }
         modelView = glm::rotate(modelView, glm::radians(angle), glm::vec3(1.f, 0.3f, 0.5f));
 
         cube->getProgram()->setUniformMat4fv("ModelView", glm::value_ptr(modelView));
-        cube->getProgram()->setUniformMat4fv("Projection", glm::value_ptr(projectionMatrix));
+        cube->getProgram()->setUniformMat4fv("Projection", camera->getProjectMat4f());
         cube->drawAll();
     }
+    camera->makeResetMove();
+}
+
+void DemoApp::chagePolygonMode() {
+    GLint currMode[] = {GL_NONE, GL_NONE};
+    glGetIntegerv(GL_POLYGON_MODE, currMode);
+    GLenum nextMode = GL_NONE;
+    if (currMode[0] == GL_FILL) {
+        nextMode = GL_LINE;
+    } else if (currMode[0] == GL_LINE) {
+        nextMode = GL_FILL;
+    } else {
+        std::cout << "[DemoApp] Unknown POLYGON_MODEs: " << currMode[0] << ", " << currMode[1] << std::endl;
+        return;
+    }
+    glPolygonMode(GL_FRONT_AND_BACK, nextMode);
 }
 
 void DemoApp::onDrawEvent() {

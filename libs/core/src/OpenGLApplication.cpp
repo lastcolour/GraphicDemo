@@ -2,6 +2,7 @@
 
 #include <core/OpenGLApplication.hpp>
 #include <core/GLFWSurface.hpp>
+#include <core/FlyCamera.hpp>
 #include <core/Resouce.hpp>
 
 #include <iostream>
@@ -14,6 +15,7 @@ const int APP_OK = 0;
 
 OpenGLApplication::OpenGLApplication(int argc, char* argv[]) :
     surfaceImpl(new GLFWSurface(this)) {
+
     assert(argc >= 1 && "[App] Required cmd argc for application");
     assert(argv != nullptr && "[App] Require argv for application");
     Resource::setResourceDir(argv[0]);

@@ -5,6 +5,7 @@
 
 #include <core/OpenGLApplication.hpp>
 #include <openGL/VAOPipeline.hpp>
+#include <core/FlyCamera.hpp>
 
 #include <memory>
 
@@ -23,13 +24,15 @@ protected:
     void onResizeEvent(unsigned int width, unsigned int height);
     void onKeyboardEvent(const KeyboardEvent& keyEvent);
 
+    void chagePolygonMode();
+
 private:
 
     VAOPipeline* createCube();
     void drawAllCubes();
 
-    glm::mat4 projectionMatrix;
     std::unique_ptr<VAOPipeline> cube;
+    std::unique_ptr<FlyCamera> camera;
 };
 
 #endif /* __DEMO_APP_HPP__ */

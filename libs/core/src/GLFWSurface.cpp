@@ -139,6 +139,18 @@ void GLFWSurface::keyboardCallback(GLFWwindow* windowPtr, int keyCode, int scanC
     case GLFW_KEY_R:
         code = KeyCode::R;
         break;
+    case GLFW_KEY_W:
+        code = KeyCode::W;
+        break;
+    case GLFW_KEY_S:
+        code = KeyCode::S;
+        break;
+    case GLFW_KEY_D:
+        code = KeyCode::D;
+        break;
+    case GLFW_KEY_A:
+        code = KeyCode::A;
+        break;
     default:
         code = KeyCode::UNKNOWN;
         break;
@@ -221,8 +233,8 @@ bool GLFWSurface::show() {
     if(!windowPtr) {
 #ifdef GD_CORE_LIB_DEBUG
         std::cerr << "[Surface] Can't create Surface";
-        std::cerr << "\n[Surface] Require openGL version: " << openGLMajor << "." << openGLMinor << std::endl;
-#endif GD_CORE_LIB_DEBUG
+        std::cerr << "\n[Surface] Required openGL version: " << openGLMajor << "." << openGLMinor << std::endl;
+#endif /* GD_CORE_LIB_DEBUG */
         return false;
     }
 
@@ -230,8 +242,8 @@ bool GLFWSurface::show() {
     if(!initGLEW()) {
 #ifdef GD_CORE_LIB_DEBUG
         std::cerr << "[Surface] Can't initialize GLEW";
-        std::cerr << "\n[Surface] Require openGL version: " << openGLMajor << "." << openGLMinor << std::endl;
-#endif GD_CORE_LIB_DEBUG
+        std::cerr << "\n[Surface] Required openGL version: " << openGLMajor << "." << openGLMinor << std::endl;
+#endif /* GD_CORE_LIB_DEBUG */
         glfwDestroyWindow(windowPtr);
         return false;
     }

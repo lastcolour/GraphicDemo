@@ -36,7 +36,6 @@ public:
 private:
 
     Surface* surfaceImpl;
-    Camera* cameraIpml;
 };
 
 #endif /* __OPENGL_APPLICATION_HPP__*/
