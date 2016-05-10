@@ -23,6 +23,7 @@ protected:
     void onDrawEvent();
     void onResizeEvent(unsigned int width, unsigned int height);
     void onKeyboardEvent(const KeyboardEvent& keyEvent);
+    void onMouseEnvet(const MouseEvent& mouseEvent);
 
     void chagePolygonMode();
 

@@ -14,8 +14,6 @@ public:
     ~MouseEvent() {}
 
 private:
-
-    bool inFocus;
 };
 
 #endif /* __MOUSE_EVENT_HPP__ */

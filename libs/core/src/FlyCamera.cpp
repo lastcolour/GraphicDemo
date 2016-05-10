@@ -3,7 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <iostream>>
+#include <iostream>
 
 FlyCamera::FlyCamera() :
 	Camera(),
@@ -12,9 +12,9 @@ FlyCamera::FlyCamera() :
     fov(45.f),
     zNear(0.1f),
     zFar(100.f),
-    moveV(0),
     position(0),
     lookAt(0.f, 0.f, 1.f),
+    upVec(0.f, 1.f, 0.f),
     projection(1.0) {
 }
 
@@ -56,6 +56,18 @@ void FlyCamera::setLocation(float x, float y, float z) {
     position.z = z;
 }
 
+void FlyCamera::setUpVec(float x, float y, float z) {
+    modified = true;
+    upVec.x = x;
+    upVec.y = y;
+    upVec.z = z;
+}
+
+void FlyCamera::setUpVec(const glm::vec3& up) {
+    modified = true;
+    upVec = up;
+}
+
 void FlyCamera::setLocation(const glm::vec3& location) {
     modified = true;
     position = location;
@@ -77,23 +89,17 @@ float FlyCamera::getAspectRatio() const {
     return aspectRatio;
 }
 
-void FlyCamera::makeMove(float xVal, float yVal, float distance) {
+void FlyCamera::makeMove(float xVal, float yVal, float zVal) {
     modified = true;
-    moveV.x += xVal;
-    moveV.z += yVal;
-    moveV.y += distance;
-    position += moveV;
-    std::cout << "[Camera] Make move: (x=" << moveV.x << ", y=" << moveV.y << "), D=" << distance << std::endl;
-}
-
-void FlyCamera::makeResetMove() {
-    //modified = true;
-    moveV = glm::vec3(0);
+    position.x += xVal;
+    position.y += yVal;
+    position.z += zVal;
+    std::cout << "[FlyCamera] Position: (x=" << position.x << ", y=" << position.y << ", z=" << position.z << ")" << std::endl;
 }
 
 void FlyCamera::makeMove(const glm::vec3& v) {
     modified = true;
-    moveV = v;
+    position += v;
 }
 
 void FlyCamera::makeLookAt(float x, float y, float z) {
@@ -115,14 +121,13 @@ const glm::vec3& FlyCamera::getLookAt() const {
     return lookAt;
 }
 
-const glm::vec3& FlyCamera::getMoveVec() const {
-    return moveV;
+const glm::vec3& FlyCamera::getUpVec() const {
+    return upVec;
 }
 
 void FlyCamera::calcProjectMat() const {
     glm::mat4 tPerspMat = glm::perspective(fov, aspectRatio, zNear, zFar);
-    glm::mat4 tLookMat = glm::lookAt(getLocation(), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
-    std::cout << "[Camera] FoV: " << fov << " Aspect: " << aspectRatio << " zNear: " << zNear << " zFar:" << zFar << std::endl;
+    glm::mat4 tLookMat = glm::lookAt(position, position - lookAt, upVec);
     projection = tPerspMat * tLookMat;
 }
 

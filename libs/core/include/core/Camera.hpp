@@ -18,21 +18,22 @@ public:
     virtual void setFarPlane(float zFar) = 0;
     virtual void setLocation(float x, float y, float z) = 0;
     virtual void setLocation(const glm::vec3& location) = 0;
+    virtual void setUpVec(float x, float y, float z) = 0;
+    virtual void setUpVec(const glm::vec3& up) = 0;
 
     virtual float getFarPlane() const = 0;
     virtual float getNearPlane() const = 0;
     virtual float getFoV() const = 0;
     virtual float getAspectRatio() const = 0;
 
-    virtual void makeResetMove() = 0;
-    virtual void makeMove(float xVal, float yVal, float distance) = 0;
+    virtual void makeMove(float xVal, float yVal, float zVal) = 0;
     virtual void makeMove(const glm::vec3& v) = 0;
     virtual void makeLookAt(float x, float y, float z) = 0;
     virtual void makeLookAt(const glm::vec3& point) = 0;
 
     virtual const glm::vec3& getLocation() const = 0;
     virtual const glm::vec3& getLookAt() const = 0;
-    virtual const glm::vec3& getMoveVec() const = 0;
+    virtual const glm::vec3& getUpVec() const = 0;
 
     virtual const float* getProjectMat4f() const = 0;
 };

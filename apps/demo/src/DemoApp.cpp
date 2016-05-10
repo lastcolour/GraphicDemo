@@ -38,29 +38,32 @@ void DemoApp::onKeyboardEvent(const KeyboardEvent& keyEvent) {
        break;
     case KeyCode::W:
        if(keyEvent.isPressed()) {
-           camera->makeMove(0.0f, 1.0, 1.0);
+           camera->makeMove(0.0f, 0.0, -1.0);
        }
        break;
     case KeyCode::S:
         if(keyEvent.isPressed()) {
-        } else {
-            camera->makeMove(0.0f, -1.0, 1.0);
+            camera->makeMove(0.0f, 0.0, 1.0);
         }
        break;
     case KeyCode::A:
         if(keyEvent.isPressed()) {
-            camera->makeMove(-1.0f, 0.0, 1.0);
+            camera->makeMove(-1.0f, 0.0, 0.0);
         }
         break;
     case KeyCode::D:
         if(keyEvent.isPressed()) {
-            camera->makeMove(1.0f, 0.0, 1.0);
+            camera->makeMove(1.0f, 0.0, 0.0);
         }
         break;
     default:
         // ignore
         break;
     }
+}
+
+void DemoApp::onMouseEnvet(const MouseEvent& mouseEvent) {
+
 }
 
 void DemoApp::onResizeEvent(unsigned int width, unsigned int height) {
@@ -173,7 +176,6 @@ void DemoApp::drawAllCubes() {
         cube->getProgram()->setUniformMat4fv("Projection", camera->getProjectMat4f());
         cube->drawAll();
     }
-    camera->makeResetMove();
 }
 
 void DemoApp::chagePolygonMode() {
@@ -192,6 +194,7 @@ void DemoApp::chagePolygonMode() {
 }
 
 void DemoApp::onDrawEvent() {
+    std::cout << "[DemoApp] Draw" << std::endl;
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     drawAllCubes();
     surfaceSwapBuffers();

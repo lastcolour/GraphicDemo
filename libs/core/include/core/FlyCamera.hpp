@@ -17,13 +17,14 @@ public:
     void setFarPlane(float zFar);
     void setLocation(float x, float y, float z);
     void setLocation(const glm::vec3& location);
+    void setUpVec(float x, float y, float z);
+    void setUpVec(const glm::vec3& up);
 
     float getFarPlane() const;
     float getNearPlane() const;
     float getFoV() const;
     float getAspectRatio() const;
 
-    void makeResetMove();
     void makeMove(float xVal, float yVal, float distance);
     void makeMove(const glm::vec3& v);
     void makeLookAt(float x, float y, float z);
@@ -31,7 +32,7 @@ public:
 
     const glm::vec3& getLocation() const;
     const glm::vec3& getLookAt() const;
-    const glm::vec3& getMoveVec() const;
+    const glm::vec3& getUpVec() const;
 
     const float* getProjectMat4f() const;
 
@@ -46,9 +47,9 @@ protected:
     float fov;
     float zNear;
     float zFar;
-    glm::vec3 moveV;
     glm::vec3 position;
     glm::vec3 lookAt;
+    glm::vec3 upVec;
     mutable glm::mat4 projection;
 
 };
