@@ -30,30 +30,30 @@ DemoApp::~DemoApp() {
 }
 
 void DemoApp::onKeyboardEvent(const KeyboardEvent& keyEvent) {
-    switch(keyEvent.getCode()) {
-    case KeyCode::R:
-        if(keyEvent.getType() == KeyType::PRESSED) {
-            chagePolygonMode();
-        }
-       break;
-    case KeyCode::W:
+    switch(keyEvent.getKeyCode()) {
+    case KeyboardCode::R:
        if(keyEvent.isPressed()) {
-           camera->makeMove(0.0f, 0.0, -1.0);
+            chagePolygonMode();
        }
        break;
-    case KeyCode::S:
+    case KeyboardCode::W:
+       if(keyEvent.isPressed()) {
+           camera->makeMoveAtDirection(camera->getLookAt(), -1.0f);
+       }
+       break;
+    case KeyboardCode::S:
         if(keyEvent.isPressed()) {
-            camera->makeMove(0.0f, 0.0, 1.0);
+            camera->makeMoveAtDirection(camera->getLookAt(), 1.0f);
         }
        break;
-    case KeyCode::A:
+    case KeyboardCode::A:
         if(keyEvent.isPressed()) {
-            camera->makeMove(-1.0f, 0.0, 0.0);
+            camera->makeMoveAtDirection(camera->getRightVec(), -1.0f);
         }
         break;
-    case KeyCode::D:
+    case KeyboardCode::D:
         if(keyEvent.isPressed()) {
-            camera->makeMove(1.0f, 0.0, 0.0);
+            camera->makeMoveAtDirection(camera->getRightVec(), 1.0f);
         }
         break;
     default:
@@ -62,8 +62,11 @@ void DemoApp::onKeyboardEvent(const KeyboardEvent& keyEvent) {
     }
 }
 
-void DemoApp::onMouseEnvet(const MouseEvent& mouseEvent) {
-
+void DemoApp::onMouseEvent(const MouseEvent& mouseEvent) {
+    if(mouseEvent.isMoved()) {
+        float xoffset = mouseEvent.getXOffset();
+        float yoffset = mouseEvent.getYOffset();
+    }
 }
 
 void DemoApp::onResizeEvent(unsigned int width, unsigned int height) {
@@ -194,7 +197,6 @@ void DemoApp::chagePolygonMode() {
 }
 
 void DemoApp::onDrawEvent() {
-    std::cout << "[DemoApp] Draw" << std::endl;
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     drawAllCubes();
     surfaceSwapBuffers();

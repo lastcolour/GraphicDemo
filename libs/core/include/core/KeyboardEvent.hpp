@@ -3,7 +3,9 @@
 #ifndef __KEYBOARD_EVENT_HPP__
 #define __KEYBOARD_EVENT_HPP__
 
-enum class KeyCode {
+#include <core/IOEvent.hpp>
+
+enum class KeyboardCode {
     UNKNOWN = 0,
     Q,
     W,
@@ -42,17 +44,10 @@ enum class KeyCode {
     SPACE
 };
 
-enum class KeyType {
-    UNKNOWN = 0,
-    RELEASE,
-    PRESSED,
-    REPEAT
-};
-
 class KeyboardEvent {
 public:
 
-    explicit KeyboardEvent(KeyCode keyCode, KeyType keyType) :
+    explicit KeyboardEvent(KeyboardCode keyCode, EventType keyType) :
         code(keyCode),
         type(keyType),
         altPressed(false),
@@ -80,15 +75,15 @@ public:
 
     ~KeyboardEvent() {}
 
-    KeyCode getCode() const { return code; }
-    KeyType getType() const { return type; }
+    KeyboardCode getKeyCode() const { return code; }
+    EventType getType() const { return type; }
 
     void setAltPressed(bool flag) { altPressed = flag; }
     void setShiftPressed(bool flag) { shiftPressed = flag; }
     void setCtrlPressed(bool flag) { ctrlPressed = flag; }
 
-    bool isPressed() const { return type == KeyType::PRESSED || type == KeyType::REPEAT; }
-    bool isReleased() const { return type == KeyType::RELEASE; }
+    bool isPressed() const { return type == EventType::PRESSED; }
+    bool isReleased() const { return type == EventType::RELEASE; }
     bool isAltPressed() const {return altPressed; }
     bool isShiftPressed() const {return shiftPressed; }
     bool isCtrlPressed() const {return ctrlPressed; }
@@ -96,8 +91,8 @@ public:
 
 private:
 
-    KeyCode code;
-    KeyType type;
+    KeyboardCode code;
+    EventType type;
     bool altPressed;
     bool shiftPressed;
     bool ctrlPressed;

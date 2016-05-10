@@ -7,11 +7,13 @@
 #include <core/KeyboardEvent.hpp>
 #include <core/MouseEvent.hpp>
 
+class AppCache;
+
 class LIB_EXPORT_CONV VisualApplication {
 public:
 
-    VisualApplication() {}
-    virtual ~VisualApplication() {}
+    VisualApplication();
+    virtual ~VisualApplication();
 
     virtual void setSurfaceTitle(const char* title) = 0;
     virtual void setSurfaceGeometry(unsigned int width, unsigned int height) = 0;
@@ -22,26 +24,11 @@ public:
 
 protected:
 
-    void appInitRequest() {
-        onInitEvent();
-    }
-
-    void appResizeRequest(unsigned int width, unsigned int heigth) {
-        onResizeEvent(width, heigth);
-    }
-
-    void appKeyboardRequest(const KeyboardEvent& keyEvent) {
-        onKeyboardEvent(keyEvent);
-    }
-
-    void appDrawRequest() {
-        onDrawEvent();
-    }
-
-    void appMouseRequest(const MouseEvent& mouseEvent) {
-        onMouseEvent(mouseEvent);
-
-    }
+    void appInitRequest();
+    void appDrawRequest();
+    void appResizeRequest(unsigned int width, unsigned int heigth);
+    void appKeyboardRequest(const KeyboardEvent& keyEvent);
+    void appMouseRequest(const MouseEvent& mouseEvent);
 
     virtual void onResizeEvent(unsigned int width, unsigned int heigth) {}
     virtual void onKeyboardEvent(const KeyboardEvent& keyEvent) {}

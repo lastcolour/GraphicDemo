@@ -23,7 +23,7 @@ protected:
     void onDrawEvent();
     void onResizeEvent(unsigned int width, unsigned int height);
     void onKeyboardEvent(const KeyboardEvent& keyEvent);
-    void onMouseEnvet(const MouseEvent& mouseEvent);
+    void onMouseEvent(const MouseEvent& mouseEvent);
 
     void chagePolygonMode();
 
@@ -33,7 +33,7 @@ private:
     void drawAllCubes();
 
     std::unique_ptr<VAOPipeline> cube;
-    std::unique_ptr<FlyCamera> camera;
+    std::unique_ptr<Camera> camera;
 };
 
 #endif /* __DEMO_APP_HPP__ */

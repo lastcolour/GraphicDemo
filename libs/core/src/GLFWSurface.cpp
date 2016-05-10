@@ -130,45 +130,45 @@ float GLFWSurface::getShowDuration() const {
 
 void GLFWSurface::keyboardCallback(GLFWwindow* windowPtr, int keyCode, int scanCode, int action, int keyMode) {
 
-    KeyCode code = KeyCode::UNKNOWN;
-    KeyType type = KeyType::UNKNOWN;
+    KeyboardCode code = KeyboardCode::UNKNOWN;
+    EventType type = EventType::UNKNOWN;
 
     switch (keyCode)
     {
 
     case GLFW_KEY_R:
-        code = KeyCode::R;
+        code = KeyboardCode::R;
         break;
     case GLFW_KEY_W:
-        code = KeyCode::W;
+        code = KeyboardCode::W;
         break;
     case GLFW_KEY_S:
-        code = KeyCode::S;
+        code = KeyboardCode::S;
         break;
     case GLFW_KEY_D:
-        code = KeyCode::D;
+        code = KeyboardCode::D;
         break;
     case GLFW_KEY_A:
-        code = KeyCode::A;
+        code = KeyboardCode::A;
         break;
     default:
-        code = KeyCode::UNKNOWN;
+        code = KeyboardCode::UNKNOWN;
         break;
     }
 
     switch (action)
     {
     case GLFW_PRESS:
-        type = KeyType::PRESSED;
+        type = EventType::PRESSED;
         break;
     case GLFW_RELEASE:
-        type = KeyType::RELEASE;
+        type = EventType::RELEASE;
         break;
     case GLFW_REPEAT:
-        type = KeyType::REPEAT;
+        type = EventType::REPEAT;
         break;
     default:
-        type = KeyType::UNKNOWN;
+        type = EventType::UNKNOWN;
         break;
     }
 
@@ -185,23 +185,36 @@ void GLFWSurface::keyboardCallback(GLFWwindow* windowPtr, int keyCode, int scanC
 }
 
 void GLFWSurface::mouseFocusCallback(GLFWwindow* window, int entered) {
-    MouseEvent tEvent;
-    Surface::sendMouseEvent(tEvent);
 }
 
 void GLFWSurface::mousePosCallback(GLFWwindow* window, double x, double y) {
-    MouseEvent tEvent;
+    MouseEvent tEvent(static_cast<float>(x), static_cast<float>(y), MouseKeyCode::NONE, EventType::MOVE);
     Surface::sendMouseEvent(tEvent);
 }
 
 void GLFWSurface::mouseButtonCallback(GLFWwindow* window, int mouseButton, int action, int keyMode) {
-    MouseEvent tEvent;
+    // Recive mouse key
+    EventType type;
+    switch (action)
+    {
+    case GLFW_PRESS:
+        type = EventType::PRESSED;
+        break;
+    case GLFW_RELEASE:
+        type = EventType::RELEASE;
+        break;
+    case GLFW_REPEAT:
+        type = EventType::REPEAT;
+        break;
+    default:
+        type = EventType::UNKNOWN;
+        break;
+    }
+    MouseEvent tEvent(static_cast<float>(0.f), static_cast<float>(0.f), MouseKeyCode::NONE, type);
     Surface::sendMouseEvent(tEvent);
 }
 
 void GLFWSurface::mouseWheelCallback(GLFWwindow* window, double xoffset, double yoffset) {
-    MouseEvent tEvent;
-    Surface::sendMouseEvent(tEvent);
 }
 
 void GLFWSurface::initCallbacks() {
@@ -250,6 +263,6 @@ bool GLFWSurface::show() {
     initCallbacks();
     glfwSetTime(0.F);
 
-    sendResizeEvent(width, height);
+    Surface::sendResizeEvent(width, height);
     return true;
 }

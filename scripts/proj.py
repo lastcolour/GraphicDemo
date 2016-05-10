@@ -208,7 +208,7 @@ class Project:
             log.error("[Error][{0}] Can't generate project files by cmake".format(self.getName()))
             return False
         else:
-            log.info("[Error][{0}] Cmake generation -- OK".format(self.getName()))
+            log.info("[Info][{0}] Cmake generation -- OK".format(self.getName()))
             self._cmakeOutDir = tCmakeInfo["CMAKE_OUT_DIR"] # TODO Remove this
         tCompileRunner = CompileRunner(tCmakeInfo)
         return tCompileRunner.run()
