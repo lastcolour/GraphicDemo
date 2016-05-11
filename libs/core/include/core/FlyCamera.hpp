@@ -29,13 +29,8 @@ public:
     float getFoV() const;
     float getAspectRatio() const;
 
-    void makeLookAround(float pitch, float yaw, float roll);
-    void makeLookAround(const glm::vec3& v);
-    void makeMove(float xVal, float yVal, float distance);
-    void makeMove(const glm::vec3& v);
+    void makePitchYawUpdate(float pitch, float yaw);
     void makeMoveAtDirection(const glm::vec3& direction, float distance);
-    void makeLookAt(float x, float y, float z);
-    void makeLookAt(const glm::vec3& point);
 
     const glm::vec3& getLocation() const;
     const glm::vec3& getLookAt() const;
@@ -56,6 +51,8 @@ protected:
     float fov;
     float zNear;
     float zFar;
+    float pitch;
+    float yaw;
     glm::vec3 position;
     glm::vec3 lookAt;
     glm::vec3 upVec;

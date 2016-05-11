@@ -38,12 +38,12 @@ void DemoApp::onKeyboardEvent(const KeyboardEvent& keyEvent) {
        break;
     case KeyboardCode::W:
        if(keyEvent.isPressed()) {
-           camera->makeMoveAtDirection(camera->getLookAt(), -1.0f);
+           camera->makeMoveAtDirection(camera->getLookAt(), 1.0f);
        }
        break;
     case KeyboardCode::S:
         if(keyEvent.isPressed()) {
-            camera->makeMoveAtDirection(camera->getLookAt(), 1.0f);
+            camera->makeMoveAtDirection(camera->getLookAt(), -1.0f);
         }
        break;
     case KeyboardCode::A:
@@ -64,8 +64,10 @@ void DemoApp::onKeyboardEvent(const KeyboardEvent& keyEvent) {
 
 void DemoApp::onMouseEvent(const MouseEvent& mouseEvent) {
     if(mouseEvent.isMoved()) {
-        float xoffset = mouseEvent.getXOffset();
-        float yoffset = mouseEvent.getYOffset();
+        float sensitivity = .2f;
+        float xoffset =  sensitivity * mouseEvent.getXOffset();
+        float yoffset = -sensitivity * mouseEvent.getYOffset();
+        camera->makePitchYawUpdate(yoffset, xoffset);
     }
 }
 

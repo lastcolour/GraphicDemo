@@ -5,6 +5,8 @@
 
 #include <iostream>
 
+const float MAX_PITCH_VAL = 89.9f;
+
 FlyCamera::FlyCamera() :
 	Camera(),
     modified(true),
@@ -13,7 +15,9 @@ FlyCamera::FlyCamera() :
     zNear(0.1f),
     zFar(100.f),
     position(0),
-    lookAt(0.f, 0.f, 1.f),
+    pitch(0.f),
+    yaw(-90.f),
+    lookAt(0.f, 0.f, -1.f),
     upVec(0.f, 1.f, 0.f),
     rightVec(0.f),
     cameraMat(1.0) {
@@ -110,49 +114,38 @@ float FlyCamera::getAspectRatio() const {
     return aspectRatio;
 }
 
-void FlyCamera::makeLookAround(float pitch, float yaw, float roll) {
-}
-
-void FlyCamera::makeLookAround(const glm::vec3& v) {
-}
-
-void FlyCamera::makeMove(float xVal, float yVal, float zVal) {
+void FlyCamera::makePitchYawUpdate(float pitchVal, float yawVal) {
     modified = true;
-    position.x += xVal;
-    position.y += yVal;
-    position.z += zVal;
-#ifndef GD_CORE_LIB_DEBUG
-    std::cout << "[FlyCamera] Position: (x=" << position.x << ", y=" << position.y << ", z=" << position.z << ")" << std::endl;
-#endif
-}
 
-void FlyCamera::makeMove(const glm::vec3& v) {
-    modified = true;
-    position += v;
-#ifndef GD_CORE_LIB_DEBUG
-    std::cout << "[FlyCamera] Position: (x=" << position.x << ", y=" << position.y << ", z=" << position.z << ")" << std::endl;
+    pitch += pitchVal;
+    yaw += yawVal;
+
+    if(pitch > MAX_PITCH_VAL) {
+        pitch =  MAX_PITCH_VAL;
+    }
+    if(pitch < -MAX_PITCH_VAL) {
+        pitch = -MAX_PITCH_VAL;
+    }
+
+    glm::vec3 tNewLookAt;
+    tNewLookAt.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    tNewLookAt.y = sin(glm::radians(pitch));
+    tNewLookAt.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    lookAt = glm::normalize(tNewLookAt);
+
+    reCalcRightVec();
+
+#ifdef GD_CORE_LIB_DEBUG
+    std::cout << "[FlyCamera] LookAt: (x=" << lookAt.x << ", y=" << lookAt.y << ", z=" << lookAt.z << ")" << std::endl;
 #endif
 }
 
 void FlyCamera::makeMoveAtDirection(const glm::vec3& direction, float distance) {
     modified = true;
     position += glm::normalize(direction) * distance;
-#ifndef GD_CORE_LIB_DEBUG
+#ifdef GD_CORE_LIB_DEBUG
     std::cout << "[FlyCamera] Position: (x=" << position.x << ", y=" << position.y << ", z=" << position.z << ")" << std::endl;
 #endif
-}
-
-void FlyCamera::makeLookAt(float x, float y, float z) {
-    modified = true;
-    lookAt.x = x;
-    lookAt.y = y;
-    lookAt.z = z;
-}
-
-void FlyCamera::makeLookAt(const glm::vec3& point) {
-    assert(point != position && "Invalid look up points");
-    modified = true;
-    lookAt = point;
 }
 
 const glm::vec3& FlyCamera::getLocation() const {
@@ -172,12 +165,12 @@ const glm::vec3& FlyCamera::getRightVec() const {
 }
 
 void FlyCamera::reCalcRightVec() {
-    rightVec = glm::normalize(glm::cross(upVec, lookAt));
+    rightVec = glm::normalize(glm::cross(lookAt, upVec));
 }
 
 void FlyCamera::reCalcCameraMat() const {
     glm::mat4 tPerspMat = glm::perspective(fov, aspectRatio, zNear, zFar);
-    glm::mat4 tLookMat = glm::lookAt(position, position - lookAt, upVec);
+    glm::mat4 tLookMat = glm::lookAt(position, position + lookAt, upVec);
     cameraMat = tPerspMat * tLookMat;
 }
 

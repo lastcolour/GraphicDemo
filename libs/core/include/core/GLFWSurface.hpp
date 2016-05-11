@@ -8,6 +8,7 @@
 #include <string>
 
 struct GLFWwindow;
+class MouseEvent;
 
 class GLFWSurface : public Surface {
 public:
@@ -36,6 +37,7 @@ private:
 
     static bool GLFW_LIB_INITED;
     static bool GLEW_LIB_INITED;
+    static MouseEvent LAST_MOUSE_EVENT;
 
     static bool initGLEW();
 

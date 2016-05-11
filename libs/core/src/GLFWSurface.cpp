@@ -14,6 +14,7 @@
 
 bool GLFWSurface::GLFW_LIB_INITED = false;
 bool GLFWSurface::GLEW_LIB_INITED = false;
+MouseEvent GLFWSurface::LAST_MOUSE_EVENT = MouseEvent(0.f, 0.f, MouseKeyCode::NONE, EventType::NONE);
 
 GLFWSurface::GLFWSurface(VisualApplication* app) :
     Surface(app),
@@ -189,11 +190,14 @@ void GLFWSurface::mouseFocusCallback(GLFWwindow* window, int entered) {
 
 void GLFWSurface::mousePosCallback(GLFWwindow* window, double x, double y) {
     MouseEvent tEvent(static_cast<float>(x), static_cast<float>(y), MouseKeyCode::NONE, EventType::MOVE);
+    tEvent.setTime(static_cast<float>(glfwGetTime()));
+    tEvent.setPrevEvent(LAST_MOUSE_EVENT);
+    LAST_MOUSE_EVENT = tEvent;
+
     Surface::sendMouseEvent(tEvent);
 }
 
 void GLFWSurface::mouseButtonCallback(GLFWwindow* window, int mouseButton, int action, int keyMode) {
-    // Recive mouse key
     EventType type;
     switch (action)
     {

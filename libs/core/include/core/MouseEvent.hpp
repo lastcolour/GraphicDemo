@@ -28,6 +28,9 @@ public:
     MouseKeyCode getKeyCode() const;
     EventType getType() const;
 
+    void setPrevEvent(const MouseEvent& prevE);
+    void setTime(float timeP);
+
     float getX() const;
     float getY() const;
     float getXOffset() const;
@@ -40,8 +43,12 @@ private:
 
     MouseKeyCode code;
     EventType type;
+    float timePoint;
     float x;
     float y;
+    float prevTimePoint;
+    float prevX;
+    float prevY;
 };
 
 #endif /* __MOUSE_EVENT_HPP__ */

@@ -3,15 +3,23 @@
 MouseEvent::MouseEvent(float xPos, float yPos, MouseKeyCode keyCode, EventType eventType) : 
     code(keyCode),
     type(eventType),
+    timePoint(0.f),
     x(xPos),
-    y(yPos) {
+    y(yPos),
+    prevTimePoint(0.f),
+    prevX(yPos),
+    prevY(yPos) {
 }
 
 MouseEvent::MouseEvent(const MouseEvent& mouseEvent) :
     code(mouseEvent.code),
     type(mouseEvent.type),
+    timePoint(mouseEvent.timePoint),
     x(mouseEvent.x),
-    y(mouseEvent.y) {
+    y(mouseEvent.y),
+    prevTimePoint(mouseEvent.prevTimePoint),
+    prevX(mouseEvent.prevX),
+    prevY(mouseEvent.prevY) {
 }
 
 MouseEvent& MouseEvent::operator=(const MouseEvent& mouseEvent) {
@@ -20,11 +28,14 @@ MouseEvent& MouseEvent::operator=(const MouseEvent& mouseEvent) {
     }
     code = mouseEvent.code;
     type = mouseEvent.type;
+    timePoint = mouseEvent.timePoint;
     x = mouseEvent.x;
-    y = mouseEvent.x;
+    y = mouseEvent.y;
+    prevTimePoint = mouseEvent.prevTimePoint;
+    prevX = mouseEvent.prevX;
+    prevY = mouseEvent.prevY;
     return *this;
 }
-
 
 MouseEvent::~MouseEvent() {}
 
@@ -36,20 +47,30 @@ EventType MouseEvent::getType() const {
     return type;
 }
 
-float MouseEvent::getX() const { 
-    return x;
+void MouseEvent::setPrevEvent(const MouseEvent& prevE) {
+    prevTimePoint = prevE.timePoint;
+    prevX = prevE.x;
+    prevY = prevE.y;
 }
 
-float MouseEvent::getXOffset() const {
-    return x;
+void MouseEvent::setTime(float timeP) {
+    timePoint = timeP;
 }
 
-float MouseEvent::getYOffset() const {
-    return y;
+float MouseEvent::getX() const {
+    return x;
 }
 
 float MouseEvent::getY() const { 
     return y;
+}
+
+float MouseEvent::getXOffset() const {
+    return x - prevX;
+}
+
+float MouseEvent::getYOffset() const {
+    return y - prevY;
 }
 
 bool MouseEvent::isPressed() const {
