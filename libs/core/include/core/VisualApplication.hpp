@@ -18,6 +18,7 @@ public:
     virtual void setSurfaceTitle(const char* title) = 0;
     virtual void setSurfaceGeometry(unsigned int width, unsigned int height) = 0;
     virtual void setSurfaceResizable(bool flag) = 0;
+    virtual void setVisibleCursor(float falg) = 0;
 
     virtual unsigned int getWidth() const = 0;
     virtual unsigned int getHeight() const = 0;

@@ -14,6 +14,7 @@
 
 bool GLFWSurface::GLFW_LIB_INITED = false;
 bool GLFWSurface::GLEW_LIB_INITED = false;
+bool GLFWSurface::MOUSE_IN_FOCUS = false;
 MouseEvent GLFWSurface::LAST_MOUSE_EVENT = MouseEvent(0.f, 0.f, MouseKeyCode::NONE, EventType::NONE);
 
 GLFWSurface::GLFWSurface(VisualApplication* app) :
@@ -65,6 +66,10 @@ void GLFWSurface::setOpenGL(unsigned int major, unsigned int minor) {
 
 void GLFWSurface::setCoreProfile(bool flag) {
     corePorfile = flag;
+}
+
+void GLFWSurface::setVisibleCursor(bool flag) {
+    isDisabledCursor = flag;
 }
 
 void GLFWSurface::sendEvents() {
@@ -186,12 +191,16 @@ void GLFWSurface::keyboardCallback(GLFWwindow* windowPtr, int keyCode, int scanC
 }
 
 void GLFWSurface::mouseFocusCallback(GLFWwindow* window, int entered) {
+    MOUSE_IN_FOCUS = entered != 0;
 }
 
 void GLFWSurface::mousePosCallback(GLFWwindow* window, double x, double y) {
     MouseEvent tEvent(static_cast<float>(x), static_cast<float>(y), MouseKeyCode::NONE, EventType::MOVE);
     tEvent.setTime(static_cast<float>(glfwGetTime()));
-    tEvent.setPrevEvent(LAST_MOUSE_EVENT);
+    // Do not jump
+    if(MOUSE_IN_FOCUS) {
+        tEvent.setPrevEvent(LAST_MOUSE_EVENT);
+    }
     LAST_MOUSE_EVENT = tEvent;
 
     Surface::sendMouseEvent(tEvent);
@@ -254,7 +263,9 @@ bool GLFWSurface::show() {
 #endif /* GD_CORE_LIB_DEBUG */
         return false;
     }
-
+    if(isDisabledCursor) {
+        glfwSetInputMode(windowPtr, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
     glfwMakeContextCurrent(windowPtr);
     if(!initGLEW()) {
 #ifdef GD_CORE_LIB_DEBUG

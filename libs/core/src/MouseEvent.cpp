@@ -7,7 +7,7 @@ MouseEvent::MouseEvent(float xPos, float yPos, MouseKeyCode keyCode, EventType e
     x(xPos),
     y(yPos),
     prevTimePoint(0.f),
-    prevX(yPos),
+    prevX(xPos),
     prevY(yPos) {
 }
 

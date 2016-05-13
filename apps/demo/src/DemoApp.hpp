@@ -7,6 +7,7 @@
 #include <openGL/VAOPipeline.hpp>
 #include <core/FlyCamera.hpp>
 
+#include <map>
 #include <memory>
 
 #include <glm/glm.hpp>
@@ -26,6 +27,7 @@ protected:
     void onMouseEvent(const MouseEvent& mouseEvent);
 
     void chagePolygonMode();
+    void processUserInput();
 
 private:
 
@@ -34,6 +36,9 @@ private:
 
     std::unique_ptr<VAOPipeline> cube;
     std::unique_ptr<Camera> camera;
+    std::map<KeyboardCode, bool> keysPressStatus;
+    float currDrawTimeP;
+    float prevDrawTimeP;
 };
 
 #endif /* __DEMO_APP_HPP__ */

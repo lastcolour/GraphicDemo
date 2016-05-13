@@ -169,7 +169,10 @@ void Texture::reset() {
 }
 
 void Texture::generateMipmaps() {
-
+    makeBind(getID());
+    glGenerateMipmap(texUnitType);
+    makeUnbind(getID());
+    CHECK_OPENGL_STATUS("Texture::generateMipmaps");
 }
 
 void Texture::setWrapS(GLenum wrapType) {

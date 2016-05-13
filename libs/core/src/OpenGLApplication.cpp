@@ -49,6 +49,10 @@ void OpenGLApplication::setOpenGLCoreProfile(bool flag) {
     surfaceImpl->setCoreProfile(flag);
 }
 
+void OpenGLApplication::setVisibleCursor(float flag) {
+    surfaceImpl->setVisibleCursor(flag);
+}
+
 void OpenGLApplication::setDataFolder(const char* path) {
     Resource::setClientResourceDir(path);
 }

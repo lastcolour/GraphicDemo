@@ -17,6 +17,7 @@ public:
     virtual void setResizeable(bool flag) = 0;
     virtual void setOpenGL(unsigned int major, unsigned int minor) = 0;
     virtual void setCoreProfile(bool flag) = 0;
+    virtual void setVisibleCursor(bool flag) = 0;
 
     virtual void sendEvents() = 0;
 

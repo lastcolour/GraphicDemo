@@ -82,7 +82,7 @@ public:
     void setShiftPressed(bool flag) { shiftPressed = flag; }
     void setCtrlPressed(bool flag) { ctrlPressed = flag; }
 
-    bool isPressed() const { return type == EventType::PRESSED; }
+    bool isPressed() const { return type == EventType::PRESSED || type == EventType::REPEAT; }
     bool isReleased() const { return type == EventType::RELEASE; }
     bool isAltPressed() const {return altPressed; }
     bool isShiftPressed() const {return shiftPressed; }

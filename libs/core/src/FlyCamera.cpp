@@ -66,7 +66,8 @@ void FlyCamera::setLocation(float x, float y, float z) {
 }
 
 void FlyCamera::setLookAt(float x, float y, float z) {
-    assert(x != 0.f && y != 0.f && z != 0.f && "Invalid value for LookAt point");
+    assert((x != 0.f || y != 0.f || z != 0.f) && "Invalid value for LookAt point");
+    modified = true;
     lookAt.x = x;
     lookAt.y = y;
     lookAt.z = z;
@@ -74,11 +75,12 @@ void FlyCamera::setLookAt(float x, float y, float z) {
 
 void FlyCamera::setLookAt(const glm::vec3& point) {
     assert(point != glm::vec3(0) && "Invalid value for LookAt point");
+    modified = true;
     lookAt = point;
 }
 
 void FlyCamera::setUpVec(float x, float y, float z) {
-    assert(x != 0.f && y != 0.f && z != 0.f && "Invalid value for UP vec");
+    assert((x != 0.f || y != 0.f || z != 0.f) && "Invalid value for UP vec");
     modified = true;
     upVec.x = x;
     upVec.y = y;
@@ -134,18 +136,11 @@ void FlyCamera::makePitchYawUpdate(float pitchVal, float yawVal) {
     lookAt = glm::normalize(tNewLookAt);
 
     reCalcRightVec();
-
-#ifdef GD_CORE_LIB_DEBUG
-    std::cout << "[FlyCamera] LookAt: (x=" << lookAt.x << ", y=" << lookAt.y << ", z=" << lookAt.z << ")" << std::endl;
-#endif
 }
 
 void FlyCamera::makeMoveAtDirection(const glm::vec3& direction, float distance) {
     modified = true;
     position += glm::normalize(direction) * distance;
-#ifdef GD_CORE_LIB_DEBUG
-    std::cout << "[FlyCamera] Position: (x=" << position.x << ", y=" << position.y << ", z=" << position.z << ")" << std::endl;
-#endif
 }
 
 const glm::vec3& FlyCamera::getLocation() const {

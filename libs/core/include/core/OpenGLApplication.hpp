@@ -19,6 +19,7 @@ public:
     void setSurfaceTitle(const char* title);
     void setSurfaceGeometry(unsigned int width, unsigned int height);
     void setSurfaceResizable(bool flag);
+    void setVisibleCursor(float falg);
 
     void surfaceSwapBuffers();
 

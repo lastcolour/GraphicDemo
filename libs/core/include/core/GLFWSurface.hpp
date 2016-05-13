@@ -21,6 +21,7 @@ public:
     void setResizeable(bool flag);
     void setOpenGL(unsigned int major, unsigned int minor);
     void setCoreProfile(bool flag);
+    void setVisibleCursor(bool flag);
 
     void sendEvents();
 
@@ -35,8 +36,10 @@ public:
 
 private:
 
+    // TODO: Move static data related to mouse to some instance
     static bool GLFW_LIB_INITED;
     static bool GLEW_LIB_INITED;
+    static bool MOUSE_IN_FOCUS;
     static MouseEvent LAST_MOUSE_EVENT;
 
     static bool initGLEW();
@@ -60,6 +63,7 @@ private:
     int openGLMinor;
     bool resizeable;
     bool corePorfile;
+    bool isDisabledCursor;
 };
 
 #endif /* __GLFW_SURFACE_HPP__ */

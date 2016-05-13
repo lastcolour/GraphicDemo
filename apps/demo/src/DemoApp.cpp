@@ -12,7 +12,10 @@
 
 DemoApp::DemoApp(int argc, char* argv[]) : OpenGLApplication(argc, argv),
     cube(nullptr),
-    camera(new FlyCamera()) {
+    camera(new FlyCamera()),
+    keysPressStatus(), 
+    currDrawTimeP(0.f),
+    prevDrawTimeP(0.f) {
 
     setSurfaceTitle("DemoApp");
     setSurfaceGeometry(600, 400);
@@ -24,42 +27,15 @@ DemoApp::DemoApp(int argc, char* argv[]) : OpenGLApplication(argc, argv),
     setDataFolder("data");
 
     camera->setPerspective(45.f, 0.f, 0.1f, 100.f);
+    camera->setLocation(0.f, 0.f, -3.f);
+    camera->setLookAt(0.f, 0.f, -1.f);
 }
 
 DemoApp::~DemoApp() {
 }
 
 void DemoApp::onKeyboardEvent(const KeyboardEvent& keyEvent) {
-    switch(keyEvent.getKeyCode()) {
-    case KeyboardCode::R:
-       if(keyEvent.isPressed()) {
-            chagePolygonMode();
-       }
-       break;
-    case KeyboardCode::W:
-       if(keyEvent.isPressed()) {
-           camera->makeMoveAtDirection(camera->getLookAt(), 1.0f);
-       }
-       break;
-    case KeyboardCode::S:
-        if(keyEvent.isPressed()) {
-            camera->makeMoveAtDirection(camera->getLookAt(), -1.0f);
-        }
-       break;
-    case KeyboardCode::A:
-        if(keyEvent.isPressed()) {
-            camera->makeMoveAtDirection(camera->getRightVec(), -1.0f);
-        }
-        break;
-    case KeyboardCode::D:
-        if(keyEvent.isPressed()) {
-            camera->makeMoveAtDirection(camera->getRightVec(), 1.0f);
-        }
-        break;
-    default:
-        // ignore
-        break;
-    }
+    keysPressStatus[keyEvent.getKeyCode()] = keyEvent.isPressed();
 }
 
 void DemoApp::onMouseEvent(const MouseEvent& mouseEvent) {
@@ -126,11 +102,13 @@ VAOPipeline* DemoApp::createCube() {
     };
 
     Texture texSmile("images/awesomeface.png", GL_TEXTURE_2D);
-    texSmile.setMagFilter(GL_LINEAR);
-    texSmile.setMinFilter(GL_NEAREST);
+    texSmile.generateMipmaps();
+    texSmile.setMagFilter(GL_NEAREST);
+    texSmile.setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
     Texture texCoont("images/container.jpg", GL_TEXTURE_2D);
+    texCoont.generateMipmaps();
     texCoont.setMagFilter(GL_NEAREST);
-    texCoont.setMinFilter(GL_NEAREST);
+    texCoont.setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
 
     ShaderProgram tProgram("shaders/vert.glsl", "shaders/frag.glsl");
     tProgram.setUniformTex("Smile", std::move(texSmile));
@@ -177,9 +155,40 @@ void DemoApp::drawAllCubes() {
         }
         modelView = glm::rotate(modelView, glm::radians(angle), glm::vec3(1.f, 0.3f, 0.5f));
 
-        cube->getProgram()->setUniformMat4fv("ModelView", glm::value_ptr(modelView));
-        cube->getProgram()->setUniformMat4fv("Projection", camera->getProjectMat4f());
+        cube->getProgram()->setUniformMat4fv("WorldMat", glm::value_ptr(modelView));
+        cube->getProgram()->setUniformMat4fv("CameraMat", camera->getProjectMat4f());
         cube->drawAll();
+    }
+}
+
+void DemoApp::processUserInput() {
+    for(auto keyStatus : keysPressStatus) {
+        if(!keyStatus.second) {
+            // Key not pressed
+            continue;
+        }
+        float moveSpeed = 10.f;
+        float tDist = (currDrawTimeP - prevDrawTimeP) * moveSpeed;
+        switch(keyStatus.first) {
+        case KeyboardCode::R:
+            chagePolygonMode();
+            break;
+        case KeyboardCode::W:
+            camera->makeMoveAtDirection(camera->getLookAt(), tDist);
+            break;
+        case KeyboardCode::S:
+            camera->makeMoveAtDirection(camera->getLookAt(), -tDist);
+            break;
+        case KeyboardCode::A:
+            camera->makeMoveAtDirection(camera->getRightVec(), -tDist);
+            break;
+        case KeyboardCode::D:
+            camera->makeMoveAtDirection(camera->getRightVec(), tDist);
+            break;
+        default:
+            // ignore
+            break;
+        }
     }
 }
 
@@ -200,6 +209,9 @@ void DemoApp::chagePolygonMode() {
 
 void DemoApp::onDrawEvent() {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    prevDrawTimeP = currDrawTimeP;
+    currDrawTimeP = getAppRunDuration();
+    processUserInput();
     drawAllCubes();
     surfaceSwapBuffers();
 }
