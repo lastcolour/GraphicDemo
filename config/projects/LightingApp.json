@@ -1,0 +1,63 @@
+{
+  "name": "LightingApp",
+
+  "build_types": ["Debug", "Release"],
+  "bin_types": ["app"],
+
+  "deps": [
+    {
+      "project": "CoreLib.json",
+      "link": "shared",
+      "type": "{BUILD_TYPE}"
+    },
+    {
+      "project": "GLEW.json",
+      "link": "shared",
+      "type": "Release",
+      "install": {
+        "path": "{OUT_DIR}/{PLATFORM}/{BUILD_TYPE}"
+      }
+    }
+  ],
+
+  "cmake": {
+    "run_dir": "apps/lighting",
+    "out_dir": "_build/{PLATFORM}/{BUILD_TYPE}/apps/lighting",
+    "debug": {
+      "defs": [
+        {"CMAKE_BUILD_TYPE": "Debug"}
+      ],
+      "env": []
+    },
+
+    "release": {
+      "defs": [
+        {"CMAKE_BUILD_TYPE": "Release"}
+      ],
+      "env": []
+    },
+
+    "common": {
+      "defs": [{"GD_LIGHTING_APP_INCLUDE_CORE_LIB": "ON",
+                "type":"BOOLEAN"},
+               {"CMAKE_CXX_COMPILER_ARG1": "-std=c++11"}],
+      "env": []
+    }
+  },
+
+  "build": {
+  },
+
+  "cleanUp": {
+
+  },
+
+  "install": {
+    "groups": [
+      {
+        "files": [],
+        "to": ""
+      }
+    ]
+  }
+}

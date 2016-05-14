@@ -13,7 +13,7 @@ Project.intializePaths({
     "config_root": selfPath + "/" + "config/projects",
     "project_root": selfPath
 })
-_DEF_PROJECT = "config/projects/DemoApp.json"
+_DEF_PROJECT = "config/projects/LightingApp.json"
 del selfPath
 
 

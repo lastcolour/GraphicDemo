@@ -24,7 +24,7 @@ DemoApp::DemoApp(int argc, char* argv[]) : OpenGLApplication(argc, argv),
     setOpenGLVersion(3, 3);
     setOpenGLCoreProfile(true);
 
-    setDataFolder("data");
+    setDataFolder("DemoApp_data");
 
     camera->setPerspective(45.f, 0.f, 0.1f, 100.f);
     camera->setLocation(0.f, 0.f, -3.f);

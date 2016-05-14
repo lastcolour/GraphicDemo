@@ -5,18 +5,18 @@ if(NOT GD_ROOT_DIR)
   set(GD_CONFIG_DIR "${GD_ROOT_DIR}/config/cmakes")
 endif()
 
-project(DemoApp)
+project(LightingApp)
 
 include(${GD_CONFIG_DIR}/dirs.cmake)
 include(${GD_CONFIG_DIR}/opengl.cmake)
 
-set(TARGET_NAME "demo")
+set(TARGET_NAME "Lighting")
 
 set(DATA_DIR_NAME "data")
 set(DATA_DIR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${DATA_DIR_NAME}")
 set(SHADER_DIR_PATH "${DATA_DIR_PATH}/shaders")
 
-file(GLOB HEADERS "src/*.hpp") # TODO: Replace glob to file enumeration
+file(GLOB HEADERS "src/*.hpp")
 file(GLOB SRC     "src/*.cpp")
 
 file(GLOB SHADERS "${SHADER_DIR_PATH}/*.glsl")
@@ -31,7 +31,7 @@ add_executable(${TARGET_NAME} ${SRC} ${HEADERS} ${SHADERS})
 set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD 11)
 
 # CoreLib link
-if(NOT GD_DEMO_APP_INCLUDE_CORE_LIB)
+if(NOT GD_LIGHTING_APP_INCLUDE_CORE_LIB)
 
   set(GD_LIB_CORE_LOOK_PATH "${GD_OUT_ROOT_DIR}/${GD_BUILD_PLATFORM}/${CMAKE_BUILD_TYPE}")
 
@@ -43,7 +43,7 @@ if(NOT GD_DEMO_APP_INCLUDE_CORE_LIB)
 
 else()
 
-  # Include CoreLib to AppDemo for easy development both targets
+  # Include CoreLib to for easy development both targets
   add_subdirectory(${GD_LIBS_ROOT_DIR}/core "${CMAKE_BINARY_DIR}/corelib")
   set(CORE_LIB_PATH core)
   add_dependencies(${TARGET_NAME} ${CORE_LIB_PATH})
@@ -52,7 +52,7 @@ endif()
 
 target_link_libraries(${TARGET_NAME} PRIVATE ${CORE_LIB_PATH})
 
-# Additional build steps
+#---------------- Additional build steps ----------------#
 
 # Copy application data
 message(STATUS "Shader dir: ${DATA_DIR_PATH}")
