@@ -10,7 +10,7 @@ project(LightingApp)
 include(${GD_CONFIG_DIR}/dirs.cmake)
 include(${GD_CONFIG_DIR}/opengl.cmake)
 
-set(TARGET_NAME "Lighting")
+set(TARGET_NAME "lighting")
 
 set(DATA_DIR_NAME "data")
 set(DATA_DIR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${DATA_DIR_NAME}")

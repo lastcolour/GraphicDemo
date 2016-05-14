@@ -22,7 +22,7 @@
 
   "cmake": {
     "run_dir": "apps/lighting",
-    "out_dir": "_build/{PLATFORM}/{BUILD_TYPE}/apps/lighting",
+    "out_dir": "_build/{PLATFORM}/{BUILD_TYPE}/apps/LightingApp",
     "debug": {
       "defs": [
         {"CMAKE_BUILD_TYPE": "Debug"}

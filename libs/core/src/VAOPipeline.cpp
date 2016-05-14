@@ -94,6 +94,10 @@ void VAOPipeline::setProgram(ShaderProgram&& program) {
     shaderPrg = new ShaderProgram(std::move(program));
 }
 
+void VAOPipeline::setVertexBuffer(VertexBuffer* buffer) {
+
+}
+
 void VAOPipeline::setVertexBuffer(GLsizeiptr size, const GLvoid* buffer, const VertexPacking* packing, GLenum bufferMode) {
     if(vertexDataBuffer != 0) {
         glDeleteBuffers(1, &vertexDataBuffer);
