@@ -44,6 +44,10 @@ private:
 
     static bool initGLEW();
 
+    static void windowFramebufferResizeCallback(GLFWwindow* window, int w, int h);
+    static void windowRefreshCallback(GLFWwindow* window);
+
+
     static void keyboardCallback(GLFWwindow* window, int keyCode, int scanCode, int action, int keyMode);
 
     static void mousePosCallback(GLFWwindow* window, double x, double y);

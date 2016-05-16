@@ -134,6 +134,14 @@ float GLFWSurface::getShowDuration() const {
     return static_cast<float>(glfwGetTime());
 }
 
+void GLFWSurface::windowRefreshCallback(GLFWwindow* windowPtr) {
+    Surface::sendReDrawEvent();
+}
+
+void GLFWSurface::windowFramebufferResizeCallback(GLFWwindow* windwoPtr, int width, int height) {
+    Surface::sendResizeEvent(static_cast<unsigned int>(width), static_cast<unsigned int>(height));
+}
+
 void GLFWSurface::keyboardCallback(GLFWwindow* windowPtr, int keyCode, int scanCode, int action, int keyMode) {
 
     KeyboardCode code = KeyboardCode::UNKNOWN;
@@ -232,6 +240,9 @@ void GLFWSurface::mouseWheelCallback(GLFWwindow* window, double xoffset, double 
 
 void GLFWSurface::initCallbacks() {
     assert(windowPtr != nullptr && "Can't create callback without windwows");
+    // Window
+    glfwSetWindowRefreshCallback(windowPtr, windowRefreshCallback);
+    glfwSetFramebufferSizeCallback(windowPtr, windowFramebufferResizeCallback);
     // Keyboard
     glfwSetKeyCallback(windowPtr, keyboardCallback);
     // Mouse
@@ -258,7 +269,7 @@ bool GLFWSurface::show() {
     windowPtr = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
     if(!windowPtr) {
 #ifdef GD_CORE_LIB_DEBUG
-        std::cerr << "[Surface] Can't create Surface";
+        std::cerr << "[Surface] Can't create GLFWSurface";
         std::cerr << "\n[Surface] Required openGL version: " << openGLMajor << "." << openGLMinor << std::endl;
 #endif /* GD_CORE_LIB_DEBUG */
         return false;

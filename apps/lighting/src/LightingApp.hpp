@@ -16,7 +16,9 @@ public:
 protected:
 
     void onInitEvent();
-    void onDrawEvent();
+    void onReDrawEvent();
+
+    void mainLoop();
 
     VAOPipeline* createCube();
     VAOPipeline* createLightPoint();

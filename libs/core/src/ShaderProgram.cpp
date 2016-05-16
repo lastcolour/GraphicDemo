@@ -14,12 +14,15 @@ class TextureManager {
 public:
 
     typedef Texture* TexturePtr;
-    typedef std::pair<GLint, TexturePtr> TexBindInfo;
+    typedef std::pair<GLint, TexturePtr> TexBindInfo; // first == texture layout, second == texture obj
 
     TextureManager() : texUnits() {}
     ~TextureManager() {
         for(auto texInfo : texUnits) {
-            SAFE_DELETE(texInfo.second);
+            texInfo.second->unref();
+            if(!texInfo.second->isReffed()) {
+                SAFE_DELETE(texInfo.second);
+            }
         }
         texUnits.clear();
     }
@@ -30,6 +33,7 @@ public:
 
     void addTexture(GLint location, TexturePtr texture) {
         assert(texUnits.size() < MAX_BIND_TEX_UNITS && "Too many textures used for program binding");
+        texture->ref();
         texUnits.push_back(std::make_pair(location, texture));
     }
 
@@ -112,7 +116,7 @@ ShaderProgram::ShaderProgram(GLuint vertID, GLuint fragID) :
     assert(fragID != 0 && "Invalid fragment program id");
     GLuint tProgID = linkProgram(vertID, fragID);
     if(tProgID != 0) {
-        holdID(tProgID);
+        objID = tProgID;
     }
 }
 
@@ -129,7 +133,7 @@ ShaderProgram::ShaderProgram(const char* vertShader, const char* fragShader) :
     }
     GLuint tProgID = linkProgram(tVert.getID(), tFrag.getID());
     if(tProgID != 0) {
-        holdID(tProgID);
+        objID = tProgID;
     }
 }
 
@@ -149,7 +153,7 @@ ShaderProgram::ShaderProgram(const Shader& firstShader, const Shader& secondShad
     assert(fragID != 0 && "No fragment shader specified");
     GLuint tProgID = linkProgram(vertID, fragID);
     if(tProgID != 0) {
-        holdID(tProgID);
+        objID = tProgID;
     }
 }
 
@@ -157,7 +161,7 @@ ShaderProgram::ShaderProgram(ShaderProgram&& program) :
     OpenGLObject(),
     texManager(nullptr) {
 
-    replaceTo(std::move(program));
+    replaceToID(std::move(program));
     std::swap(texManager, program.texManager);
 }
 
@@ -165,20 +169,20 @@ ShaderProgram& ShaderProgram::operator=(ShaderProgram&& program) {
     if(this == &program) {
         return *this;
     }
-    replaceTo(std::move(program));
+    replaceToID(std::move(program));
     SAFE_DELETE(texManager);
     std::swap(texManager, program.texManager);
     return *this;
 }
 
 ShaderProgram::~ShaderProgram() {
-    if(getID() == 0) {
+    if(objID == 0) {
         return;
     }
-    if(makeIsBoundCheck(getID())) {
-        makeUnbind(getID());
+    if(makeIsBoundCheck()) {
+        makeUnbind();
     }
-    makeFree(getID());
+    makeFree();
     SAFE_DELETE(texManager);
 }
 
@@ -237,30 +241,30 @@ void ShaderProgram::setUniformTex(const char* name, Texture&& texture) {
     glUseProgram(0);
 }
 
-bool ShaderProgram::makeIsBoundCheck(GLuint resourceID) {
+bool ShaderProgram::makeIsBoundCheck() {
     GLint tProgram = 0;
     glGetIntegerv(GL_CURRENT_PROGRAM, &tProgram);
-    return resourceID == tProgram;
+    return objID == tProgram;
 }
 
-bool ShaderProgram::makeCheck(GLuint resourceID) {
-    return resourceID != 0;
+bool ShaderProgram::makeCheck() {
+    return objID != 0;
 }
 
-bool ShaderProgram::makeBind(GLuint resourceID) {
-    glUseProgram(resourceID);
+bool ShaderProgram::makeBind() {
+    glUseProgram(objID);
     texManager->bind();
     return true;
 }
 
-bool ShaderProgram::makeUnbind(GLuint resourceID) {
+bool ShaderProgram::makeUnbind() {
     texManager->unbind();
     glUseProgram(0);
     return true;
 }
 
-bool ShaderProgram::makeFree(GLuint resourceID) {
-    glDeleteProgram(resourceID);
+bool ShaderProgram::makeFree() {
+    glDeleteProgram(objID);
     texManager->reset();
     return true;
 }

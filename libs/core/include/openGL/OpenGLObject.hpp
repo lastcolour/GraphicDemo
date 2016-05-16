@@ -6,7 +6,31 @@
 #include <core/DEFS.hpp>
 #include <openGL/openGL.hpp>
 
-class LIB_EXPORT_CONV OpenGLObject {
+#include <cassert>
+
+class LIB_EXPORT_CONV SharedObject {
+public:
+
+    // TODO: Move to other file?
+
+    SharedObject() : refCount(0) {}
+    virtual ~SharedObject() { assert(refCount == 0 && "Deleting refferd resource"); }
+
+    void ref() { refCount++; }
+    void unref() { assert(refCount > 0 && "Too many unref"); refCount--;}
+    int getRefCount() { return refCount; }
+    bool isReffed() const { return refCount == 0; }
+
+private:
+
+    SharedObject(const SharedObject&);
+    SharedObject& operator=(SharedObject&);
+
+    int refCount;
+};
+
+
+class LIB_EXPORT_CONV OpenGLObject : public SharedObject {
 public:
 
     virtual ~OpenGLObject();
@@ -16,27 +40,29 @@ public:
     void bind();
     void unbind();
 
+    GLuint getID() const;
+
 protected:
 
     OpenGLObject();
 
-    virtual bool makeIsBoundCheck(GLuint resourceID) = 0;
-    virtual bool makeCheck(GLuint resourceID)        = 0;
-    virtual bool makeBind(GLuint resourceID)         = 0;
-    virtual bool makeUnbind(GLuint resourceID)       = 0;
-    virtual bool makeFree(GLuint resourceID)         = 0;
+    virtual bool makeIsBoundCheck() = 0;
+    virtual bool makeCheck()        = 0;
+    virtual bool makeBind()         = 0;
+    virtual bool makeUnbind()       = 0;
+    virtual bool makeFree()         = 0;
 
-    void holdID(GLuint resourceID);
-    void replaceTo(OpenGLObject&& resourceID);
+protected:
+
     void resetID();
-    GLuint getID() const;
+    void replaceToID(OpenGLObject&& object);
+
+    GLuint objID;
 
 private:
 
      OpenGLObject(const OpenGLObject&);
      OpenGLObject& operator=(const OpenGLObject&);
-
-     GLuint resID;
 };
 
 #endif /* __OPENGL_OBJECT_HPP__ */

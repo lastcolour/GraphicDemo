@@ -19,19 +19,30 @@ del selfPath
 
 def parseArgs():
     from argparse import ArgumentParser
-    argPrs = ArgumentParser(description="Helpful script for project managment")
-    argPrs.add_argument("-p",     dest="proj",  nargs=1,   required=False, type=str,    default=_DEF_PROJECT,
+
+    argPrs = ArgumentParser(description= "Helpful script for project managment",
+                            epilog="Developed by Oleksii Zhogan (alexzhogan@gmail.com)")
+
+    argPrs.add_argument("-proj",  dest="proj",  nargs=1,   required=False, type=str,    default=_DEF_PROJECT,
                                   help="specifie custon project file")
-    argPrs.add_argument("-build", dest="build", nargs="?", required=True,  type=str,    const="debug", choices=["Debug","debug" ,"Release", "release"],
+    tGroup = argPrs.add_mutually_exclusive_group()
+    tGroup.add_argument("-build", dest="build", nargs="?", required=False,  type=str,    const="debug", choices=["Debug","debug" ,"Release", "release"],
                                   help="build project of specifig type (debug, release)")
-    argPrs.add_argument("-clean", dest="clean", nargs="?", required=False, type=bool,   const=True, default=False,
+    tGroup.add_argument("-init-local", dest="init local config", required=False, type=bool, const=True, default=False,
+                                       nargs="?", help="init local configuration")
+    tGroup.add_argument("-clean", dest="clean", nargs="?", required=False, type=bool,   const=True, default=False,
                                   help="clean all generated files before build")
-    return argPrs.parse_args()                                                                                                                                                                                                            
+    tGroup.add_argument("-list",  dest="list", nargs="?", required=False,  type=bool,    const=True, default=False,
+                                  help="show all projects")
+    return argPrs.parse_args()
 
 
 def main():
     args = parseArgs()
     try:
+        if args.proj is None:
+            log.error("[Info] Project not loaded")
+            return
         proj = Project(args.proj)
     except:
         log.error("[Error] Unexpected error when loading project from: {0}".format(args.proj))
@@ -39,6 +50,9 @@ def main():
         return
     if args.clean:
         proj.cleanUp()
+    if args.build is None:
+        log.info("[Info] Build config not specified. Skipping!")
+        return
     proj.build(args.build.title())
 
 if __name__ == "__main__":

@@ -1,6 +1,5 @@
 #include <LightingApp.hpp>
-
-#include <openGL/VertexBuffer.hpp>
+#include <vector>
 
 LightingApp::LightingApp(int argc, char* argv[]) :
     OpenGLApplication(argc, argv) {
@@ -18,14 +17,17 @@ LightingApp::~LightingApp() {
 
 VAOPipeline* LightingApp::createCube() {
     VAOPipeline* tVaoPtr = new VAOPipeline();
-    tVaoPtr->setVertexBuffer(VertexBuffer::createCube(0.5f, glm::vec3(0)));
     tVaoPtr->setProgram(new ShaderProgram("shaders/cubeVert.glsl", "shaders/cubetFrag.glsl"));
     return tVaoPtr;
 }
 
 VAOPipeline* LightingApp::createLightPoint() {
     VAOPipeline* tVaoPtr = new VAOPipeline();
-    tVaoPtr->setVertexBuffer(VertexBuffer::createCube(0.5f, glm::vec3(0)));
+    GLfloat vertexs[] = {
+        -0.5, -0.5f, 0.f,
+         0.5, -0.5f, 0.f,
+         0.0,  0.5f, 0.f,
+    };
     tVaoPtr->setProgram(new ShaderProgram("shaders/lightVert.glsl", "shaders/lightFrag.glsl"));
     return tVaoPtr;
 }
@@ -36,9 +38,10 @@ void LightingApp::onInitEvent() {
     cube.reset(createCube());
 }
 
-void LightingApp::onDrawEvent() {
+void LightingApp::mainLoop() {
+}
+
+void LightingApp::onReDrawEvent() {
     glClear(GL_COLOR_BUFFER_BIT);
-    lightPoint->drawAll();
-    cube->drawAll();
     surfaceSwapBuffers();
 }

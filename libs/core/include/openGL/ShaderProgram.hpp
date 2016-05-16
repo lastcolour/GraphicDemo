@@ -28,11 +28,11 @@ public:
 
 protected:
 
-    bool makeIsBoundCheck(GLuint resourceID);
-    bool makeCheck(GLuint resourceID);
-    bool makeBind(GLuint resourceID);
-    bool makeUnbind(GLuint resourceID);
-    bool makeFree(GLuint resourceID);
+    bool makeIsBoundCheck();
+    bool makeCheck();
+    bool makeBind();
+    bool makeUnbind();
+    bool makeFree();
 
 private:
 

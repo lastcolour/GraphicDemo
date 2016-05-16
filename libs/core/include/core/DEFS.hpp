@@ -3,17 +3,22 @@
 #ifndef __DEFS_HPP__
 #define __DEFS_HPP__
 
+
+#define GD_CORE_LIB_DEBUG // Move to project config
+#define GD_WIN_DLL_BUILD  // Move to project config
+
+
 #if defined(_WIN32) || defined(_WIN64)
-  #define GD_WIN_DLL_BUILD
+  #define GD_WIN_BUILD
 #endif
 
-#define GD_CORE_LIB_DEBUG
 
-#ifdef GD_WIN_DLL_BUILD
+#if defined GD_WIN_BUILD && defined(GD_WIN_DLL_BUILD)
   #define LIB_EXPORT_CONV __declspec(dllexport)
 #else
   #define LIB_EXPORT_CONV
 #endif
+
 
 #define BUF_STRIDE( X ) \
     reinterpret_cast<GLvoid*>(X)

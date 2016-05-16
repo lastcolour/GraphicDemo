@@ -14,8 +14,8 @@ void VisualApplication::appKeyboardRequest(const KeyboardEvent& keyEvent) {
     onKeyboardEvent(keyEvent);
 }
 
-void VisualApplication::appDrawRequest() {
-    onDrawEvent();
+void VisualApplication::appReDrawRequest() {
+    onReDrawEvent();
 }
 
 void VisualApplication::appMouseRequest(const MouseEvent& mouseE) {

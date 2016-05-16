@@ -4,70 +4,64 @@
 
 #include <cassert>
 
-OpenGLObject::OpenGLObject() : resID(0) {
+OpenGLObject::OpenGLObject() : objID(0) {
 }
 
 OpenGLObject::~OpenGLObject() {
 }
 
-void OpenGLObject::replaceTo(OpenGLObject&& object) {
-    if(object.resID == resID) {
-        return;
-    }
-    if(resID != 0) {
-        if(makeIsBoundCheck(resID)) {
-            makeUnbind(resID);
-        }
-        makeFree(resID);
-    }
-    resID = object.resID;
-    object.resID = 0;
-}
-
-void OpenGLObject::holdID(GLuint resourceID) {
-    assert(resourceID != 0 && "Try hold invalid openGL resource");
-    assert(resID == 0 && "Try hold other openGL resource");
-    resID = resourceID;
-}
-
 GLuint OpenGLObject::getID() const {
-    return resID;
+    return objID;
 }
 
 bool OpenGLObject::isValid() {
-    if(resID == 0) {
+    if(objID == 0) {
         return false;
     }
-    return makeCheck(resID);
+    return makeCheck();
 }
 
 bool OpenGLObject::isBounded() {
-    if(resID == 0) {
+    if(objID == 0) {
         return false;
     }
-    return makeIsBoundCheck(resID);
+    return makeIsBoundCheck();
 }
 
 void OpenGLObject::bind() {
-    assert(resID != 0 && "Try use invalid resource");
-    if(!makeIsBoundCheck(resID)) {
-        makeBind(resID);
+    assert(objID != 0 && "Try use invalid resource");
+    if(!makeIsBoundCheck()) {
+        makeBind();
     }
 }
 
 void OpenGLObject::unbind() {
-    assert(resID != 0 && "Try use invalid resource");
-    if(makeIsBoundCheck(resID)) {
-        makeUnbind(resID);
+    assert(objID != 0 && "Try use invalid resource");
+    if(makeIsBoundCheck()) {
+        makeUnbind();
     }
 }
 
 void OpenGLObject::resetID() {
-   if(resID != 0) {
-        if(makeIsBoundCheck(resID)) {
-            makeUnbind(resID);
+   if(objID != 0) {
+        if(makeIsBoundCheck()) {
+            makeUnbind();
         }
-        makeFree(resID);
+        makeFree();
     }
-   resID = 0;
+   objID = 0;
+}
+
+void OpenGLObject::replaceToID(OpenGLObject&& object) {
+    if(object.objID == objID) {
+        return;
+    }
+    if(objID != 0) {
+        if(makeIsBoundCheck()) {
+            makeUnbind();
+        }
+        makeFree();
+    }
+    objID = object.objID;
+    object.objID = 0;
 }

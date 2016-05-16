@@ -5,7 +5,6 @@
 
 #include <openGL/openGL.hpp>
 
-#include <openGL/VertexBuffer.hpp>
 #include <openGL/ShaderProgram.hpp>
 #include <openGL/Texture.hpp>
 
@@ -26,7 +25,6 @@ public:
     void setDrawMode(GLenum mode);
     void setProgram(ShaderProgram* program);
     void setProgram(ShaderProgram&& program);
-    void setVertexBuffer(VertexBuffer* buffer);
     void setVertexBuffer(GLsizeiptr size, const GLvoid* buffer, const VertexPacking* packing, GLenum bufferMode = GL_STATIC_DRAW);
     void setElementBuffer(GLsizeiptr size, const GLvoid* buffer, GLenum bufferType = GL_UNSIGNED_INT, GLenum bufferMode = GL_STATIC_DRAW);
 

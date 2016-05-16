@@ -32,7 +32,7 @@ public:
 
 protected:
 
-    static void sendDrawEvent();
+    static void sendReDrawEvent();
     static void sendKeyboardEvent(const KeyboardEvent& keyEvent);
     static void sendMouseEvent(const MouseEvent& mouseEvent);
     static void sendResizeEvent(unsigned int w, unsigned int h);

@@ -7,8 +7,6 @@
 #include <core/KeyboardEvent.hpp>
 #include <core/MouseEvent.hpp>
 
-class AppCache;
-
 class LIB_EXPORT_CONV VisualApplication {
 public:
 
@@ -26,7 +24,7 @@ public:
 protected:
 
     void appInitRequest();
-    void appDrawRequest();
+    void appReDrawRequest();
     void appResizeRequest(unsigned int width, unsigned int heigth);
     void appKeyboardRequest(const KeyboardEvent& keyEvent);
     void appMouseRequest(const MouseEvent& mouseEvent);
@@ -34,8 +32,10 @@ protected:
     virtual void onResizeEvent(unsigned int width, unsigned int heigth) {}
     virtual void onKeyboardEvent(const KeyboardEvent& keyEvent) {}
     virtual void onMouseEvent(const MouseEvent& mouseEvent) {}
-    virtual void onDrawEvent() {}
+    virtual void onReDrawEvent() {}
     virtual void onInitEvent() {}
+
+    virtual void mainLoop() = 0;
 
 protected:
 

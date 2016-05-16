@@ -83,19 +83,21 @@ VAOPipeline::~VAOPipeline() {
 void VAOPipeline::setProgram(ShaderProgram* program) {
     assert(program != nullptr && "Setup invalid program");
     assert(program->isValid() == true && "Setup not compiled program");
+    program->ref();
+    if(shaderPrg != nullptr && shaderPrg->getRefCount() == 0) {
+        shaderPrg->unref();
+        SAFE_DELETE(shaderPrg);
+    }
     shaderPrg = program;
 }
 
 void VAOPipeline::setProgram(ShaderProgram&& program) {
     assert(program.isValid() == true && "Setup not compiled program");
-    if(shaderPrg != nullptr) {
+    if(shaderPrg != nullptr && shaderPrg->getRefCount() == 0) {
+        shaderPrg->unref();
         SAFE_DELETE(shaderPrg);
     }
     shaderPrg = new ShaderProgram(std::move(program));
-}
-
-void VAOPipeline::setVertexBuffer(VertexBuffer* buffer) {
-
 }
 
 void VAOPipeline::setVertexBuffer(GLsizeiptr size, const GLvoid* buffer, const VertexPacking* packing, GLenum bufferMode) {

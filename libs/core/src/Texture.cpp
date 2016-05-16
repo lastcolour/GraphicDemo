@@ -41,8 +41,6 @@ int getCompRequires(GLenum texFormat) {
     }
 }
 
-// TODO: Implemt class with ref and unref methods for shared object holding 
-
 Texture::Texture(const char* filename, GLenum texType) :
     OpenGLObject(),
     Resource(),
@@ -85,7 +83,7 @@ Texture::Texture(const char* filename, GLenum texType) :
     freeImage(buffer);
 
     glBindTexture(texType, 0);
-    holdID(texUnitID);
+    objID  = texUnitID;
     CHECK_OPENGL_STATUS("Texture:Texture");
 }
 
@@ -97,7 +95,7 @@ Texture::Texture(Texture&& texture) :
     texUnitType(texture.texUnitType),
     texUnitFrmt(texture.texUnitFrmt) {
 
-    replaceTo(std::move(texture));
+    replaceToID(std::move(texture));
     texture.reset();
 }
 
@@ -109,9 +107,9 @@ Texture& Texture::operator=(Texture&& texture) {
     w = texture.w;
     h = texture.h;
     texUnitType = texture.texUnitType;
-    texUnitFrmt =texture.texUnitFrmt;
+    texUnitFrmt = texture.texUnitFrmt;
 
-    replaceTo(std::move(texture));
+    replaceToID(std::move(texture));
     texture.reset();
     return *this;
 }
@@ -120,10 +118,10 @@ Texture::~Texture() {
     if(getID() == 0) {
         return;
     }
-    if(makeIsBoundCheck(getID())) {
-        makeUnbind(getID());
+    if(makeIsBoundCheck()) {
+        makeUnbind();
     }
-    makeFree(getID());
+    makeFree();
     CHECK_OPENGL_STATUS("Texture:~Texture");
 }
 
@@ -135,28 +133,29 @@ int Texture::width() const{
     return w;
 }
 
-bool Texture::makeIsBoundCheck(GLuint resourceID) {
+bool Texture::makeIsBoundCheck() {
     GLint tTexID = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_2D, &tTexID);
-    return tTexID == resourceID;
+    return tTexID == objID;
 }
 
-bool Texture::makeCheck(GLuint resourceID) {
-    return resourceID != 0;
+bool Texture::makeCheck() {
+    return objID != 0;
 }
 
-bool Texture::makeBind(GLuint resourceID) {
-    glBindTexture(texUnitType, resourceID);
+bool Texture::makeBind() {
+    glBindTexture(texUnitType, objID);
     return true;
 }
 
-bool Texture::makeUnbind(GLuint resourceID) {
+bool Texture::makeUnbind() {
     glBindTexture(texUnitType, 0);
     return true;
 }
 
-bool Texture::makeFree(GLuint resourceID) {
-    glDeleteTextures(1, &resourceID);
+bool Texture::makeFree() {
+    glDeleteTextures(1, &objID);
+    objID = 0;
     return true;
 }
 
@@ -169,30 +168,30 @@ void Texture::reset() {
 }
 
 void Texture::generateMipmaps() {
-    makeBind(getID());
+    makeBind();
     glGenerateMipmap(texUnitType);
-    makeUnbind(getID());
+    makeUnbind();
     CHECK_OPENGL_STATUS("Texture::generateMipmaps");
 }
 
 void Texture::setWrapS(GLenum wrapType) {
-    makeBind(getID());
+    makeBind();
     glTexParameteri(texUnitType, GL_TEXTURE_WRAP_S, wrapType);
-    makeUnbind(getID());
+    makeUnbind();
     CHECK_OPENGL_STATUS("Texture:setWrapS");
 }
 
 void Texture::setWrapT(GLenum wrapType) {
-    makeBind(getID());
+    makeBind();
     glTexParameteri(texUnitType, GL_TEXTURE_WRAP_T, wrapType);
-    makeUnbind(getID());
+    makeUnbind();
     CHECK_OPENGL_STATUS("Texture:setWrapT");
 }
 
 void Texture::setWrapR(GLenum wrapType) {
-    makeBind(getID());
+    makeBind();
     glTexParameteri(texUnitType, GL_TEXTURE_WRAP_R, wrapType);
-    makeUnbind(getID());
+    makeUnbind();
     CHECK_OPENGL_STATUS("Texture:setWrapR");
 }
 
@@ -200,15 +199,15 @@ void Texture::setBorderColor() {
 }
 
 void Texture::setMinFilter(GLenum filterType) {
-    makeBind(getID());
+    makeBind();
     glTexParameteri(texUnitType, GL_TEXTURE_MIN_FILTER, filterType);
-    makeUnbind(getID());
+    makeUnbind();
     CHECK_OPENGL_STATUS("Texture:setMinFilter");
 }
 
 void Texture::setMagFilter(GLenum filterType) {
-    makeBind(getID());
+    makeBind();
     glTexParameteri(texUnitType, GL_TEXTURE_MAG_FILTER, filterType);
-    makeUnbind(getID());
+    makeUnbind();
     CHECK_OPENGL_STATUS("Texture:setMagFilter");
 }

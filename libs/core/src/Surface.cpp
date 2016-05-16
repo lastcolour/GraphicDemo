@@ -13,8 +13,8 @@ VisualApplication* Surface::application = nullptr;
  Surface::~Surface() {
  }
 
-void Surface::sendDrawEvent() {
-    application->appDrawRequest();
+void Surface::sendReDrawEvent() {
+    application->appReDrawRequest();
 }
 
 void Surface::sendKeyboardEvent(const KeyboardEvent& keyEvent) {

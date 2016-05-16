@@ -77,7 +77,6 @@ int OpenGLApplication::run() {
     while(surfaceImpl->isOpen()) {
         // TODO: Reimplement this method
         surfaceImpl->sendEvents();
-        appDrawRequest();
     }
     return APP_OK;
 }
