@@ -17,8 +17,8 @@ To perform build use script **project.py**, here is some examples:
 ## Project:
 ### DemoApp
 
-Based on @www.learnopengl.com tutorial: <Getting started> and containe fully implenented example
+Based on @www.learnopengl.com tutorial "Getting started" and containe fully implenented example
  
 ### LightigApp
 
-Based on @www.learnopengl.com tutorial <Lighting> 
+Based on @www.learnopengl.com tutorial "Lighting" 
