@@ -12,11 +12,6 @@ from utils import copyFiles
 from cmake import CmakeRunner
 from compile import CompileRunner
 
-_DEF_WIN_GENERATOR = "Visual Studio 11 Win64"
-_DEF_LIN_GENERATOR = "Eclipse CDT4 - Unix Makefiles"
-
-
-
 def _getPlatformInfo():
   import platform
   tPlatform = dict()
@@ -51,14 +46,15 @@ class Project:
     # TODO: Add build dict as member of Project instance
 
     _CONFIG_ROOT = ""
-    _PROJECTS_ROOT = ""
+    _REPO_ROOT = ""
 
-    def __init__(self, configFile, parent=None):
+    def __init__(self, projectName, parent=None):
         self._parent = parent
         self._installFlag = False
         self._cmakeOutDir = None
+        self._cmakeGenerator = None
         self._depProjects = dict()
-        self._loadModel(configFile)
+        self._loadModel(projectName)
 
     def getName(self):
         return self._model["name"]
@@ -70,7 +66,7 @@ class Project:
     @staticmethod
     def intializePaths(pathInfo):
         Project._CONFIG_ROOT = pathInfo["config_root"]
-        Project._PROJECTS_ROOT = pathInfo["project_root"]
+        Project._REPO_ROOT = pathInfo["repo_root"]
 
     def _absPath(self, path):
        tPath = ""
@@ -104,9 +100,16 @@ class Project:
         for item in self._model["install"]["groups"]:
             item["to"] = path
 
-    def _loadModel(self, filename):
+    def _loadModel(self, projectName):
+        if "json" in projectName.split("."):
+            tPrefix = ""
+        else:
+            tPrefix = ".json"
+        tConfigFile = "{0}/{1}".format(Project._CONFIG_ROOT, projectName) + tPrefix
+        if not os.path.exists(tConfigFile):
+            raise  RuntimeError("[Error] Can't find project config file: {0}".format(tConfigFile))
         try:
-            with open(filename, "r") as tFile:
+            with open(tConfigFile, "r") as tFile:
               self._model =  json.load(tFile)
               if "deps" in self._model:
                   for depItem in self._model.pop("deps"):
@@ -121,15 +124,15 @@ class Project:
                raise
         except:
             if self._parent is not None:
-                raise DependError("Can't load dep project from file: {0}".format(filename))
+                raise DependError("Can't load dep project from file: {0}".format(tConfigFile))
             else:
-                log.error("[Error] Unknown error when load project from: {0}".format(filename))
+                log.error("[Error] Unknown error when load project from: {0}".format(tConfigFile))
                 raise
         else:
             log.info("[Info][{0}] Loaded -- OK".format(self.getName()))
 
     def _loadDepProject(self, depInfo):
-        depInfo["project"] = Project(self._findProjectFile(depInfo.pop("project")))
+        depInfo["project"] = Project(depInfo.pop("project"), parent=self)
         if "install" in depInfo:
             depInfo["project"]._setNeedInstall(True)
         self._depProjects[depInfo["project"].getName()] = depInfo
@@ -139,6 +142,9 @@ class Project:
 
     def _setLinkType(self, linkType):
         self._linkType = linkType
+
+    def setLocalConfig(self, config):
+        self._cmakeGenerator = config.getCMAKEGenerator()
 
     def _doBuild(self, buildType):
         if not self._compileProject(buildType):
@@ -189,20 +195,18 @@ class Project:
         return False
 
     def _getInstallRoot(self):
-        return Project._PROJECTS_ROOT + "/" + "_out"
+        return Project._REPO_ROOT + "/" + "_out"
 
-    def _getCmakeGenerator(self):
-        if Platform["name"] == "Windows":
-            # TODO: Move generator to some config
-            tGenStr = _DEF_WIN_GENERATOR
+    def _getCmakeGen(self):
+        if self._parent is not None:
+            return self._parent._getCmakeGen()
         else:
-            tGenStr = _DEF_LIN_GENERATOR
-        return tGenStr
+            return self._cmakeGenerator
 
     def _compileProject(self, buildType):
         tCmakeRunner = CmakeRunner(self._model["cmake"])
-        tCmakeRunner.setGenerator(self._getCmakeGenerator())
-        tCmakeRunner.setRootPath(Project._PROJECTS_ROOT)
+        tCmakeRunner.setGenerator(self._getCmakeGen())
+        tCmakeRunner.setRootPath(Project._REPO_ROOT)
         tCmakeInfo = tCmakeRunner.run(buildType)
         if tCmakeInfo is None:
             log.error("[Error][{0}] Can't generate project files by cmake".format(self.getName()))
@@ -212,9 +216,3 @@ class Project:
             self._cmakeOutDir = tCmakeInfo["CMAKE_OUT_DIR"] # TODO Remove this
         tCompileRunner = CompileRunner(tCmakeInfo)
         return tCompileRunner.run()
-
-    def _findProjectFile(self, projectFile):
-        tPath = Project._CONFIG_ROOT + "/" + projectFile
-        if not os.path.exists(tPath):
-            raise DependError("Can't find project file: {0}".format(tPath))
-        return tPath

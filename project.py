@@ -4,16 +4,16 @@ import os
 import sys
 
 from scripts.proj import Project
-
+from scripts.initter import Initializer
 from scripts.logger import log
 
 
 selfPath = os.path.dirname(os.path.abspath(__file__)).replace("\\", "/")
+SELF_NAME = os.path.basename(__file__)
 Project.intializePaths({
     "config_root": selfPath + "/" + "config/projects",
-    "project_root": selfPath
+    "repo_root": selfPath
 })
-_DEF_PROJECT = "config/projects/LightingApp.json"
 del selfPath
 
 
@@ -23,7 +23,7 @@ def parseArgs():
     argPrs = ArgumentParser(description= "Helpful script for project managment",
                             epilog="Developed by Oleksii Zhogan (alexzhogan@gmail.com)")
 
-    argPrs.add_argument("-proj",  dest="proj",  nargs=1,   required=False, type=str,    default=_DEF_PROJECT,
+    argPrs.add_argument("-proj",  dest="proj",  nargs="?",   required=False, type=str,    default=None,
                                   help="specifie custon project file")
     tGroup = argPrs.add_mutually_exclusive_group()
     tGroup.add_argument("-build", dest="build", nargs="?", required=False,  type=str,    const="debug", choices=["Debug","debug" ,"Release", "release"],
@@ -39,13 +39,23 @@ def parseArgs():
 
 def main():
     args = parseArgs()
+    tInit = Initializer()
+    if not tInit.initLocal():
+      log.error("[Error] Can't initialize local config for repository.")
+      return
+    tProjectName = args.proj # Try get project from cmd, if not specified, then use default
+    if args.proj is None:
+       tProjectName = tInit.getDefProject()
+    if tProjectName is None:
+      log.error("[Error] Default project not specified in local config: {0}".format(tInit.getConfigPath()))
+      log.error("[Error] Please add cmd args: \n\n\t> {0} -proj=PROJECT_NAME ...\n\n".format(SELF_NAME))
+      log.error("[Error] or query avaible project use: \n\n\t> {0} -list\n\n".format(SELF_NAME))
+      return
     try:
-        if args.proj is None:
-            log.error("[Info] Project not loaded")
-            return
-        proj = Project(args.proj)
+        proj = Project(tProjectName)
+        proj.setLocalConfig(tInit)
     except:
-        log.error("[Error] Unexpected error when loading project from: {0}".format(args.proj))
+        log.error("[Error] Unexpected error when loading project from: {0}".format(tProjectName))
         log.error("[Error] Problem: {0}".format(sys.exc_info()[1]))
         return
     if args.clean:

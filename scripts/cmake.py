@@ -83,7 +83,7 @@ class CmakeRunner:
 
     def _extractCompilerFromGenerator(self, generator):
         if generator is None:
-            raise Exception("Generator for cmake not specified")
+            raise RuntimeError("Generator for cmake not specified")
         else:
             tGenStr = generator.lower().split()
             if "studio" in tGenStr:

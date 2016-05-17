@@ -36,3 +36,6 @@ _build/
 *.exe
 *.out
 *.app
+
+# Local repo conig file
+local-config.ini
