@@ -22,6 +22,7 @@ public:
     void setOpenGL(unsigned int major, unsigned int minor);
     void setCoreProfile(bool flag);
     void setVisibleCursor(bool flag);
+    void setVsyncOn(bool flag);
 
     void sendEvents();
 
@@ -68,6 +69,7 @@ private:
     bool resizeable;
     bool corePorfile;
     bool isDisabledCursor;
+    bool isVsyncOn;
 };
 
 #endif /* __GLFW_SURFACE_HPP__ */

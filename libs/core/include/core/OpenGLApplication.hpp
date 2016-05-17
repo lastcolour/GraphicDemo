@@ -18,8 +18,11 @@ public:
 
     void setSurfaceTitle(const char* title);
     void setSurfaceGeometry(unsigned int width, unsigned int height);
+    void setSurfaceVsynOn(bool flag);
     void setSurfaceResizable(bool flag);
     void setVisibleCursor(float falg);
+  
+    bool isAppRunning();
 
     void surfaceSwapBuffers();
 

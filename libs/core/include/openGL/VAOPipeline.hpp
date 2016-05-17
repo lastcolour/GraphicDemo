@@ -43,7 +43,7 @@ private:
 
 private:
 
-    // TODO: Maybe need create single class for buffers
+    // TODO: Maybe need create single class for buffers?
     GLuint vaoID;
     GLuint vertexDataBuffer;
     GLuint vertexElemBuffer;

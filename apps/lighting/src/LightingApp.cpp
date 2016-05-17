@@ -1,8 +1,13 @@
 #include <LightingApp.hpp>
+
+#include <core/FlyCamera.hpp>
 #include <vector>
 
 LightingApp::LightingApp(int argc, char* argv[]) :
-    OpenGLApplication(argc, argv) {
+    OpenGLApplication(argc, argv),
+    ioController(new IOCameraController()) {
+
+    ioController->setCamera(new FlyCamera());
 
     setSurfaceTitle("LightingApp");
     setSurfaceResizable(true);
@@ -10,6 +15,8 @@ LightingApp::LightingApp(int argc, char* argv[]) :
 
     setOpenGLCoreProfile(true);
     setOpenGLVersion(3, 3);
+
+    setDataFolder("LightingApp_data"); // TODO: Move this data to some config
 }
 
 LightingApp::~LightingApp() {
@@ -17,31 +24,42 @@ LightingApp::~LightingApp() {
 
 VAOPipeline* LightingApp::createCube() {
     VAOPipeline* tVaoPtr = new VAOPipeline();
-    tVaoPtr->setProgram(new ShaderProgram("shaders/cubeVert.glsl", "shaders/cubetFrag.glsl"));
+    tVaoPtr->setProgram(new ShaderProgram("shaders/cubeVert.glsl", 
+                                          "shaders/cubeFrag.glsl"));
     return tVaoPtr;
 }
 
 VAOPipeline* LightingApp::createLightPoint() {
     VAOPipeline* tVaoPtr = new VAOPipeline();
     GLfloat vertexs[] = {
-        -0.5, -0.5f, 0.f,
-         0.5, -0.5f, 0.f,
-         0.0,  0.5f, 0.f,
+        0.1, 0.1, 0.1,
     };
-    tVaoPtr->setProgram(new ShaderProgram("shaders/lightVert.glsl", "shaders/lightFrag.glsl"));
+    VertexPacking packing[] = {
+        VertexPacking::VEC3, VertexPacking::NONE
+    };
+    tVaoPtr->setVertexBuffer(sizeof(vertexs), vertexs, packing);
+    tVaoPtr->setProgram(new ShaderProgram("shaders/lightVert.glsl", 
+                                          "shaders/lightFrag.glsl"));
     return tVaoPtr;
 }
 
 void LightingApp::onInitEvent() {
-    glClearColor(1.f, 0.f, 0.f, 1.f);
+    glClearColor(0.2f, 0.2f, 0.2f, 0.2f);
     lightPoint.reset(createLightPoint());
     cube.reset(createCube());
 }
 
-void LightingApp::mainLoop() {
+void LightingApp::onMouseEvent(const MouseEvent& mouseE) {
+    ioController->controll(mouseE);
 }
 
-void LightingApp::onReDrawEvent() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    surfaceSwapBuffers();
+void LightingApp::onKeyboardEvent(const KeyboardEvent& keyE) {
+    ioController->controll(keyE);
+}
+
+void LightingApp::mainLoop() {
+    while (isAppRunning())
+    {
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
 }

@@ -105,6 +105,7 @@ VAOPipeline* DemoApp::createCube() {
     texSmile.generateMipmaps();
     texSmile.setMagFilter(GL_NEAREST);
     texSmile.setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+
     Texture texCoont("images/container.jpg", GL_TEXTURE_2D);
     texCoont.generateMipmaps();
     texCoont.setMagFilter(GL_NEAREST);
@@ -207,11 +208,14 @@ void DemoApp::chagePolygonMode() {
     glPolygonMode(GL_FRONT_AND_BACK, nextMode);
 }
 
-void DemoApp::onDrawEvent() {
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-    prevDrawTimeP = currDrawTimeP;
-    currDrawTimeP = getAppRunDuration();
-    processUserInput();
-    drawAllCubes();
-    surfaceSwapBuffers();
+void DemoApp::mainLoop() {
+    while (isAppRunning())
+    {
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        prevDrawTimeP = currDrawTimeP;
+        currDrawTimeP = getAppRunDuration();
+        processUserInput();
+        drawAllCubes();
+        surfaceSwapBuffers();
+    }
 }

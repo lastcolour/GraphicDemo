@@ -1,6 +1,8 @@
 #ifndef __LIGHTINGAPP_HPP__
 #define __LIGHTINGAPP_HPP__
 
+#include <IOCameraController.hpp>
+
 #include <core/OpenGLApplication.hpp>
 #include <openGL/VAOPipeline.hpp>
 
@@ -16,7 +18,9 @@ public:
 protected:
 
     void onInitEvent();
-    void onReDrawEvent();
+   
+    void onMouseEvent(const MouseEvent& mouseE);
+    void onKeyboardEvent(const KeyboardEvent& keyE);
 
     void mainLoop();
 
@@ -25,6 +29,7 @@ protected:
 
 private:
 
+    std::unique_ptr<IOCameraController> ioController;
     std::unique_ptr<VAOPipeline> lightPoint;
     std::unique_ptr<VAOPipeline> cube;
 };

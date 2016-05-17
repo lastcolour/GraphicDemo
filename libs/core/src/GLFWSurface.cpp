@@ -26,7 +26,8 @@ GLFWSurface::GLFWSurface(VisualApplication* app) :
     openGLMajor(3),
     openGLMinor(3),
     resizeable(true),
-    corePorfile(true) {
+    corePorfile(true),
+    isVsyncOn(false) {
 
     if(!GLFW_LIB_INITED) {
         GLFW_LIB_INITED = glfwInit() == GL_TRUE;
@@ -57,6 +58,10 @@ void GLFWSurface::setGeometry(unsigned int width, unsigned int height) {
 
 void GLFWSurface::setResizeable(bool flag) {
     resizeable = flag;
+}
+
+void GLFWSurface::setVsyncOn(bool flag) {
+    isVsyncOn = flag;
 }
 
 void GLFWSurface::setOpenGL(unsigned int major, unsigned int minor) {
@@ -253,6 +258,7 @@ void GLFWSurface::initCallbacks() {
 }
 
 bool GLFWSurface::show() {
+    // TODO: split this function to several
     if(windowPtr) {
         return false;
     }
@@ -287,8 +293,11 @@ bool GLFWSurface::show() {
         return false;
     }
     initCallbacks();
-    glfwSetTime(0.F);
 
+    if(isVsyncOn) {
+        glfwSwapInterval(1);
+    }
+    glfwSetTime(0.F);
     Surface::sendResizeEvent(width, height);
     return true;
 }

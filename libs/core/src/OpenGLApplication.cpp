@@ -69,14 +69,33 @@ float OpenGLApplication::getAppRunDuration() const {
     return surfaceImpl->getShowDuration();
 }
 
+void OpenGLApplication::setSurfaceVsynOn(bool flag) {
+    surfaceImpl->setVsyncOn(flag);
+}
+
+bool OpenGLApplication::isAppRunning() {
+    if (surfaceImpl->isOpen()) {
+        surfaceImpl->sendEvents();
+        return true;
+    }
+    return false;
+}
+
 int OpenGLApplication::run() {
     if(!surfaceImpl->show()) {
         return APP_FAIL;
     }
     appInitRequest();
-    while(surfaceImpl->isOpen()) {
-        // TODO: Reimplement this method
-        surfaceImpl->sendEvents();
+    try {
+
+        mainLoop();
+
+    } catch(const std::exception& exc) {
+        std::cerr << "[OpenGLApplication] Fatal error when in mainLoop(): " << exc.what() << std::endl;
+        return APP_FAIL;
+    } catch(...) {
+        std::cerr << "[OpenGLApplication] Unexpected error in mainLoop()!" << std::endl;
+        return APP_FAIL;
     }
     return APP_OK;
 }

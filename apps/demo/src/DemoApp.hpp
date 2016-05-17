@@ -21,13 +21,14 @@ public:
 protected:
 
     void onInitEvent();
-    void onDrawEvent();
     void onResizeEvent(unsigned int width, unsigned int height);
     void onKeyboardEvent(const KeyboardEvent& keyEvent);
     void onMouseEvent(const MouseEvent& mouseEvent);
 
     void chagePolygonMode();
     void processUserInput();
+
+    void mainLoop();
 
 private:
 
