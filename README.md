@@ -10,14 +10,15 @@ For build project need:
 
 To perform build use script **project.py**, here is some examples:
 
-    > project.py -build
-    > project.py -build=debug
-    > project.py -build=release -c
+    > project.py -proj=DemoApp -build=Debug // make debug build of DemoApp 
+    > project.py -build=Debug               // build default project (see local-config.ini) 
+    > project.py -build=Release             // build default project in release
+    
+## Project:
+### DemoApp
 
-**-build=[build_type]** - build project. Avaible valid build's types:
-- debug
-- release
+Based on @www.learnopengl.com tutorial: <Getting started> and containe fully implenented example
+ 
+### LightigApp
 
-**-clean** - clean up project (not required)
-
-**-p** - specify project file location (not required)
+Based on @www.learnopengl.com tutorial <Lighting> 
