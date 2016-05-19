@@ -27,6 +27,7 @@ GLFWSurface::GLFWSurface(VisualApplication* app) :
     openGLMinor(3),
     resizeable(true),
     corePorfile(true),
+    isDisabledCursor(false),
     isVsyncOn(false) {
 
     if(!GLFW_LIB_INITED) {

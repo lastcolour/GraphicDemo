@@ -37,7 +37,7 @@ public:
     const glm::vec3& getUpVec() const;
     const glm::vec3& getRightVec() const;
 
-    const float* getProjectMat4f() const;
+    const GLfloat* getProjectMat4f() const;
 
 protected:
 

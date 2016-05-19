@@ -62,6 +62,7 @@ VAOPipeline::VAOPipeline() :
     vertexSize(0),
     elemsSize(0),
     shaderPrg(nullptr) {
+
     glGenVertexArrays(1, &vaoID);
     assert(vaoID != 0 && "Can't generate VAO"); 
 }

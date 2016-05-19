@@ -4,6 +4,9 @@
 #define __CAMERA_HPP__
 
 #include <core/DEFS.hpp>
+
+#include <openGL/openGL.hpp>
+
 #include <glm/glm.hpp>
 
 class LIB_EXPORT_CONV Camera {
@@ -40,7 +43,7 @@ public:
     virtual const glm::vec3& getUpVec() const = 0;
     virtual const glm::vec3& getRightVec() const = 0;
 
-    virtual const float* getProjectMat4f() const = 0;
+    virtual const GLfloat* getProjectMat4f() const = 0;
 };
 
 #endif /* __CAMERA_HPP__ */
