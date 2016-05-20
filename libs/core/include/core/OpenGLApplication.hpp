@@ -16,11 +16,12 @@ public:
     OpenGLApplication(int argc, char* argv[]);
     virtual ~OpenGLApplication();
 
+    void setAppShouldEnd();
     void setSurfaceTitle(const char* title);
     void setSurfaceGeometry(unsigned int width, unsigned int height);
     void setSurfaceVsynOn(bool flag);
     void setSurfaceResizable(bool flag);
-    void setVisibleCursor(float falg);
+    void setVisibleCursor(bool falg);
   
     bool isAppRunning();
 
@@ -40,6 +41,7 @@ public:
 private:
 
     Surface* surfaceImpl;
+    bool isShouldClose;
 };
 
 #endif /* __OPENGL_APPLICATION_HPP__*/

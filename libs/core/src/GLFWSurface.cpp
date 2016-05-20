@@ -171,6 +171,9 @@ void GLFWSurface::keyboardCallback(GLFWwindow* windowPtr, int keyCode, int scanC
     case GLFW_KEY_A:
         code = KeyboardCode::A;
         break;
+    case GLFW_KEY_ESCAPE:
+        code = KeyboardCode::ESC;
+        break;
     default:
         code = KeyboardCode::UNKNOWN;
         break;

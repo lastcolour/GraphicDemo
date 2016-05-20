@@ -43,7 +43,7 @@ public:
     virtual const glm::vec3& getUpVec() const = 0;
     virtual const glm::vec3& getRightVec() const = 0;
 
-    virtual const GLfloat* getProjectMat4f() const = 0;
+    virtual const GLfloat* getDataMat4f() const = 0;
 };
 
 #endif /* __CAMERA_HPP__ */

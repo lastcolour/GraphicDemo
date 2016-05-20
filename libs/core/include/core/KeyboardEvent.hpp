@@ -41,7 +41,8 @@ enum class KeyboardCode {
     COMMA,
     DOT,
     SLASH,
-    SPACE
+    SPACE,
+    ESC
 };
 
 class KeyboardEvent {

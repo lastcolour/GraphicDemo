@@ -14,7 +14,8 @@ const int APP_FAIL = -1;
 const int APP_OK = 0;
 
 OpenGLApplication::OpenGLApplication(int argc, char* argv[]) :
-    surfaceImpl(new GLFWSurface(this)) {
+    surfaceImpl(new GLFWSurface(this)),
+    isShouldClose(false) {
 
     assert(argc >= 1 && "[App] Required cmd argc for application");
     assert(argv != nullptr && "[App] Require argv for application");
@@ -49,7 +50,7 @@ void OpenGLApplication::setOpenGLCoreProfile(bool flag) {
     surfaceImpl->setCoreProfile(flag);
 }
 
-void OpenGLApplication::setVisibleCursor(float flag) {
+void OpenGLApplication::setVisibleCursor(bool flag) {
     surfaceImpl->setVisibleCursor(flag);
 }
 
@@ -65,6 +66,11 @@ unsigned int OpenGLApplication::getHeight() const {
     return surfaceImpl->getHeight();
 }
 
+
+void OpenGLApplication::setAppShouldEnd() {
+    isShouldClose = true;
+}
+
 float OpenGLApplication::getAppRunDuration() const {
     return surfaceImpl->getShowDuration();
 }
@@ -74,8 +80,11 @@ void OpenGLApplication::setSurfaceVsynOn(bool flag) {
 }
 
 bool OpenGLApplication::isAppRunning() {
-    if (surfaceImpl->isOpen()) {
+    if (!isShouldClose && surfaceImpl->isOpen()) {
         surfaceImpl->sendEvents();
+        if(isShouldClose) {
+            return false;
+        }
         return true;
     }
     return false;

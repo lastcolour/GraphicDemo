@@ -169,7 +169,7 @@ void FlyCamera::reCalcCameraMat() const {
     cameraMat = tPerspMat * tLookMat;
 }
 
-const GLfloat* FlyCamera::getProjectMat4f() const {
+const GLfloat* FlyCamera::getDataMat4f() const {
     if(modified) {
         reCalcCameraMat();
         modified = false;

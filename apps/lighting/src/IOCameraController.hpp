@@ -1,20 +1,17 @@
 #ifndef __IO_CAMERA_CONTROLLER_HPP__
 #define __IO_CAMERA_CONTROLLER_HPP__
 
+#include <CameraController.hpp>
+
 #include <core/Camera.hpp>
 #include <core/MouseEvent.hpp>
 #include <core/KeyboardEvent.hpp>
 
-#include <openGL/openGL.hpp>
-
 #include <memory>
-#include <chrono>
-#include <vector>
 #include <map>
 
-#include <LightCube.hpp> // TODO: Remove this;
 
-class IOCameraController {
+class IOCameraController : public CameraController {
 
     //TODO: Move this class to core
 
@@ -31,8 +28,7 @@ public:
     void setMouseSensitive(float value);
     void setMoveSpeed(float value);
 
-    void addObject(const SceneObject* obj); // TODO: choose better name for this function
-    void updateObj(float timeP);  // TODO: choose better name for this function
+    const GLfloat* getCameraMat();
 
 protected:
 
@@ -45,7 +41,6 @@ private:
 
     std::unique_ptr<Camera> cameraPtr;
     std::map<KeyboardCode, bool> keysStatus;
-    std::vector<const SceneObject*> objList;
 
     float mouseSensitive;
     float moveSpeed;

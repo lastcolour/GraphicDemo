@@ -1,12 +1,9 @@
 #ifndef __LIGHTINGAPP_HPP__
 #define __LIGHTINGAPP_HPP__
 
-#include <IOCameraController.hpp>
-#include <TargetCube.hpp>
-#include <LightCube.hpp>
+#include <GraphicsScene.hpp>
 
 #include <core/OpenGLApplication.hpp>
-#include <openGL/VAOPipeline.hpp>
 
 #include <memory>
 
@@ -18,24 +15,18 @@ public:
     virtual ~LightingApp();
 
 protected:
-
-    void initSurface();
-    void initGeomtry();
    
     void onMouseEvent(const MouseEvent& mouseE);
     void onKeyboardEvent(const KeyboardEvent& keyE);
 
+    void initScene();
     void mainLoop();
     void drawFrame();
-
-    VAOPipeline* createCube();
-    VAOPipeline* createLightPoint();
 
 private:
 
     std::unique_ptr<IOCameraController> ioController;
-    std::unique_ptr<LightCube> lightCube;
-    std::unique_ptr<TargetCube> targetCube;
+    std::unique_ptr<GraphicsScene> scenePtr;
 };
 
 #endif /* __LIGHTINGAPP_HPP__ */

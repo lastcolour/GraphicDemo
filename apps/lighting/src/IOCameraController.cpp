@@ -64,26 +64,9 @@ void IOCameraController::calcCameraPos() {
     }
 }
 
-void IOCameraController::addObject(const SceneObject* obj) {
-    objList.push_back(obj);
-}
-
-void IOCameraController::updateObj(float timeP) {
-    static bool inited = false; // TODO: remove this and add method init()
-    if(!inited) {
-        prevTimeP = timeP;
-        currTimeP = timeP;
-        inited = true;
-    } else {
-        prevTimeP = currTimeP;
-        currTimeP = timeP;
-    }
-
+const GLfloat* IOCameraController::getCameraMat() {
     calcCameraPos();
-
-    for(auto objPtr : objList) {
-        objPtr->setCameraMat(cameraPtr->getProjectMat4f());
-    }
+    return cameraPtr->getDataMat4f();
 }
 
 void IOCameraController::setCamera(Camera* camera) {

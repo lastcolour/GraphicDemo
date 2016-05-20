@@ -1,24 +1,20 @@
 #ifndef __LIGHT_CUBE_HPP__
 #define  __LIGHT_CUBE_HPP__
 
+#include <GraphicsItem.hpp>
+
 #include <openGL/VAOPipeline.hpp>
 
 #include <memory>
 
-class SceneObject {
+class LightPoint : public GraphicsItem {
 public:
 
-    virtual void setCameraMat(const GLfloat* cameraMat) const = 0;
-};
+    LightPoint(const char* vertShader, const char* fragShader);
+    virtual ~LightPoint();
 
-
-class LightCube : public SceneObject {
-public:
-
-    LightCube(const char* vertShader, const char* fragShader);
-
-    virtual ~LightCube();
-    virtual void render();
+    void render();
+    void update(float timeP);
     void setCameraMat(const GLfloat* cameraMat) const;
 
 protected:
