@@ -18,7 +18,9 @@ bool OpenGLObject::isValid() {
     if(objID == 0) {
         return false;
     }
-    return makeCheck();
+    return true;
+    // TODO: Remove?
+    // return makeCheck();
 }
 
 bool OpenGLObject::isBounded() {

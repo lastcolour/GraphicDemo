@@ -187,9 +187,9 @@ ShaderProgram::~ShaderProgram() {
 }
 
 void ShaderProgram::setUniform1f(const char* name, float x) const {
-    assert(getID() != 0 && "Invalid shader program used");
+    assert(objID != 0 && "Invalid shader program used");
     GLint unifLoc = -1;
-    glUseProgram(getID());
+    glUseProgram(objID);
     if((unifLoc = uniformFindLocation(name)) != -1) {
         glUniform1f(unifLoc, x);
     }
@@ -197,9 +197,9 @@ void ShaderProgram::setUniform1f(const char* name, float x) const {
 }
 
 void ShaderProgram::setUniform4f(const char* name, float x, float y, float z, float w) const {
-    assert(getID() != 0 && "Invalid shader program used");
+    assert(objID != 0 && "Invalid shader program used");
     GLint unifLoc = -1;
-    glUseProgram(getID());
+    glUseProgram(objID);
     if((unifLoc = uniformFindLocation(name)) != -1) {
         glUniform4f(unifLoc, x, y, z, w);
     }
@@ -207,10 +207,10 @@ void ShaderProgram::setUniform4f(const char* name, float x, float y, float z, fl
 }
 
 void ShaderProgram::setUniformMat4fv(const char* name, const GLfloat* mat4x4Data) const {
-    assert(getID() != 0 && "Invalid shader program used");
+    assert(objID != 0 && "Invalid shader program used");
     assert(mat4x4Data != nullptr && "Setup invalid matrix data uniform");
     GLint unifLoc = -1;
-    glUseProgram(getID());
+    glUseProgram(objID);
     if((unifLoc = uniformFindLocation(name)) != -1) {
         glUniformMatrix4fv(unifLoc, 1, GL_FALSE, mat4x4Data);
     }
@@ -218,11 +218,11 @@ void ShaderProgram::setUniformMat4fv(const char* name, const GLfloat* mat4x4Data
 }
 
 void ShaderProgram::setUniformTex(const char* name, Texture* texture) {
-    assert(getID() != 0 && "Invalid shader program used");
+    assert(objID != 0 && "Invalid shader program used");
     assert(texture != nullptr && "Setup invalid texture");
     assert(texture->isValid() && "Setup invalid texture");
     GLint unifLoc = -1;
-    glUseProgram(getID());
+    glUseProgram(objID);
     if((unifLoc = uniformFindLocation(name)) != -1) {
         texManager->addTexture(unifLoc, texture);
     }
@@ -230,11 +230,11 @@ void ShaderProgram::setUniformTex(const char* name, Texture* texture) {
 }
 
 void ShaderProgram::setUniformTex(const char* name, Texture&& texture) {
-    assert(getID() != 0 && "Invalid shader program used");
+    assert(objID != 0 && "Invalid shader program used");
     assert(texture.isValid() && "Setup invalid texture");
     GLint unifLoc = -1;
     Texture* tTexPtr = new Texture(std::move(texture));
-    glUseProgram(getID());
+    glUseProgram(objID);
     if((unifLoc = uniformFindLocation(name)) != -1) {
         texManager->addTexture(unifLoc, tTexPtr);
     }
@@ -270,14 +270,14 @@ bool ShaderProgram::makeFree() {
 }
 
 GLint ShaderProgram::uniformFindLocation(const char* name) const {
-    assert(getID() != 0 && "Invalid shader program used");
+    assert(objID != 0 && "Invalid shader program used");
 #ifdef GD_CORE_LIB_DEBUG
     GLint tProgram = 0;
     glGetIntegerv(GL_CURRENT_PROGRAM, &tProgram);
-    assert(tProgram == getID() && "Set uniform for not bounded program");
+    assert(tProgram == objID && "Set uniform for not bounded program");
 #endif
 
-    GLint unifLoc = glGetUniformLocation(getID(), name);
+    GLint unifLoc = glGetUniformLocation(objID, name);
 
 #ifdef GD_CORE_LIB_DEBUG
     if(unifLoc == -1) {
@@ -288,9 +288,9 @@ GLint ShaderProgram::uniformFindLocation(const char* name) const {
 }
 
 void ShaderProgram::uniformReportNameError(const char* name) const {
-    std::vector<std::string> allUniforms = getAllUniformsNames(getID());
+    std::vector<std::string> allUniforms = getAllUniformsNames(objID);
     std::string tMessagePrefix;
-    tMessagePrefix = tMessagePrefix + "[ShaderProgram:" + std::to_string(getID()) + "] ";
+    tMessagePrefix = tMessagePrefix + "[ShaderProgram:" + std::to_string(objID) + "] ";
     if(allUniforms.size() == 0) {
         std::cerr << tMessagePrefix.c_str() << "Can't find uniform: \"" << name
             << "\"; Program does't have any uniform\n";

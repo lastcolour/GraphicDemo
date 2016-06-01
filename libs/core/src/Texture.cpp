@@ -115,7 +115,7 @@ Texture& Texture::operator=(Texture&& texture) {
 }
 
 Texture::~Texture() {
-    if(getID() == 0) {
+    if(objID == 0) {
         return;
     }
     if(makeIsBoundCheck()) {

@@ -24,7 +24,7 @@ DemoApp::DemoApp(int argc, char* argv[]) : OpenGLApplication(argc, argv),
     setOpenGLVersion(3, 3);
     setOpenGLCoreProfile(true);
 
-    setDataFolder("DemoApp_data");
+    setDataFolder("DemoAppData");
 
     camera->setPerspective(45.f, 0.f, 0.1f, 100.f);
     camera->setLocation(0.f, 0.f, -3.f);
@@ -157,7 +157,7 @@ void DemoApp::drawAllCubes() {
         modelView = glm::rotate(modelView, glm::radians(angle), glm::vec3(1.f, 0.3f, 0.5f));
 
         cube->getProgram()->setUniformMat4fv("WorldMat", glm::value_ptr(modelView));
-        cube->getProgram()->setUniformMat4fv("CameraMat", camera->getProjectMat4f());
+        cube->getProgram()->setUniformMat4fv("CameraMat", camera->getDataMat4f());
         cube->drawAll();
     }
 }

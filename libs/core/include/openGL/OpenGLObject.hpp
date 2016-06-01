@@ -14,7 +14,7 @@ public:
     // TODO: Move to other file?
 
     SharedObject() : refCount(0) {}
-    virtual ~SharedObject() { refCount--; assert(refCount == 0 && "Deleting refferd resource"); }
+    virtual ~SharedObject() { assert(refCount == 0 && "Deleting refferd resource"); }
 
     void ref() { refCount++; }
     void unref() { assert(refCount > 0 && "Too many unref"); refCount--;}

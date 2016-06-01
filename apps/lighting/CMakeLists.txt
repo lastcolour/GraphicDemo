@@ -13,6 +13,7 @@ include(${GD_CONFIG_DIR}/opengl.cmake)
 set(TARGET_NAME "lighting")
 
 set(DATA_DIR_NAME "data")
+set(OUT_DATA_DIR_NAME "Data")
 set(DATA_DIR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${DATA_DIR_NAME}")
 set(SHADER_DIR_PATH "${DATA_DIR_PATH}/shaders")
 
@@ -59,7 +60,7 @@ message(STATUS "Shader dir: ${DATA_DIR_PATH}")
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${DATA_DIR_PATH}
-        $<TARGET_FILE_DIR:${TARGET_NAME}>/${TARGE_NAME}/"${PROJECT_NAME}_${DATA_DIR_NAME}")
+        $<TARGET_FILE_DIR:${TARGET_NAME}>/${TARGE_NAME}/"${PROJECT_NAME}${OUT_DATA_DIR_NAME}")
 
 # Other target setups
 if(MSVC)
