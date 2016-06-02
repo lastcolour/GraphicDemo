@@ -7,6 +7,9 @@
 
 #include <glm/glm.hpp>
 
+#include <Scene.hpp>
+#include <InputController.hpp>
+
 #include <memory>
 #include <map>
 
@@ -18,31 +21,18 @@ public:
 
 protected:
    
+    Scene* createScene();
+
     void onResizeEvent(unsigned int width, unsigned int heigth);
     void onMouseEvent(const MouseEvent& mouseE);
     void onKeyboardEvent(const KeyboardEvent& keyE);
 
-    VAOPipeline* createCube(const char* vertShader, const char* fragShader);
-    void drawCube();
-
-    VAOPipeline* createLight(const char* vertShader, const char* fragShader);
-    void drawLight();
-
-    void processUserInput();
-
     void mainLoop();
-    void drawFrame();
 
 private:
 
-    std::unique_ptr<VAOPipeline> cubePtr;
-    std::unique_ptr<VAOPipeline> lightPtr;
-    std::unique_ptr<Camera> camera;
-
-    std::map<KeyboardCode, bool> keysPressStatus;
-
-    glm::mat4 cubeTransform;
-    glm::mat4 lightTransform;
+    std::unique_ptr<Scene> scenePtr;
+    std::unique_ptr<InputController> inpController;
 
     float currDrawTimeP;
     float prevDrawTimeP;
