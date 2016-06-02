@@ -12,7 +12,7 @@ selfPath = os.path.dirname(os.path.abspath(__file__)).replace("\\", "/")
 SELF_NAME = os.path.basename(__file__)
 Project.intializePaths({
     "config_root": selfPath + "/" + "config/projects",
-    "repo_root": selfPath
+    "repo_root"  : selfPath
 })
 del selfPath
 
@@ -34,6 +34,8 @@ def parseArgs():
                                   help="clean all generated files before build")
     tGroup.add_argument("-list",  dest="list", nargs="?", required=False,  type=bool,    const=True, default=False,
                                   help="show all projects")
+    argPrs.add_argument("-fast",  dest="fast", nargs="?", required=False, type=bool, const=False, default=False,
+                                  help="skip build of 3d parties depedecies")
     return argPrs.parse_args()
 
 
@@ -54,6 +56,7 @@ def main():
     try:
         proj = Project(tProjectName)
         proj.setLocalConfig(tInit)
+        proj.setSkip3dParty(args.fast)
     except:
         log.error("[Error] Unexpected error when loading project from: {0}".format(tProjectName))
         log.error("[Error] Problem: {0}".format(sys.exc_info()[1]))

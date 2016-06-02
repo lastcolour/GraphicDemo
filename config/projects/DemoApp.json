@@ -1,6 +1,6 @@
 {
   "name": "DemoApp",
-
+  "3dParty": false,
   "build_types": ["Debug", "Release"],
   "bin_types": ["app"],
 

@@ -1,6 +1,6 @@
 {
   "name": "GLFW",
-
+  "3dParty": true,
   "build_types": ["Debug", "Release"],
   "bin_types": ["shared_lib", "static_lib"],
 

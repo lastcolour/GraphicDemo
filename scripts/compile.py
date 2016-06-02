@@ -12,6 +12,8 @@ _COMPILE_LOG_FILE = "lastCompileRun.log"
 
 class CompileRunner:
 
+    # TODO: Create base class for CmakeRunner and Compiler runner that encapsulate common behaviour
+
     def __init__(self, cmakeRunInfo):
         self._config = cmakeRunInfo
 

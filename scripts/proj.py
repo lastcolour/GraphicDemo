@@ -42,8 +42,8 @@ class DependError(RuntimeError):
 class Project:
 
     # TODO: Move model to other class
-    # TODO: Create instances AfterBuildRunner with corresponding functionality
     # TODO: Add build dict as member of Project instance
+    # TODO: Move project creation to ProjectBuilder class
 
     _CONFIG_ROOT = ""
     _REPO_ROOT = ""
@@ -54,14 +54,18 @@ class Project:
         self._cmakeOutDir = None
         self._cmakeGenerator = None
         self._depProjects = dict()
+        self._fast = False
         self._loadModel(projectName)
+
+    def setSkip3dParty(self, flag):
+        self._fast = flag
 
     def getName(self):
         return self._model["name"]
 
     def cleanUp(self):
         # TODO: Implement this method
-        pass
+        log.warning("[Warning] Project CleanUP not implemented")
 
     @staticmethod
     def intializePaths(pathInfo):
@@ -74,11 +78,17 @@ class Project:
            tPath = "/" + path
        return os.path.abspath(self._CONFIG_ROOT + tPath)
 
+    def is3dParty(self):
+        return self._model["3dParty"]
+
     def build(self, buildType):
         self._targetBuildType = buildType
         log.info("[Info][{0}] Start build target: {0}".format(self.getName()))
         for depProjName in self._depProjects:
             tProjectNode = self._depProjects[depProjName]
+            if tProjectNode["project"].is3dParty():
+               log.info("[Info] Skip build of 3rd party project: {0}".format(depProjName))
+               continue
             tBuildDict = {"OUT_DIR"   : self._getInstallRoot(),
                           "BUILD_TYPE": buildType,
                           "PLATFORM"  : Platform["name"]}
