@@ -66,23 +66,10 @@ Cube::Cube() :
 Cube::~Cube() {
 }
 
-void Cube::translate() {
-}
-
-void Cube::rotate() {
-}
-
-void Cube::scale() {
-}
-
 void Cube::update() {
 }
 
-void Cube::setPosition(const glm::vec3& pos) {
-    position = pos;
-}
-
-void Cube::draw() {
+void Cube::render() {
     pipePtr->getProgram()->setUniformMat4fv("CameraMat", getScene()->getCameraMat());
     pipePtr->drawAll();
 }

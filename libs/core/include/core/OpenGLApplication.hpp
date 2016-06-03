@@ -4,7 +4,6 @@
 #define __OPENGL_APPLICATION_HPP__
 
 #include <openGL/openGL.hpp>
-#include <core/Camera.hpp>
 #include <core/VisualApplication.hpp>
 
 class Surface;

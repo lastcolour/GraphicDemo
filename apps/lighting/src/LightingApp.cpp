@@ -2,7 +2,8 @@
 
 #include <Cube.hpp>
 #include <Light.hpp>
-#include <SceneCamera.hpp>
+
+#include <graphics/SceneFlyCamera.hpp>
 
 #ifndef DATA_FOLDER_LOCATION
 #define DATA_FOLDER_LOCATION "LightingAppData"
@@ -31,35 +32,32 @@ void LightingApp::mainLoop() {
 
     inpController.reset(new InputController());
     inpController->setMouseSensetive(0.2f);
-    //inpController->setListener(tScene);
+    inpController->setMoveSpeed(20.f);
     scenePtr.reset(createScene());
+    inpController->setSceneToControll(scenePtr.get());
 
     currDrawTimeP = getAppRunDuration();
     prevDrawTimeP = currDrawTimeP;
 
     while (isAppRunning())
     {
-        if (false /* inpController->hasExitEvent() */) {
-            // setAppShouldEnd(true);
-        } else {
-            prevDrawTimeP = currDrawTimeP;
-            currDrawTimeP = getAppRunDuration();
-            inpController->process(currDrawTimeP - prevDrawTimeP);
+        prevDrawTimeP = currDrawTimeP;
+        currDrawTimeP = getAppRunDuration();
+        inpController->process(currDrawTimeP - prevDrawTimeP);
 
-            scenePtr->update();
-            scenePtr->draw();
+        scenePtr->update();
+        scenePtr->render();
 
-            surfaceSwapBuffers();
-        }
+        surfaceSwapBuffers();
     }
 }
 
-Scene* LightingApp::createScene() {
-    Scene* tScene = new Scene();
+Scene3D* LightingApp::createScene() {
+    Scene3D* tScene = new Scene3D();
 
-    tScene->setCameraOwner(new SceneCamera(), glm::vec3(-1));
-    tScene->addElement(new Cube(), glm::vec3(0));
-    tScene->addElement(new Light(), glm::vec3(1));
+    tScene->setCamera(new SceneFlyCamera(), glm::vec3(0));
+    tScene->add(new Cube(), glm::vec3(0));
+    tScene->add(new Light(), glm::vec3(1));
 
     return tScene;
 }
@@ -73,7 +71,8 @@ void LightingApp::onMouseEvent(const MouseEvent& mouseEvent) {
 }
 
 void LightingApp::onResizeEvent(unsigned int width, unsigned int heigth) {
-    if (scenePtr != nullptr) { // TODO: Need remove this;
-        scenePtr->setViewPort(0, 0, width, heigth);
+    glViewport(0, 0, width, heigth);
+    if (scenePtr != nullptr) {
+        scenePtr->getCamera()->setAspectRatio(width / float(heigth));
     }
 }

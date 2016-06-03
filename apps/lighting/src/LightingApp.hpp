@@ -7,7 +7,7 @@
 
 #include <glm/glm.hpp>
 
-#include <Scene.hpp>
+#include <graphics/Scene3D.hpp>
 #include <InputController.hpp>
 
 #include <memory>
@@ -21,7 +21,7 @@ public:
 
 protected:
    
-    Scene* createScene();
+    Scene3D* createScene();
 
     void onResizeEvent(unsigned int width, unsigned int heigth);
     void onMouseEvent(const MouseEvent& mouseE);
@@ -31,7 +31,7 @@ protected:
 
 private:
 
-    std::unique_ptr<Scene> scenePtr;
+    std::unique_ptr<Scene3D> scenePtr;
     std::unique_ptr<InputController> inpController;
 
     float currDrawTimeP;

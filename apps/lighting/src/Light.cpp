@@ -69,27 +69,14 @@ Light::Light() :
 Light::~Light() {
 }
 
-void Light::draw() {
+void Light::render() {
     glm::mat4 transform;
     transform = glm::scale(transform, glm::vec3(0.2f));
-    transform = glm::translate(transform, position);
+    transform = glm::translate(transform, getPosition());
     pipePtr->getProgram()->setUniformMat4fv("CameraMat", getScene()->getCameraMat());
     pipePtr->getProgram()->setUniformMat4fv("TransformMat", glm::value_ptr(transform));
     pipePtr->drawAll();
 }
 
-void Light::setPosition(const glm::vec3& pos) {
-    position = pos;
-}
-
 void Light::update() {
-}
-
-void Light::translate() {
-}
-
-void Light::rotate() {
-}
-
-void Light::scale() {
 }

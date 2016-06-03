@@ -2,7 +2,6 @@
 
 #include <core/OpenGLApplication.hpp>
 #include <core/GLFWSurface.hpp>
-#include <core/FlyCamera.hpp>
 #include <core/Resouce.hpp>
 
 #include <iostream>

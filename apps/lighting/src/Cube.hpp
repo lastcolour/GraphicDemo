@@ -1,7 +1,7 @@
 #ifndef __CUBE_HPP__
 #define __CUBE_HPP__
 
-#include <SceneElement.hpp>
+#include <graphics/SceneElement.hpp>
 
 #include <openGL/VAOPipeline.hpp>
 
@@ -13,14 +13,8 @@ public:
     Cube();
     virtual ~Cube();
 
-    void setPosition(const glm::vec3& pos);
-
-    void translate();
-    void rotate();
-    void scale();
-
     void update();
-    void draw();
+    void render();
 
 private:
 
@@ -31,7 +25,6 @@ private:
 
     std::unique_ptr<VAOPipeline> pipePtr;
     glm::mat4 transform;
-    glm::vec3 position;
 };
 
 #endif /* __CUBE_HPP__ */
