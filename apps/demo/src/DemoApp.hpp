@@ -5,7 +5,7 @@
 
 #include <core/OpenGLApplication.hpp>
 #include <openGL/VAOPipeline.hpp>
-#include <core/FlyCamera.hpp>
+#include <graphics/SceneFlyCamera.hpp>
 
 #include <map>
 #include <memory>
@@ -36,7 +36,7 @@ private:
     void drawAllCubes();
 
     std::unique_ptr<VAOPipeline> cube;
-    std::unique_ptr<Camera> camera;
+    std::unique_ptr<SceneFlyCamera> camera;
     std::map<KeyboardCode, bool> keysPressStatus;
     float currDrawTimeP;
     float prevDrawTimeP;

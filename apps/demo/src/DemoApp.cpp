@@ -12,7 +12,7 @@
 
 DemoApp::DemoApp(int argc, char* argv[]) : OpenGLApplication(argc, argv),
     cube(nullptr),
-    camera(new FlyCamera()),
+    camera(new SceneFlyCamera()),
     keysPressStatus(), 
     currDrawTimeP(0.f),
     prevDrawTimeP(0.f) {
@@ -27,8 +27,8 @@ DemoApp::DemoApp(int argc, char* argv[]) : OpenGLApplication(argc, argv),
     setDataFolder("DemoAppData");
 
     camera->setPerspective(45.f, 0.f, 0.1f, 100.f);
-    camera->setLocation(0.f, 0.f, -3.f);
-    camera->setLookAt(0.f, 0.f, -1.f);
+    camera->setPosition(glm::vec3(0.f, 0.f, -3.f));
+    camera->setLookAt(glm::vec3(0.f, 0.f, -1.f));
 }
 
 DemoApp::~DemoApp() {
@@ -157,7 +157,7 @@ void DemoApp::drawAllCubes() {
         modelView = glm::rotate(modelView, glm::radians(angle), glm::vec3(1.f, 0.3f, 0.5f));
 
         cube->getProgram()->setUniformMat4fv("WorldMat", glm::value_ptr(modelView));
-        cube->getProgram()->setUniformMat4fv("CameraMat", camera->getDataMat4f());
+        cube->getProgram()->setUniformMat4fv("CameraMat", camera->getMatrixPtr());
         cube->drawAll();
     }
 }
