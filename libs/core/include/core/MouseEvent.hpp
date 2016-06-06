@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __MOUSE_EVENT_HPP__
 #define __MOUSE_EVENT_HPP__
 

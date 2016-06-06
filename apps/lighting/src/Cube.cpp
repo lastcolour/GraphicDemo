@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #include <Cube.hpp>
 
 const char* Cube::VERT_SHADER = "shaders/cubeVert.glsl";

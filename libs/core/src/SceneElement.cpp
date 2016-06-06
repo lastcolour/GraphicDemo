@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #include <graphics/SceneElement.hpp>
 
 SceneElement::SceneElement() {

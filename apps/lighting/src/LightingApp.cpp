@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #include <LightingApp.hpp>
 
 #include <Cube.hpp>
@@ -27,12 +29,9 @@ LightingApp::~LightingApp() {
 }
 
 void LightingApp::mainLoop() {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glEnable(GL_DEPTH_TEST);
-
     inpController.reset(new InputController());
-    inpController->setMouseSensetive(0.2f);
-    inpController->setMoveSpeed(20.f);
+    inpController->setMouseSensetive(0.1f);
+    inpController->setMoveSpeed(10.f);
     scenePtr.reset(createScene());
     inpController->setSceneToControll(scenePtr.get());
 
@@ -56,8 +55,9 @@ Scene3D* LightingApp::createScene() {
     Scene3D* tScene = new Scene3D();
 
     tScene->setCamera(new SceneFlyCamera(), glm::vec3(0));
-    tScene->add(new Cube(), glm::vec3(0));
-    tScene->add(new Light(), glm::vec3(1));
+    tScene->setClearColor(0.f, 0.f, 0.f, 1.f);
+    tScene->add(new Cube(), glm::vec3(0.f));
+    tScene->add(new Light(), glm::vec3(3.f, 3.f, -5.f));
 
     return tScene;
 }
@@ -71,8 +71,7 @@ void LightingApp::onMouseEvent(const MouseEvent& mouseEvent) {
 }
 
 void LightingApp::onResizeEvent(unsigned int width, unsigned int heigth) {
-    glViewport(0, 0, width, heigth);
     if (scenePtr != nullptr) {
-        scenePtr->getCamera()->setAspectRatio(width / float(heigth));
+        scenePtr->setViewArea(0.f, 0.f, width, heigth);
     }
 }

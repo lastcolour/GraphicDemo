@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __SCENE_CAMERA_HPP__
 #define __SCENE_CAMERA_HPP__
 

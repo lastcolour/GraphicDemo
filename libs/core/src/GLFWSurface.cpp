@@ -9,8 +9,8 @@
 #include <GLFW/glfw3.h>
 
 #include <cstdlib>
+#include <cassert>
 #include <iostream>
-#include <assert.h>
 
 bool GLFWSurface::GLFW_LIB_INITED = false;
 bool GLFWSurface::GLEW_LIB_INITED = false;
@@ -173,6 +173,9 @@ void GLFWSurface::keyboardCallback(GLFWwindow* windowPtr, int keyCode, int scanC
         break;
     case GLFW_KEY_ESCAPE:
         code = KeyboardCode::ESC;
+        break;
+    case GLFW_KEY_SPACE:
+        code = KeyboardCode::SPACE;
         break;
     default:
         code = KeyboardCode::UNKNOWN;

@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __CUBE_HPP__
 #define __CUBE_HPP__
 

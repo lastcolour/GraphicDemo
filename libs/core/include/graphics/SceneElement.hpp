@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __SCENE_ELEMENT_HPP__
 #define __SCENE_ELEMENT_HPP__
 

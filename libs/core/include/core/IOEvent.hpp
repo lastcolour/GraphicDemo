@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __IO_EVENT_HPP__
 #define __IO_EVENT_HPP__
 

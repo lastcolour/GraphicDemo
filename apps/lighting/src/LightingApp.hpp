@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __LIGHTINGAPP_HPP__
 #define __LIGHTINGAPP_HPP__
 

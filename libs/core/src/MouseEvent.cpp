@@ -1,3 +1,5 @@
+#include <cassert>
+
 #include <core/MouseEvent.hpp>
 
 MouseEvent::MouseEvent(float xPos, float yPos, MouseKeyCode keyCode, EventType eventType) : 

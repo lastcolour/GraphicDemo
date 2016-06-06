@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #include <LightingApp.hpp>
 
 int main(int argc, char* argv[]) {

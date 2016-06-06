@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #include <InputController.hpp>
 
 #include <graphics/SceneCamera.hpp>
@@ -60,6 +62,9 @@ void InputController::process(float deltaTime) {
             break;
         case KeyboardCode::D:
             tCamera->makeMoveAtDirection(tCamera->getRightVec(),  tDist);
+            break;
+        case KeyboardCode::SPACE:
+            tCamera->makeMoveAtDirection(tCamera->getUpVec(), tDist);
             break;
         default:
             //ignore

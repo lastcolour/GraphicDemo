@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #include <graphics/SceneFlyCamera.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>

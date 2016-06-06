@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __DRAWABLE_HPP__
 #define __DRAWABLE_HPP__
 

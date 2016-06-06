@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #include <Light.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
