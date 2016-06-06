@@ -1,4 +1,4 @@
-#include <cassert>
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
 
 #include <core/MouseEvent.hpp>
 

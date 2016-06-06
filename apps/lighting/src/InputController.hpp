@@ -1,3 +1,5 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #ifndef __INPUT_CONTROLLER_HPP__
 #define __INPUT_CONTROLLER_HPP__
 

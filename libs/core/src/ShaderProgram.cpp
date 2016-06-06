@@ -196,6 +196,16 @@ void ShaderProgram::setUniform1f(const char* name, float x) const {
     glUseProgram(0);
 }
 
+void ShaderProgram::setUniform3f(const char* name, float x, float y, float z) const {
+    assert(objID != 0 && "Invalid shader program used");
+    GLint unifLoc = -1;
+    glUseProgram(objID);
+    if ((unifLoc = uniformFindLocation(name)) != -1) {
+        glUniform3f(unifLoc, x, y, z);
+    }
+    glUseProgram(0);
+}
+
 void ShaderProgram::setUniform4f(const char* name, float x, float y, float z, float w) const {
     assert(objID != 0 && "Invalid shader program used");
     GLint unifLoc = -1;

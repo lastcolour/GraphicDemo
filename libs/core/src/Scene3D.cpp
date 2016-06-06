@@ -1,11 +1,15 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 #include <graphics/Scene3D.hpp>
 #include <graphics/SceneElement.hpp>
+#include <graphics/SceneLight.hpp>
 #include <graphics/SceneCamera.hpp>
 
 #include <cassert>
 
 Scene3D::Scene3D() : Drawable(),
     elements(),
+    lights(),
     viewBox(),
     cameraPtr(nullptr) {
 
@@ -15,11 +19,18 @@ Scene3D::Scene3D() : Drawable(),
 Scene3D::~Scene3D() {
 }
 
-void Scene3D::add(SceneElement* elem, const glm::vec3& position) {
+void Scene3D::addElement(SceneElement* elem, const glm::vec3& position) {
     assert(elem != nullptr && "Add NULL element to scene");
     elem->setScene(this);
     elem->setPosition(position);
     elements.push_back(elem);
+}
+
+void Scene3D::addLight(SceneLight* light, const glm::vec3& position) {
+    assert(light != nullptr && "Add NULL light to scene");
+    light->setScene(this);
+    light->setPosition(position);
+    lights.push_back(light);
 }
 
 void Scene3D::setCamera(SceneCamera* camera, const glm::vec3& position) {
@@ -29,8 +40,12 @@ void Scene3D::setCamera(SceneCamera* camera, const glm::vec3& position) {
     cameraPtr = camera;
 }
 
+const std::vector<SceneLight*>& Scene3D::getLights() const {
+    return lights;
+}
+
 void Scene3D::setViewArea(float origX, float origY, float width, float height) { 
-    assert(origX > 0 && origY > 0 && width > 0 && height > 0 && "Invalid view area for sceen");
+    assert(origX >= 0.f && origX >= 0.f && origX >= 0.f && origX >= 0.f && "Invalid view area for sceen");
     viewBox = Quad(origX, origY, width, height); // Without scissor test this code is redundat
     cameraPtr->setAspectRatio(width / height);
 }
@@ -38,7 +53,6 @@ void Scene3D::setViewArea(float origX, float origY, float width, float height) {
 void Scene3D::setClearColor(float r, float g, float b, float a) {
     glClearColor(r, g, b, a);
 }
-
 
 SceneCamera* Scene3D::getCamera() {
     return cameraPtr;
@@ -57,6 +71,9 @@ void Scene3D::clear() {
 
 void Scene3D::update() {
     cameraPtr->update();
+    for (auto it = lights.begin(), end = lights.end(); it != end; ++it) {
+        (*it)->update();
+    }
     for (auto it = elements.begin(), end = elements.end(); it != end; ++it) {
         (*it)->update();
     }
@@ -65,6 +82,9 @@ void Scene3D::update() {
 void Scene3D::render() {
     clear();
     cameraPtr->render();
+    for (auto it = lights.begin(), end = lights.end(); it != end; ++it) {
+        (*it)->render();
+    }
     for (auto it = elements.begin(), end = elements.end(); it != end; ++it) {
         (*it)->render();
     }

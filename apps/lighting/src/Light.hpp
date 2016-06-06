@@ -1,13 +1,15 @@
 #ifndef __LIGHT_HPP__
 #define __LIGHT_HPP__
 
-#include <graphics/SceneElement.hpp>
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+
+#include <graphics/SceneLight.hpp>
 
 #include <openGL/VAOPipeline.hpp>
 
 #include <memory>
 
-class Light : public SceneElement {
+class Light : public SceneLight {
 public:
 
     Light();
