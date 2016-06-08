@@ -7,10 +7,10 @@ out vec3 fFragPos;
 out vec3 fNormal;
 
 uniform mat4 CameraMat;
-//uniform mat4 WorldMat;
+uniform mat4 WorldMat;
 
 void main() {
-  gl_Position = CameraMat  * vec4(vPosition, 1.f);
-  fFragPos = vPosition;
+  vec4 fFragPos = WorldMat * vec4(vPosition, 1.f);
+  gl_Position = CameraMat * fFragPos;
   fNormal = vNormal;
 }

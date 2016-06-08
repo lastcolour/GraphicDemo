@@ -24,7 +24,7 @@ vec4 calcDiffuse(in vec3 lightDir) {
 }
 
 vec4 calcAmbient() {
-  float ambientStr = 0.1f;
+  float ambientStr = 0.2f;
   return ambientStr * LightColor;
 }
 

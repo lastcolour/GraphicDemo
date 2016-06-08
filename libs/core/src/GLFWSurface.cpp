@@ -243,6 +243,7 @@ void GLFWSurface::mouseButtonCallback(GLFWwindow* window, int mouseButton, int a
         type = EventType::UNKNOWN;
         break;
     }
+    // TODO: Use LAST_MOUSE_EVENT for position setup
     MouseEvent tEvent(static_cast<float>(0.f), static_cast<float>(0.f), MouseKeyCode::NONE, type);
     Surface::sendMouseEvent(tEvent);
 }

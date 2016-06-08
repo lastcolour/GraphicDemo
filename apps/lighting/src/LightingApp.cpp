@@ -4,6 +4,7 @@
 
 #include <Cube.hpp>
 #include <Light.hpp>
+#include <CubeWithMaterials.hpp>
 
 #include <graphics/SceneFlyCamera.hpp>
 
@@ -57,8 +58,9 @@ Scene3D* LightingApp::createScene() {
     tScene->setCamera(new SceneFlyCamera(), glm::vec3(0));
     tScene->setClearColor(0.f, 0.f, 0.f, 1.f);
     tScene->addElement(new Cube(), glm::vec3(0.f));
-    tScene->addLight(new Light(), glm::vec3(3.f, 3.f, -5.f));
+    tScene->addElement(new CubeWithMaterials(), glm::vec3(0.0f, 0.f, -7.f));
 
+    tScene->addLight(new Light(), glm::vec3(3.f, 3.f, -5.f));
     return tScene;
 }
 

@@ -46,6 +46,9 @@ enum class KeyboardCode {
 };
 
 class KeyboardEvent {
+
+  // TODO: Move implemenation to cpp
+
 public:
 
     explicit KeyboardEvent(KeyboardCode keyCode, EventType keyType) :

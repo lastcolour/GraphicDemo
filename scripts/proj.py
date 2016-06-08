@@ -59,6 +59,9 @@ class Project:
 
     def setSkip3dParty(self, flag):
         self._fast = flag
+        for depProjName in self._depProjects:
+          tProjectNode = self._depProjects[depProjName]["project"]
+          tProjectNode.setSkip3dParty(self._fast)
 
     def getName(self):
         return self._model["name"]
@@ -86,7 +89,7 @@ class Project:
         log.info("[Info][{0}] Start build target: {0}".format(self.getName()))
         for depProjName in self._depProjects:
             tProjectNode = self._depProjects[depProjName]
-            if tProjectNode["project"].is3dParty():
+            if tProjectNode["project"].is3dParty() and self._fast:
                log.info("[Info] Skip build of 3rd party project: {0}".format(depProjName))
                continue
             tBuildDict = {"OUT_DIR"   : self._getInstallRoot(),

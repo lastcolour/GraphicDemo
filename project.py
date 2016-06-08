@@ -34,7 +34,7 @@ def parseArgs():
                                   help="clean all generated files before build")
     tGroup.add_argument("-list",  dest="list", nargs="?", required=False,  type=bool,    const=True, default=False,
                                   help="show all projects")
-    argPrs.add_argument("-fast",  dest="fast", nargs="?", required=False, type=bool, const=False, default=False,
+    argPrs.add_argument("-fast",  dest="fast", required=False, action="store_const", const=True,
                                   help="skip build of 3d parties depedecies")
     return argPrs.parse_args()
 
@@ -56,7 +56,8 @@ def main():
     try:
         proj = Project(tProjectName)
         proj.setLocalConfig(tInit)
-        proj.setSkip3dParty(args.fast)
+        if args.fast is not None:
+          proj.setSkip3dParty(True)
     except:
         log.error("[Error] Unexpected error when loading project from: {0}".format(tProjectName))
         log.error("[Error] Problem: {0}".format(sys.exc_info()[1]))

@@ -9,14 +9,6 @@
       "project": "CoreLib.json",
       "link": "shared",
       "type": "{BUILD_TYPE}"
-    },
-    {
-      "project": "GLEW.json",
-      "link": "shared",
-      "type": "Release",
-      "install": {
-        "path": "{OUT_DIR}/{PLATFORM}/{BUILD_TYPE}"
-      }
     }
   ],
 

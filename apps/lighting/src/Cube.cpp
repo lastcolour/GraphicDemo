@@ -5,6 +5,9 @@
 #include <graphics/SceneLight.hpp>
 #include <graphics/SceneCamera.hpp>
 
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 const char* Cube::VERT_SHADER = "shaders/cubeVert.glsl";
 const char* Cube::FRAG_SHADER = "shaders/cubeFrag.glsl";
 
@@ -78,6 +81,9 @@ void Cube::update() {
 
 void Cube::render() {
     pipePtr->getProgram()->setUniformMat4fv("CameraMat", getScene()->getCameraMat());
+    glm::mat4 transform;
+    transform = glm::translate(transform, getPosition());
+    pipePtr->getProgram()->setUniformMat4fv("WorldMat", glm::value_ptr(transform));
     pipePtr->getProgram()->setUniform4f("FragColor", 1.f, 0.f, 0.f, 1.f);
     SceneLight* tLight = nullptr;
     for (auto ligthElem : getScene()->getLights()) {
