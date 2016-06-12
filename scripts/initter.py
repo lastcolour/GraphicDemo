@@ -10,7 +10,7 @@ from ConfigParser import SafeConfigParser
 _DEF_CONFIG_FILENAME = "local-config.ini"
 
 _DEF_PROJECT = "LightingApp"
-_DEF_WIN_GENERATOR = "Visual Studio 11 Win64"
+_DEF_WIN_GENERATOR = "Visual Studio 14 Win64"
 _DEF_LIN_GENERATOR = "Eclipse CDT4 - Unix Makefiles"
 
 class Initializer:
@@ -34,7 +34,7 @@ class Initializer:
     if platform.system().lower() == "windows":
       tConfig.set("cmake", "generator", _DEF_WIN_GENERATOR)
     else:
-      tConfig.set("cmake", "generator", _DEF_WIN_GENERATOR)
+      tConfig.set("cmake", "generator", _DEF_LIN_GENERATOR)
     self._config = tConfig
     try:
       with open(filename, "w") as tFile:
