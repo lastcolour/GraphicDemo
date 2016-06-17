@@ -8,15 +8,18 @@ from utils import runCMD
 from utils import setUpEnv
 from utils import tryFormat
 
+from runner import Runner
+
 from logger import log
 
 
 _CMAKE_LOG_FILE = "lastCmakeRun.log"
 
 
-class CmakeRunner:
+class CmakeRunner(Runner):
 
     def __init__(self, cmakeConfig):
+        Runner.__init__(self)
         self._config = cmakeConfig
         self._currBuild = None
         self._rootPath = None

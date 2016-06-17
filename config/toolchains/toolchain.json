@@ -1,0 +1,63 @@
+{
+  "lin": {
+    "cmake": {
+      "name": "cmake",
+      "bin": "cmake",
+      "type": "project generator",
+      "query": {
+        "args": "-version",
+        "line": 0,
+        "word": 2,
+        "match": {
+          "composite": true,
+          "type": ">=,>=,?",
+          "value": "4.2.*"
+        }
+      },
+    "compilers": [
+      {
+        "name": "gcc",
+        "version": "",
+        "generator": "Eclipse CDT4 - Unix Makefiles"
+      }
+    ]
+    }
+  },
+  "win": {
+    "cmake": {
+      "name": "cmake",
+      "bin": "cmake",
+      "type": "project generator",
+      "query": {
+        "args": "-version",
+        "line": 0,
+        "word": 2,
+        "match": {
+          "composite": true,
+          "type": ">=,>=,?",
+          "value": "2.8.*",
+          "back_port": true
+        }
+      }
+    },
+    "compilers": [
+      {
+        "name": "msvc",
+        "full_name": "Microsoft Visual Studio",
+        "bin": "devenv.com",
+        "type": "compiler",
+        "generator": "Visual Studio 14 Win64",
+        "query": {
+          "args": "/?",
+          "line": 1,
+          "word": 3,
+          "match": {
+            "composite": false,
+            "type": ">=",
+            "value": 2015
+          }
+        }
+      }
+    ]
+  }
+}

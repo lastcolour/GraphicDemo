@@ -5,19 +5,22 @@ import platform
 
 from utils import runCMD
 
+from runner import Runner
+
 from logger import log
 
 _COMPILE_LOG_FILE = "lastCompileRun.log"
 
 
-class CompileRunner:
+class CompileRunner(Runner):
 
     # TODO: Create base class for CmakeRunner and Compiler runner that encapsulate common behaviour
 
     def __init__(self, cmakeRunInfo):
+        Runner.__init__(self)
         self._config = cmakeRunInfo
 
-    def run(self):
+    def run(self, buildType):
         tCompCmd = self._formatCompileCMD()
         try:
             tCompileLog = self._getLogFileName()

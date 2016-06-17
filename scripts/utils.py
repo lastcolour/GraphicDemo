@@ -1,7 +1,8 @@
 # author: Oleksii Zhogan
 
-__all__ = ["runCMD", "setUpEnv", "tryFormat", "copyFiles"]
+__all__ = ["runCMD", "setUpEnv", "tryFormat", "copyFiles", "findAppInENV"]
 
+import platform
 import shutil
 import glob
 import sys
@@ -11,6 +12,31 @@ from subprocess import Popen
 from logger import log
 
 _TMP_FILE = "data.temp"
+
+
+def findAppsInENV(appName):
+    if "." not in appName:
+       tAppName = appName + ".exe" if platform.system().lower() == "windows" else ""
+    else:
+       tAppName = appName
+    def _scanPath(path, appName):
+        if not os.path.exists(path) or not os.path.isdir(path):
+           return False
+        for item in os.listdir(path):
+            if os.path.basename(item) == tAppName:
+                return True
+        return False
+    tPossiblePath = []
+    for item in os.environ:
+        tElem =  os.environ[item]
+        tPathList = tElem.split(";")
+        if len(tPathList) > 1:
+          for tPath in tPathList:
+             if _scanPath(tPath, appName):
+                 tPossiblePath.append(tPath.replace("\\", "/"))
+        elif _scanPath(tElem, appName):
+          tPossiblePath.append(tElem.replace("\\", "/"))
+    return tPossiblePath
 
 
 def copyFiles(fileMasks, fromPath, toPath):
@@ -65,7 +91,7 @@ def runCMD(cmd, workDir=None, pipe=None, isShell=False):
   else:
     pipeFile = pipe
   try:
-    log.debug("[Debug] Start process: {0}".format(cmd))
+    #log.debug("[Debug] Start process: {0}".format(cmd if type(cmd) != list else " ".join(cmd)))
     tProc = Popen(cmd, cwd=workDir, shell=isShell, stdout=pipeFile, stderr=pipeFile)
     tProc.wait()
   except:
