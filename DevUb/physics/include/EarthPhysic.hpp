@@ -1,3 +1,7 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+// license: WTFPL
+
+
 #ifndef __EARTH_PHYSICS_HPP__
 #define __EARTH_PHYSICS_HPP__
 
@@ -11,13 +15,11 @@ public:
 
     bool isValid() const;
     void reset();
-
-    const char* getInvalidError() const;
+    bool isFinished() const;
 
     float getFlyLen() const;
     float getFlyHeight() const;
     Point2d getPointLoc(float timeP);
-
 
 private:
 
@@ -25,11 +27,11 @@ private:
 
 private:
 
-    mutable char* validError;
     PhysicsModel* dataPtr;
     float currSpeed;
     float currLen;
     float currTime;
+    float currHeight;
 };
 
 #endif /* __EARTH_PHYSICS_HPP__ */

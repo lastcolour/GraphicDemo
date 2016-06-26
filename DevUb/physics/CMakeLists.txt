@@ -10,3 +10,4 @@ file (GLOB HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 add_library(${LIB_NAME} SHARED ${SRC_FILES} ${HEADER_FILES})
+set_property(TARGET ${LIB_NAME} PROPERTY CXX_STANDARD 11)

@@ -77,6 +77,7 @@ include_directories (${SRC_DIR}
 
 #==------------- Build executable -------------==                     
 add_executable(${APP_NAME} ${SRC_FILES} ${HEADER_FILES} ${SHADER_FILES})
+set_property(TARGET ${APP_NAME} PROPERTY CXX_STANDARD 11)
 
 # Add physics lib to this project
 add_subdirectory (${PHYSICS_LIB_DIR} "${CMAKE_BINARY_DIR}/${PHYSICS_LIB}")
@@ -88,9 +89,16 @@ target_link_libraries(${APP_NAME} PRIVATE ${GLFW_LIB})
 target_link_libraries(${APP_NAME} PRIVATE ${PHYSICS_LIB})
 target_link_libraries(${APP_NAME} PRIVATE ${OPENGL_LIBRARIES})
 
+# Link pthread lib on Linux
+if (CMAKE_COMPILER_IS_GNUCXX)
+  find_package(Threads REQUIRED)
+  target_link_libraries(${APP_NAME} PRIVATE ${CMAKE_THREAD_LIBS_INIT})
+endif()
+
+
 # Copy shaders
 message(STATUS "Copy shaders in: ${SHADER_DIR}")
 add_custom_command (TARGET ${APP_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${SHADER_DIR}
-        $<TARGET_FILE_DIR:${APP_NAME}>/"${SHADER_DIR_NAME}")
+        $<TARGET_FILE_DIR:${APP_NAME}>/"${SHADER_DIR_NAME}")	

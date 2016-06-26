@@ -1,16 +1,38 @@
-#include "glUtils.hpp"
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+// license: WTFPL
 
+#include "glUtils.hpp"
+#include "Logger.hpp"
+
+#include <cmath>
 #include <cassert>
 #include <fstream>
-#include <iostream>
 
 const float PI = 3.14159265f;
 
-void CHECK_GL_STATUS(const char* place) {
-    GLenum err;
-    if ((err = glGetError()) != GL_NO_ERROR) {
-        std::cout << "[" << place << "] GL ERROR: " << gluErrorString(err) << std::endl;
-    }
+GLDrawData::GLDrawData() :
+    progID(0),
+    vaoID(0),
+    bufferID(0) {
+}
+
+GLDrawData::GLDrawData(const GLDrawData& draw) :
+    progID(draw.progID),
+    vaoID(draw.vaoID),
+    bufferID(draw.bufferID) {
+}
+
+GLDrawData::~GLDrawData() {
+}
+
+void GLDrawData::clear() {
+    glDeleteProgram(progID);
+    glDeleteBuffers(1, &bufferID);
+    glDeleteVertexArrays(1, &vaoID);
+}
+
+bool GLDrawData::isValid() const {
+    return progID != 0 && vaoID != 0 && bufferID != 0;
 }
 
 std::string getShaderLog(GLuint instanceID) {
@@ -40,7 +62,7 @@ GLuint loadShader(const char* shaderPath, GLenum shaderType) {
     }
     std::ifstream fin(shaderPath);
     if (!fin.is_open()) {
-        std::cerr << "[GL Util] Can't open " << errForStr << " shader file: \"" << shaderPath << "\"" << std::endl;
+        Logger::error("GL Util", "Can't open: ", errForStr, " shader file: \"", shaderPath, "\"");
         return 0;
     }
     std::string shaderStr;
@@ -52,8 +74,8 @@ GLuint loadShader(const char* shaderPath, GLenum shaderType) {
     GLint compiled = GL_FALSE;
     glGetShaderiv(shaderID, GL_COMPILE_STATUS, &compiled);
     if (compiled != GL_TRUE) {
-        std::cerr << "[GL Util] Can't compile " << errForStr << " shader from file: \"" << shaderPath << "\"";
-        std::cerr << "\n[GL Util] Problem: " << getShaderLog(shaderID) << std::endl;
+        Logger::error("GL Util", "Can't compile ", errForStr, " shader from file: \"", shaderPath, "\"");
+        Logger::error("GL Util", "Problem: ", getShaderLog(shaderID));
         glDeleteShader(shaderID);
         return 0;
     }
@@ -82,27 +104,29 @@ GLuint linkProgram(GLuint vertID, GLuint fragID) {
     GLint linked = GL_FALSE;
     glGetProgramiv(tProgID, GL_LINK_STATUS, &linked);
     if (linked != GL_TRUE) {
-        std::cerr << "[GL Util] Can't link program: " << getProgramLog(tProgID) << std::endl;
+        Logger::error("GL Util", "Can't link program: ", getProgramLog(tProgID));
         glDeleteProgram(tProgID);
         return 0;
     }
     return tProgID;
 }
 
-GLDrawData createGLDraw(const char* vert, const char* frag, const std::vector<GLfloat>& vertList) {
-    GLDrawData tDraw;
+GLDrawData* createGLDraw(const char* vert, const char* frag, const std::vector<GLfloat>& vertList) {
+    GLDrawData* tDraw = new GLDrawData();
     GLuint vertShader = 0, fragShader = 0;
     vertShader = loadShader(vert, GL_VERTEX_SHADER);
     fragShader = loadShader(frag, GL_FRAGMENT_SHADER);
     if (vertShader == 0 || fragShader == 0) {
         // check which shader is not zero and delete
-        return tDraw;
+        delete tDraw;
+        return nullptr;
     }
-    tDraw.progID = linkProgram(vertShader, fragShader);
+    tDraw->progID = linkProgram(vertShader, fragShader);
     glDeleteShader(vertShader);
     glDeleteShader(fragShader);
-    if (tDraw.progID == 0) {
-        return tDraw;
+    if (tDraw->progID == 0) {
+        delete tDraw;
+        return nullptr;
     }
     GLuint vaoID = 0, bufferID = 0;
     glGenVertexArrays(1, &vaoID);
@@ -115,8 +139,8 @@ GLDrawData createGLDraw(const char* vert, const char* frag, const std::vector<GL
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    tDraw.vaoID = vaoID;
-    tDraw.bufferID = bufferID;
+    tDraw->vaoID = vaoID;
+    tDraw->bufferID = bufferID;
     return tDraw;
 }
 

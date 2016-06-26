@@ -1,3 +1,6 @@
+// author: Oleksii Zhogan (alexzhogan@gmail.com)
+// license: WTFPL
+
 #ifndef __APPLICATION_HPP__
 #define __APPLICATION_HPP__
 
@@ -17,19 +20,23 @@ public:
 
 private:
 
-    bool parseArgs(int argc, char* argv[]);
+    void restart();
+    bool load(int argc, char* argv[]);
 
     bool initGraphics();
     bool initSurface();
     bool initGLEW();
     void initCallbacks();
 
+    static void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
 private:
 
+    static Application* ACTIVE_APP;
     static bool GLFW_INITED;
 
-    GLFWwindow* windowPtr;
     std::unique_ptr<Simulation> simulPtr;
+    GLFWwindow* windowPtr;
     float currTimeP;
     float prevTimeP;
 };
