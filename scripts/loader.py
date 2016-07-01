@@ -4,8 +4,8 @@ import os
 
 from logger import log
 
-from cmake import CmakeRunner
-from compile import CompileRunner
+from runner import CmakeRunner
+from runner import CompilerRunner
 
 class Project:
     def __init__(self, name):
@@ -15,6 +15,7 @@ class Project:
         self._cmakeRunner = None
         self._compilerRunner = None
         self._context = dict()
+        self._hardBuildType = None
         self._buildTypes = []
         self._depProject = []
 
@@ -24,11 +25,31 @@ class Project:
     def __str__(self):
         return self._name
 
+    def setHardBuildType(self, value):
+        self._hardBuildType = value
+
     def getName(self):
         return self._name
 
-    def _doBuild(self):
-        pass
+    def _doBuild(self, buildType):
+        log.info("[Info] {0}: Start project file generation...".format(self._name))
+        try:
+            self._cmakeRunner.run(self, buildType)
+        except:
+            log.error("[Error] Can't generate project files: {0}".format(self._name))
+            log.error("[Error] Problem: {0}".format(sys.exc_info()[1]))
+            return False
+        log.info("[Info] {0}: Generation -- OK!".format(self._name))
+        # maybe better slit this function
+        log.info("[Info] {0}: Start compilation...".format(self._name))
+        try:
+            self._compilerRunner.run(self, buildType)
+        except:
+            log.error("[Error] Can't compile project: {0}".format(self._name))
+            log.error("[Error] Problem: {0}".format(sys.exc_info()[1]))
+            return False
+        log.info("[Info] {0}: Compilation -- OK!".format(self._name))
+        return True
 
     def setInstall(self, value):
         pass
@@ -36,10 +57,21 @@ class Project:
     def setParent(self, parent):
         self._parent = parent
 
+    def _getDepth(self):
+        if self._parent is None:
+            return 0
+        else:
+            return 1 + self._parent._getDepth()
+
     def build(self, buildType):
         for depItem in self._depProject:
            depItem.build(buildType)
-        self._doBuild()
+        if self._parent is not None:
+           log.info("[Info] {0} Build embedded to {1}: {2}".format(">" * self._getDepth(),
+                                                                   self._parent.getName(), self._name))
+        else:
+           log.info("[Info] Build project: {0}".format(self._name))
+        self._doBuild(buildType)
 
     def setCmakeRunner(self, runner):
         self._cmakeRunner = runner
@@ -74,19 +106,24 @@ class ProjectLoader:
         tProj = Project(jsonNode["name"])
         tProj.set3dParty(self._is3dParty(jsonNode))
         tProj.setBuildTypes(self._processBuildTypes(jsonNode))
-        tProj.setCmakeRunner(self._processCmakeConfig(jsonNode))
+        tProj.setCmakeRunner(self._processCmakeConfig(jsonNode["cmake"]))
         tProj.setCompilerRunner(self._processCompilerConfig(jsonNode))
         self._processDepProjNode(jsonNode, tProj)
         return tProj
 
     def _processCompilerConfig(self, jsonNode):
-        tRunner = CompileRunner(jsonNode)
+        tRunner = CompilerRunner()
         tRunner.setBinPath(self._initer.getCompiler()["path"])
         return tRunner
 
-    def _processCmakeConfig(self, jsonNode):
-        tRunner = CmakeRunner(jsonNode)
+    def _processCmakeConfig(self, cmakeNode):
+        tRunner = CmakeRunner()
         tRunner.setBinPath(self._initer.getCmake()["path"])
+        tRunner.setRunDir(cmakeNode["run_dir"])
+        tRunner.setOutDir(cmakeNode["out_dir"])
+        for configItem in cmakeNode:
+            if type(cmakeNode[configItem]) is dict:
+                tRunner.addRunConfig(configItem, cmakeNode[configItem])
         return tRunner
 
     def _processBuildTypes(self, jsonNode):
@@ -102,7 +139,7 @@ class ProjectLoader:
         for depItem in jsonNode["deps"]:
             log.info("[Info] {0} -> Process embedded project: {1}".format(root.getName(), depItem["project"]))
             tProj = self._loadProject(depItem["project"])
-
+            tProj.setHardBuildType(depItem["type"])
             if tProj is None:
                 errStr = "[{0}] Can't load project from {1}".format(root.getName(), depItem["project"])
                 raise DependError(errStr)

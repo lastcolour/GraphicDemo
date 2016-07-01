@@ -140,7 +140,7 @@ class Initializer:
     return None
 
   def _validateSW(self):
-    log.info("[Info] Check needed SW...")
+    log.info("[Info] Start checking needed SW...")
     tCHItem = self._loadToolChains()
     if tCHItem is None:
       log.error("[Error] Can't validate SW without configs")

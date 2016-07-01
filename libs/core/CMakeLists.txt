@@ -48,7 +48,7 @@ add_library(${TARGET_NAME} SHARED ${SRC} ${HEADERS})
 set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD 11)
 
 target_link_libraries(${TARGET_NAME} PRIVATE ${SURFACE_LIB_PATH})
-target_link_libraries(${TARGET_NAME} PRIVATE  ${GLEW_LIB_PATH})
+target_link_libraries(${TARGET_NAME} PRIVATE ${GLEW_LIB_PATH})
 target_link_libraries(${TARGET_NAME} PUBLIC  ${OPEN_GL_LIB_PATH}) # Show opengl interface
 
 # Other target setups
