@@ -1,8 +1,9 @@
 {
   "name": "GLFW",
   "3dParty": true,
-  "build_types": ["Debug", "Release"],
-  "bin_types": ["shared_lib", "static_lib"],
+  "library": true,
+  "build_types": ["debug", "release"],
+  "bin_types": ["shared", "static"],
 
   "cmake": {
     "run_dir": "extern/libs/glfw-3.1.2",

@@ -1,8 +1,7 @@
 {
   "name": "LightingApp",
   "3dParty": false,
-  "build_types": ["Debug", "Release"],
-  "bin_types": ["app"],
+  "build_types": ["debug", "release"],
 
   "deps": [
     {
@@ -13,7 +12,7 @@
     {
       "project": "GLEW.json",
       "link": "shared",
-      "type": "Release",
+      "type": "release",
       "install": {
         "path": "{OUT_DIR}/{PLATFORM}/{BUILD_TYPE}"
       }

@@ -1,8 +1,8 @@
 {
   "name": "DemoApp",
   "3dParty": false,
-  "build_types": ["Debug", "Release"],
-  "bin_types": ["app"],
+  "library": false,
+  "build_types": ["debug", "release"],
 
   "deps": [
     {

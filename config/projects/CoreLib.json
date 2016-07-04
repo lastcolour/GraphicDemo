@@ -1,24 +1,25 @@
 {
   "name": "CoreLib",
   "3dParty": false,
-  "build_types": ["Debug", "Release"],
-  "bin_types": ["shared_lib", "static_lib"],
+  "build_types": ["debug", "release"],
+  "library": true,
+  "bin_types": ["shared", "static"],
 
   "deps": [
      {
        "project": "GLFW.json",
        "link": "shared",
-       "type": "Release",
+       "type": "release",
        "install": {
          "path": "{OUT_DIR}/{PLATFORM}/{BUILD_TYPE}"
        }},
      {
-      "project": "GLEW.json",
-      "link": "shared",
-      "type": "Release",
-      "install": {
-        "path": "{OUT_DIR}/{PLATFORM}/{BUILD_TYPE}"
-      }}
+       "project": "GLEW.json",
+       "link": "shared",
+       "type": "release",
+       "install": {
+         "path": "{OUT_DIR}/{PLATFORM}/{BUILD_TYPE}"
+       }}
   ],
 
   "cmake": {

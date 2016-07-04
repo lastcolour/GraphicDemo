@@ -11,6 +11,7 @@ from scripts.logger import log
 selfPath = os.path.dirname(os.path.abspath(__file__)).replace("\\", "/")
 SELF_NAME = os.path.basename(__file__)
 _REPO_PATHS = {
+    "root"      : selfPath,
     "projects"  : selfPath + "/config/projects",
     "toolchain" : selfPath + "/config/toolchains"
 }
@@ -59,7 +60,7 @@ def main():
     if args.build is None:
         log.info("[Info] Build config not specified. Skipping!")
         return
-    proj.build(args.build.title())
+    proj.build(args.build.lower())
 
 if __name__ == "__main__":
     main()

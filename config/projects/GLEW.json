@@ -1,8 +1,9 @@
 {
   "name": "GLEW",
   "3dParty": true,
-  "build_types": ["Debug", "Release"],
-  "bin_types": ["shared_lib", "static_lib"],
+  "build_types": ["debug", "release"],
+  "library": true,
+  "lib_types": ["shared", "static"],
 
   "cmake": {
     "run_dir": "extern/libs/glew-1.13.0/build/cmake",

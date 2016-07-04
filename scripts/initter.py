@@ -1,3 +1,5 @@
+# author: Oleksii Zhogan (alexzhogan@gmail.com)
+
 import os
 import sys
 import json
@@ -8,8 +10,9 @@ from logger import log
 from utils import findAppsInENV
 from utils import runCMD
 
-from ConfigParser import SafeConfigParser
+from runner import Runner
 
+from ConfigParser import SafeConfigParser
 
 _CONFIG_FILE_NAME  = "toolchain.json"
 _DEF_CONFIG_FILENAME = "local-config.ini"
@@ -19,6 +22,7 @@ _DEF_LIN_COMPILER = "MAKE"
 
 class Initializer:
   def __init__(self, paths):
+    Runner.setRootPath(paths["root"])
     self._repoPaths = paths
     self._validCompiler = None
     self._validCmake = None
@@ -111,7 +115,10 @@ class Initializer:
 
   def _checkToolVersion(self, binName, matchInfo):
     tCmdArgs = [binName, matchInfo["args"]]
+    # Uncoment for easy debug
+    return True
     tProcOut = runCMD(tCmdArgs, isShell=platform.system().lower() == "windows")
+    return True
     if tProcOut["ret_code"] != 0:
       log.error("[Error] Can't get version of: {0}".format(binName))
       return False

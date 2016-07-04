@@ -1,3 +1,6 @@
+# author: Oleksii Zhogan (alexzhogan@gmail.com)
+
+import platform
 import json
 import sys
 import os
@@ -7,23 +10,56 @@ from logger import log
 from runner import CmakeRunner
 from runner import CompilerRunner
 
+from utils import tryFormat
+
 class Project:
+
+    _GLOBAL_CONTEXT = {
+        "PLATFORM": "win" if platform.system().lower() == "windows" else "lin"
+    }
+
     def __init__(self, name):
         self._name = name
         self._parent = None
+        self._isLib = False
         self._external = False
-        self._cmakeRunner = None
-        self._compilerRunner = None
-        self._context = dict()
-        self._hardBuildType = None
         self._buildTypes = []
         self._depProject = []
+        self._cmakeRunner = None
+        self._compilerRunner = None
+        self._hardBuildType = None
+        self._context = {}
+
+    def addToContex(self, valKey, value):
+        if valKey in self._context:
+            log.debug("[Debug] Override contex variable {0}: {1} -> {2}"
+                      .format(valKey, self._context[valKey], value))
+        self._context[valKey] = value
 
     def getContext(self):
         return self._context
 
+    def tryFrmtByCtx(self, value):
+        tValue = tryFormat(value, self._context)
+        if self._parent is not None:
+            return self._parent.tryFrmtByCtx(tValue)
+        return tryFormat(tValue, Project._GLOBAL_CONTEXT)
+
+    def _frmtBuildType(self, buildType):
+        tVal = buildType
+        if self._hardBuildType is not None:
+            tVal = self.tryFrmtByCtx(self._hardBuildType)
+        self._context["BUILD_TYPE"] = tVal
+        return tVal
+
     def __str__(self):
         return self._name
+
+    def setIsLib(self, flag):
+        self._isLib = flag
+
+    def isLib(self):
+        return self._isLib
 
     def setHardBuildType(self, value):
         self._hardBuildType = value
@@ -31,10 +67,10 @@ class Project:
     def getName(self):
         return self._name
 
-    def _doBuild(self, buildType):
+    def _doBuild(self):
         log.info("[Info] {0}: Start project file generation...".format(self._name))
         try:
-            self._cmakeRunner.run(self, buildType)
+            self._cmakeRunner.run(self)
         except:
             log.error("[Error] Can't generate project files: {0}".format(self._name))
             log.error("[Error] Problem: {0}".format(sys.exc_info()[1]))
@@ -43,7 +79,7 @@ class Project:
         # maybe better slit this function
         log.info("[Info] {0}: Start compilation...".format(self._name))
         try:
-            self._compilerRunner.run(self, buildType)
+            self._compilerRunner.run(self)
         except:
             log.error("[Error] Can't compile project: {0}".format(self._name))
             log.error("[Error] Problem: {0}".format(sys.exc_info()[1]))
@@ -64,14 +100,16 @@ class Project:
             return 1 + self._parent._getDepth()
 
     def build(self, buildType):
+        self._hardBuildType = self._frmtBuildType(buildType)
         for depItem in self._depProject:
            depItem.build(buildType)
         if self._parent is not None:
-           log.info("[Info] {0} Build embedded to {1}: {2}".format(">" * self._getDepth(),
-                                                                   self._parent.getName(), self._name))
+           log.info("[Info] {0} Build embedded to {1}: {2}. Config: {3}"
+                    .format(">" * self._getDepth(),self._parent.getName(), self._name, self._hardBuildType.title()))
         else:
-           log.info("[Info] Build project: {0}".format(self._name))
-        self._doBuild(buildType)
+           log.info("[Info] Build project: {0}. Config: {1}"
+                    .format(self._name, self._hardBuildType.title()))
+        self._doBuild()
 
     def setCmakeRunner(self, runner):
         self._cmakeRunner = runner
@@ -105,6 +143,7 @@ class ProjectLoader:
     def _processProjNode(self, jsonNode):
         tProj = Project(jsonNode["name"])
         tProj.set3dParty(self._is3dParty(jsonNode))
+        tProj.setIsLib(jsonNode["library"])
         tProj.setBuildTypes(self._processBuildTypes(jsonNode))
         tProj.setCmakeRunner(self._processCmakeConfig(jsonNode["cmake"]))
         tProj.setCompilerRunner(self._processCompilerConfig(jsonNode))

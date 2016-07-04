@@ -67,8 +67,8 @@ def tryFormat(rawStr, dictValues):
     try:
         tOutStr = tOutStr.format(**dictValues)
     except KeyError:
-        log.debug("[Error] Unknown key when format str: {0}".format(rawStr))
-        log.debug("[Error] Key: {0}".format(sys.exc_info()[1]))
+        log.debug("[Debug] Unknown key when format str: {0}".format(rawStr))
+        log.debug("[Debug] Key: {0}".format(sys.exc_info()[1]))
     return tOutStr
 
 def setUpEnv(envVars):
