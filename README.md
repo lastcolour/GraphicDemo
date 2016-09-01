@@ -20,7 +20,7 @@ your default configs for this repo.
 ## Project:
 ### DemoApp
 
-Based on @www.learnopengl.com tutorial "Getting started" and containe fully implenented example
+Based on @www.learnopengl.com tutorial "Getting started" and contain fully implemented example
  
 ### LightigApp
 

@@ -24,12 +24,12 @@ def parseArgs():
     argPrs = ArgumentParser(description= "Helpful script for project management",
                             epilog="Developed by Oleksii Zhogan (alexzhogan@gmail.com)")
 
-    argPrs.add_argument("-proj", dest="proj", nargs="?", required=True, type=str, default=None,
-                                 help="specifie custon project file")
+    argPrs.add_argument("-proj", dest="proj", nargs="?", required=False, type=str, default=None,
+                                 help="specify custom project file")
     tGroup = argPrs.add_mutually_exclusive_group()
     tGroup.add_argument("-build", dest="build", nargs="?", required=False, type=str, const="debug",
-                                  choices=["Debug","debug" ,"Release", "release"],
-                                  help="build project of specifig type (debug, release)")
+                                  choices=["Debug", "debug", "Release", "release"],
+                                  help="build project of specified type (debug, release)")
     tGroup.add_argument("-init-local", dest="init local config", required=False, type=bool, const=True, default=False,
                                        nargs="?", help="init local configuration")
     tGroup.add_argument("-clean", dest="clean", nargs="?", required=False, type=bool, const=True, default=False,
@@ -37,7 +37,7 @@ def parseArgs():
     tGroup.add_argument("-list", dest="list", nargs="?", required=False,  type=bool, const=True, default=False,
                                  help="show all projects")
     argPrs.add_argument("-fast", dest="fast", required=False, action="store_const", const=True,
-                                 help="skip build of 3d parties depedecies")
+                                 help="skip build of 3d parties dependencies")
     return argPrs.parse_args()
 
 

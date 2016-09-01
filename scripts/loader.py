@@ -105,7 +105,7 @@ class Project:
            depItem.build(buildType)
         if self._parent is not None:
            log.info("[Info] {0} Build embedded to {1}: {2}. Config: {3}"
-                    .format(">" * self._getDepth(),self._parent.getName(), self._name, self._hardBuildType.title()))
+                    .format(">" * self._getDepth(), self._parent.getName(), self._name, self._hardBuildType.title()))
         else:
            log.info("[Info] Build project: {0}. Config: {1}"
                     .format(self._name, self._hardBuildType.title()))

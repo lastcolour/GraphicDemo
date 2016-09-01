@@ -14,7 +14,7 @@ from runner import Runner
 
 from ConfigParser import SafeConfigParser
 
-_CONFIG_FILE_NAME  = "toolchain.json"
+_CONFIG_FILE_NAME = "toolchain.json"
 _DEF_CONFIG_FILENAME = "local-config.ini"
 
 _DEF_WIN_COMPILER = "MSVC"
@@ -116,9 +116,9 @@ class Initializer:
   def _checkToolVersion(self, binName, matchInfo):
     tCmdArgs = [binName, matchInfo["args"]]
     # Uncoment for easy debug
-    return True
+    #return True
     tProcOut = runCMD(tCmdArgs, isShell=platform.system().lower() == "windows")
-    return True
+    #return True
     if tProcOut["ret_code"] != 0:
       log.error("[Error] Can't get version of: {0}".format(binName))
       return False
